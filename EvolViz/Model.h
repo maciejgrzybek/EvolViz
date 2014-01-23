@@ -4,5 +4,7 @@ class Model
 public:
 	Model();
 	~Model();
+
+	void operator()();
 };
 
