@@ -43,6 +43,15 @@ public:
 		condVar_.notify_one();
 	}
 
+	void push(Type&& value)
+	{
+		{
+			std::unique_lock<std::mutex> lock(mutex_);
+			queue_.push(std::move(value));
+		}
+		condVar_.notify_one();
+	}
+
 	void pop(Type& result)
 	{
 		std::unique_lock<std::mutex> lock(mutex_);
