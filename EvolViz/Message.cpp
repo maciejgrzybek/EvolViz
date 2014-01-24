@@ -15,6 +15,11 @@ void StopRequestedMessage::accept(MessageVisitor& visitor) const
 	visitor.visit(*this);
 }
 
+void FitnessFunctionChangeRequestedMessage::accept(MessageVisitor& visitor) const
+{
+	visitor.visit(*this);
+}
+
 // model observed events
 
 void StateChangedMessage::accept(MessageVisitor& visitor) const

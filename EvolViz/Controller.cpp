@@ -1,10 +1,12 @@
 #include "Controller.h"
 
 
-Controller::Controller(std::shared_ptr<common::BlockingQueue<common::MessagePtr> > blockingQueue,
+Controller::Controller(std::shared_ptr<common::BlockingQueue<common::MessagePtr,
+															 common::TimeoutWait<200> > > blockingQueue,
 					   std::shared_ptr<Model> model)
 	: blockingQueue(blockingQueue),
-	  model(model)
+	  model(model),
+	  working(false)
 {}
 
 Controller::~Controller()
@@ -12,8 +14,18 @@ Controller::~Controller()
 
 void Controller::operator()()
 {
-	// FIXME implement this
-	// pick message from blockingQueue and execute appropriate command according to message
+	working = true;
+	while (working)
+	{
+		common::MessagePtr msg;
+		blockingQueue->pop(msg);
+		dispatchMessage(std::move(msg));
+	}
+}
+
+void Controller::asyncStop()
+{
+	working = false;
 }
 
 void Controller::visit(const common::StartRequestedMessage& message)
@@ -22,6 +34,11 @@ void Controller::visit(const common::StartRequestedMessage& message)
 }
 
 void Controller::visit(const common::StopRequestedMessage& message)
+{
+	// FIXME implement this
+}
+
+void Controller::visit(const common::FitnessFunctionChangeRequestedMessage& message)
 {
 	// FIXME implement this
 }
@@ -37,4 +54,9 @@ void Controller::onStateChanged()
 	// enqueue Message for further evaluation in proper (Controller's) thread.
 	common::MessagePtr msg(new common::StateChangedMessage);
 	blockingQueue->push(std::move(msg));
+}
+
+void Controller::dispatchMessage(std::unique_ptr<common::Message> message)
+{
+	message->accept(*this);
 }

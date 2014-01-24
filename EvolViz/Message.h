@@ -9,9 +9,11 @@ namespace common
 
 struct StartRequestedMessage;
 struct StopRequestedMessage;
+struct FitnessFunctionChangeRequestedMessage;
+
 struct StateChangedMessage;
 
-typedef Visitor<StartRequestedMessage, StopRequestedMessage, StateChangedMessage> MessageVisitor;
+typedef Visitor<StartRequestedMessage, StopRequestedMessage, FitnessFunctionChangeRequestedMessage, StateChangedMessage> MessageVisitor;
 
 struct Message;
 
@@ -31,6 +33,11 @@ struct StartRequestedMessage : ViewMessage
 };
 
 struct StopRequestedMessage : ViewMessage
+{
+	virtual void accept(MessageVisitor& visitor) const;
+};
+
+struct FitnessFunctionChangeRequestedMessage : ViewMessage
 {
 	virtual void accept(MessageVisitor& visitor) const;
 };
