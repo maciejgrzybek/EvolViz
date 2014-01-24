@@ -11,14 +11,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Controller.cpp" />
     <ClCompile Include="evol\EvolException.cpp" />
     <ClCompile Include="evol\EvolFunctions.cpp" />
     <ClCompile Include="evol\Population.cpp" />
     <ClCompile Include="evol\Subject.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Message.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="ModelObserver.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BlockingQueue.hpp" />
+    <ClInclude Include="Controller.h" />
     <ClInclude Include="evol\Chromosome.hpp" />
     <ClInclude Include="evol\debug.h" />
     <ClInclude Include="evol\Evol.hpp" />
@@ -27,7 +32,10 @@
     <ClInclude Include="evol\Observer.hpp" />
     <ClInclude Include="evol\Population.hpp" />
     <ClInclude Include="evol\Subject.hpp" />
+    <ClInclude Include="Message.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="ModelObserver.h" />
+    <ClInclude Include="Visitor.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{533CCAC8-ABAB-4F67-9354-354674ACE086}</ProjectGuid>
