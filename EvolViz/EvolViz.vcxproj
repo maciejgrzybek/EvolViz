@@ -20,6 +20,7 @@
     <ClCompile Include="Message.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ModelObserver.cpp" />
+    <ClCompile Include="View.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BlockingQueue.hpp" />
@@ -32,9 +33,11 @@
     <ClInclude Include="evol\Observer.hpp" />
     <ClInclude Include="evol\Population.hpp" />
     <ClInclude Include="evol\Subject.hpp" />
+    <ClInclude Include="GraphDescription.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelObserver.h" />
+    <ClInclude Include="View.h" />
     <ClInclude Include="Visitor.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
