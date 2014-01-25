@@ -22,8 +22,14 @@ namespace common {
 	struct MutationOptions {
 		double mutation_rate;
 	};
-	struct UniversalRandomMutation : public MutationOptions, public UniversalRandomOptions {};
-	struct GaussRandomMutation : public MutationOptions, public GaussRandomOptions {};
+	struct UniversalRandomMutation : public MutationOptions {
+		UniversalRandomOptions x;
+		UniversalRandomOptions y;
+	};
+	struct GaussRandomMutation : public MutationOptions {
+		GaussRandomOptions x;
+		GaussRandomOptions y;
+	};
 	struct ConstMutation : public MutationOptions {
 		double value;
 	};

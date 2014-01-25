@@ -1,6 +1,6 @@
 #pragma once
-#include <chrono>
 #include "ModelOptions.h"
+#include "PopulationSnapshot.h"
 
 namespace model {
 
@@ -10,21 +10,28 @@ public:
 	Model();
 	~Model();
 
+	// COMMANDS
 	void doStep();
 	void doGeneration();
-	void doGenerations(unsigned int generations, std::chrono::milliseconds interval = std::chrono::milliseconds(0));
 	
+	// SETUP
 	void setFitnessFunction(const std::string& formula);
 	void setInitializationOptions(const common::InitializationOptions& options);
-	void setMutationOptionsX(const common::MutationOptions& options);
-	void setMutationOptionsY(const common::MutationOptions& options);
+	void setMutationOptions(const common::MutationOptions& options);
 	void setCrossOverOptions(const common::CrossOverOptions& options);
 	void setRangeOptions(const common::RangeAlignmentOptions& type);
 	void setSelectionType(const common::SelectionType& type);	
 	void setPopulationSize(const unsigned int& size);
 	void setGoalValue(const double& goal);
 
+	// GETTERS
+	PopulationSnapshot getPopulationSnapshot();
+	std::string getCurrentFormula();
+
 	void operator()();
+
+private:
+	enum ApplyPolicy { INSTANT, STEP, GENERATION, INITIALIZATION };
 };
 
 } // namespace model
