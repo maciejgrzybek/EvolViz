@@ -1,5 +1,6 @@
 #include "Evolution.h"
 #include <cassert>
+#include <algorithm>
 
 namespace model {
 
@@ -28,7 +29,7 @@ void Evolution::doStep() {
 		break;
 		case BEFORE_SELECTION:
 			(*selector_)(population_, population_size_);
-			updateBest();
+			updateGoalReached();
 			state_ = BEFORE_REPRODUCTION;
 		break;
 		default: assert(false);
@@ -57,6 +58,10 @@ bool Evolution::isBeforeGeneration() {
 
 bool Evolution::isBeforeStep() {
 	return true;
+}
+
+bool Evolution::isGoalReached() {
+	return goal_reached_;
 }
 
 Evolution::State Evolution::state() {
@@ -105,7 +110,14 @@ void Evolution::set_selector(SelectorPtr selector) {
 void Evolution::set_fitness_functioner(FitnessFunctionerPtr fitness_funtion) {
 	fitness_function_ = fitness_funtion;
 	(*fitness_function_)(population_);
-	updateBest();
+	updateGoalReached();
+}
+
+void Evolution::updateGoalReached() {
+	if (population_.subjects.empty())
+		return;
+	std::sort(population_.subjects.begin(), population_.subjects.end());
+	goal_reached_ = (population_.subjects[0].value >= goal_);
 }
 
 } // namespace model

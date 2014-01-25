@@ -15,10 +15,6 @@
     <ClCompile Include="Controller.cpp" />
     <ClCompile Include="Crosser.cpp" />
     <ClCompile Include="Evolution.cpp" />
-    <ClCompile Include="evol\EvolException.cpp" />
-    <ClCompile Include="evol\EvolFunctions.cpp" />
-    <ClCompile Include="evol\Population.cpp" />
-    <ClCompile Include="evol\Subject.cpp" />
     <ClCompile Include="FitnessFunctionCalculator.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">/bigobj</AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">/bigobj</AdditionalOptions>
@@ -41,14 +37,6 @@
     <ClInclude Include="Controller.h" />
     <ClInclude Include="Crosser.h" />
     <ClInclude Include="Evolution.h" />
-    <ClInclude Include="evol\Chromosome.hpp" />
-    <ClInclude Include="evol\debug.h" />
-    <ClInclude Include="evol\Evol.hpp" />
-    <ClInclude Include="evol\EvolException.hpp" />
-    <ClInclude Include="evol\EvolFunctions.hpp" />
-    <ClInclude Include="evol\Observer.hpp" />
-    <ClInclude Include="evol\Population.hpp" />
-    <ClInclude Include="evol\Subject.hpp" />
     <ClInclude Include="FitnessFunctionCalculator.h" />
     <ClInclude Include="FitnessFunctioner.h" />
     <ClInclude Include="GraphDescription.h" />

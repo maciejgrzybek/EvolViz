@@ -40,7 +40,7 @@ public:
 	void set_fitness_functioner(FitnessFunctionerPtr fitness_funtion);
 
 private:
-	void updateBest();
+	void updateGoalReached();
 
 	State state_;
 	
