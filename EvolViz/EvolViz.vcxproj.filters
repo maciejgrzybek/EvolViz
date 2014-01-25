@@ -45,6 +45,9 @@
     <ClCompile Include="View.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FitnessFunctionCalculator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="evol\Chromosome.hpp">
@@ -93,6 +96,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GraphDescription.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FitnessFunctionCalculator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

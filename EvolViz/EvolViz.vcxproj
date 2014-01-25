@@ -16,6 +16,10 @@
     <ClCompile Include="evol\EvolFunctions.cpp" />
     <ClCompile Include="evol\Population.cpp" />
     <ClCompile Include="evol\Subject.cpp" />
+    <ClCompile Include="FitnessFunctionCalculator.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">/bigobj</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">/bigobj</AdditionalOptions>
+    </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Message.cpp" />
     <ClCompile Include="Model.cpp" />
@@ -33,6 +37,7 @@
     <ClInclude Include="evol\Observer.hpp" />
     <ClInclude Include="evol\Population.hpp" />
     <ClInclude Include="evol\Subject.hpp" />
+    <ClInclude Include="FitnessFunctionCalculator.h" />
     <ClInclude Include="GraphDescription.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="Model.h" />
@@ -76,8 +81,8 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\gsl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>GSL_AVAILABLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\gsl\include;..\exprtk\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GSL_AVAILABLE;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -91,8 +96,8 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\gsl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>GSL_AVAILABLE;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\gsl\include;..\exprtk\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GSL_AVAILABLE;WIN32;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
