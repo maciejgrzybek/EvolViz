@@ -1,4 +1,6 @@
 #include "Mutator.h"
+#include "EvolFunctions.hpp"
+
 namespace model {
 
 MutatorPtr Mutator::Factory::produce(const common::MutationOptions& options) {
@@ -35,15 +37,37 @@ ConstMutator::ConstMutator(const double mutation_rate, const double x, const dou
 }
 
 void UniRandMutator::operator()(Population& population) const {
-	//FIXME implement this
+	unsigned int mutate = static_cast<unsigned int>(round(static_cast<double>(population.subjects.size()) * mutation_rate_));
+	while (mutate--)
+		mutateSubject(population.subjects[evol::EvolFunctions::random(0, population.subjects.size())]);
+}
+
+void UniRandMutator::mutateSubject(Population::Subject& subject) const {
+	subject.x += evol::EvolFunctions::random(x_uni_.min, x_uni_.max);
+	subject.y += evol::EvolFunctions::random(y_uni_.min, y_uni_.max);
 }
 
 void GaussRandMutator::operator()(Population& population) const {
-	//FIXME implement this
+	unsigned int mutate = static_cast<unsigned int>(round(static_cast<double>(population.subjects.size()) * mutation_rate_));
+	while (mutate--)
+		mutateSubject(population.subjects[evol::EvolFunctions::random(0, population.subjects.size())]);
+}
+
+void GaussRandMutator::mutateSubject(Population::Subject& subject) const {
+	subject.x += evol::EvolFunctions::gaussRandom(x_gauss_.expected, x_gauss_.variation);
+	subject.y += evol::EvolFunctions::gaussRandom(y_gauss_.expected, y_gauss_.variation);
 }
 
 void ConstMutator::operator()(Population& population) const {
-	//FIXME implement this
+	unsigned int mutate = static_cast<unsigned int>(round(static_cast<double>(population.subjects.size()) * mutation_rate_));
+	while (mutate--)
+		mutateSubject(population.subjects[evol::EvolFunctions::random(0, population.subjects.size())]);
 }
+
+void ConstMutator::mutateSubject(Population::Subject& subject) const {
+	subject.x += x_const_;
+	subject.y += y_const_;
+}
+
 
 } // namespace model

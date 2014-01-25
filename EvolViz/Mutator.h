@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include "ModelOptions.h"
+#include "Population.h"
 
 namespace model {
 
@@ -33,6 +34,8 @@ public:
 	virtual void operator()(Population& population) const override;
 
 private:
+	void mutateSubject(Population::Subject& subject) const;
+
 	const common::UniversalRandomOptions x_uni_;
 	const common::UniversalRandomOptions y_uni_;
 };
@@ -43,6 +46,8 @@ public:
 	virtual void operator()(Population& population) const override;
 
 private:
+	void mutateSubject(Population::Subject& subject) const;
+
 	const common::GaussRandomOptions x_gauss_;
 	const common::GaussRandomOptions y_gauss_;
 };
@@ -53,6 +58,8 @@ public:
 	virtual void operator()(Population& population) const override;
 
 private:
+	void mutateSubject(Population::Subject& subject) const;
+
 	const double x_const_;
 	const double y_const_;
 };
