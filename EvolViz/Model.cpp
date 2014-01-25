@@ -1,5 +1,4 @@
 #include "Model.h"
-#include "evol/EvolFunctions.hpp"
 #include <functional>
 
 namespace model {
