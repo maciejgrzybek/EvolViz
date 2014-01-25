@@ -5,7 +5,7 @@
 
 #include "BlockingQueue.hpp"
 #include "Message.h"
-#include "Model.h""
+#include "Model.h"
 #include "ModelObserver.h"
 
 class Controller : public ModelObserver,
