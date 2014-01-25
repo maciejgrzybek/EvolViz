@@ -59,7 +59,7 @@
     <ClInclude Include="Mutator.h" />
     <ClInclude Include="Population.h" />
     <ClInclude Include="PopulationSnapshot.h" />
-    <ClInclude Include="resource.h" />
+    <ClInclude Include="SafeQueue.hpp" />
     <ClInclude Include="Selector.h" />
     <ClInclude Include="View.h" />
     <ClInclude Include="Visitor.h" />

@@ -18,6 +18,7 @@ public:
 
 	void doStep();
 	void doGeneration();
+	void doRestart();
 
 	bool isBeforeInitialization();
 	bool isBeforeGeneration();
@@ -26,6 +27,12 @@ public:
 
 	void set_goal(double goal);
 	void set_population_size(unsigned int size);
+	void set_initializer(InitializerPtr initializer);
+	void set_mutator(MutatorPtr mutator);
+	void set_crosser(CrosserPtr crosser);
+	void set_alignator(AlignatorPtr alignator);
+	void set_selector(SelectorPtr selector);
+	void set_fitness_functioner(FitnessFunctionerPtr fitness_funtion);
 
 private:
 	State state_;
@@ -40,6 +47,7 @@ private:
 
 	double goal_;
 	unsigned int population_size_;
+	unsigned int generation_id_;
 	Population population;
 };
 
