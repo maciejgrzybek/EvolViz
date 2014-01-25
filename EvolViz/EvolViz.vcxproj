@@ -14,6 +14,7 @@
     <ClCompile Include="Alignator.cpp" />
     <ClCompile Include="Controller.cpp" />
     <ClCompile Include="Crosser.cpp" />
+    <ClCompile Include="EvolFunctions.cpp" />
     <ClCompile Include="Evolution.cpp" />
     <ClCompile Include="FitnessFunctionCalculator.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">/bigobj</AdditionalOptions>
@@ -37,6 +38,7 @@
     <ClInclude Include="BlockingQueue.hpp" />
     <ClInclude Include="Controller.h" />
     <ClInclude Include="Crosser.h" />
+    <ClInclude Include="EvolFunctions.hpp" />
     <ClInclude Include="Evolution.h" />
     <ClInclude Include="FitnessFunctionCalculator.h" />
     <ClInclude Include="FitnessFunctioner.h" />
