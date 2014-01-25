@@ -2,8 +2,8 @@
 #include "Population.h"
 
 namespace model {
-std::shared_ptr<FitnessFunctioner> FitnessFunctioner::produce(const std::string& formula) {
-	return std::shared_ptr<FitnessFunctioner>(new FitnessFunctionerImpl(formula));
+FitnessFunctionerPtr FitnessFunctioner::produce(const std::string& formula) {
+	return FitnessFunctionerPtr(new FitnessFunctionerImpl(formula));
 }
 
 FitnessFunctionerImpl::FitnessFunctionerImpl(const std::string& formula)
