@@ -34,7 +34,14 @@ private:
 
 class RandomInitializer : public Initializer {
 public:
+	RandomInitializer(double x_min, double x_max, double y_min, double y_max);
 	virtual void operator()(Population& population, unsigned int size) const override;
+
+private:
+	double x_min_;
+	double x_max_;
+	double y_min_;
+	double y_max_;
 };
 
 typedef std::shared_ptr<Initializer> InitializerPtr;

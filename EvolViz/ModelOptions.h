@@ -40,6 +40,10 @@ namespace common {
 		virtual void accept(InitializationOptionsVisitor& visitor) const override;
 	};
 	struct RandomInitialization : public InitializationOptions {
+		double x_min;
+		double x_max;
+		double y_min;
+		double y_max;
 		virtual void accept(InitializationOptionsVisitor& visitor) const override;
 	};
 
