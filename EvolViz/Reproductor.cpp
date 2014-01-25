@@ -1,4 +1,7 @@
 #include "Reproductor.h"
+#include "Population.h"
+#include "EvolFunctions.hpp"
+
 namespace model {
 
 ReproductorPtr Reproductor::produce(const common::ReproductionOptions& options) {
@@ -14,7 +17,9 @@ ReproductorImpl::ReproductorImpl(const double rate)
 }
 
 void ReproductorImpl::operator()(Population& population) const {
-	// FIXME implement this
+	unsigned int create = population.subjects.size() * rate_;
+	while (create--)
+		population.subjects.push_back(population.subjects[evol::EvolFunctions::random(0, population.subjects.size())]);
 }
 
 } // namespace model
