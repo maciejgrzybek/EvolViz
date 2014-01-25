@@ -12,6 +12,16 @@ public:
 	static std::shared_ptr<Alignator> produce(const common::RangeAlignmentOptions& options);
 };
 
+class RollingAlignator : public Alignator {
+	
+};
+
+class MirroringRangeAlignator : public Alignator {
+};
+
+class ReinitializationAlignator : public Alignator {
+};
+
 typedef std::shared_ptr<Alignator> AlignatorPtr;
 
 } // namespace model

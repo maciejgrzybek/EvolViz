@@ -28,7 +28,7 @@ public:
 	void setMutationOptions(const common::MutationOptions& options);
 	void setCrossOverOptions(const common::CrossOverOptions& options);
 	void setRangeOptions(const common::RangeAlignmentOptions& options);
-	void setSelectionType(const common::SelectionType& type);	
+	void setSelectionType(const common::SelectionOptions& options);	
 	void setPopulationSize(const unsigned int& size);
 	void setGoalValue(const double& goal);
 

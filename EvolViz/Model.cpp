@@ -62,8 +62,8 @@ void Model::setRangeOptions(const common::RangeAlignmentOptions& options) {
 	evol_commands_[ApplyPolicy::STEP].push(cmd);
 }
 
-void Model::setSelectionType(const common::SelectionType& type) {
-	SelectorPtr selector = Selector::produce(type);
+void Model::setSelectionType(const common::SelectionOptions& options) {
+	SelectorPtr selector = Selector::produce(options);
 	ObservedCommand cmd(std::bind(&Evolution::set_selector, &evol_, selector),
 						std::bind(&ModelObserver::onSelectionTypeApplied, std::placeholders::_1));
 	evol_commands_[ApplyPolicy::STEP].push(cmd);
