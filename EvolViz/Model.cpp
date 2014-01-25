@@ -41,6 +41,13 @@ void Model::setInitializationOptions(const common::InitializationOptions& option
 	evol_commands_[ApplyPolicy::INITIALIZATION].push(cmd);
 }
 
+void Model::setReproductionOptions(const common::ReproductionOptions& options) {
+	ReproductorPtr ptr;
+	ObservedCommand cmd(std::bind(&Evolution::set_reproductor, &evol_, ptr),
+						std::bind(&ModelObserver::onReproductionOptionsApplied, std::placeholders::_1));
+	evol_commands_[ApplyPolicy::INITIALIZATION].push(cmd);
+}
+
 void Model::setMutationOptions(const common::MutationOptions& options) {
 	MutatorPtr ptr; //FIXME
 	ObservedCommand cmd(std::bind(&Evolution::set_mutator, &evol_, ptr),

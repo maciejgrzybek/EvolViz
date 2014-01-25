@@ -11,6 +11,7 @@ public:
 
 	virtual void onFitnessFunctionApplied() = 0;
 	virtual void onInitializationOptionsApplied() = 0;
+	virtual void onReproductionOptionsApplied() = 0;
 	virtual void onMutationOptionsApplied() = 0;
 	virtual void onCrossOverOptionsApplied() = 0;
 	virtual void onRangeOptionsApplied() = 0;

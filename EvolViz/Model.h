@@ -25,8 +25,9 @@ public:
 	void doImmidiateExit();
 	
 	// SETUP
-	void setFitnessFunction(const std::string& formula);
+	void setFitnessFunction(const std::string& formula);	
 	void setInitializationOptions(const common::InitializationOptions& options);
+	void setReproductionOptions(const common::ReproductionOptions& options);
 	void setMutationOptions(const common::MutationOptions& options);
 	void setCrossOverOptions(const common::CrossOverOptions& options);
 	void setRangeOptions(const common::RangeAlignmentOptions& type);

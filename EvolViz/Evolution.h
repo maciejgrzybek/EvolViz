@@ -3,6 +3,7 @@
 
 #include "Population.h"
 #include "Initializer.h"
+#include "Reproductor.h"
 #include "Mutator.h"
 #include "Crosser.h"
 #include "Alignator.h"
@@ -15,9 +16,6 @@ class Evolution {
 public:
 	enum State { BEFORE_INITIALIZATION, BEFORE_GENERATION, BEFORE_REPRODUCTION = BEFORE_GENERATION, BEFORE_MUTATION, BEFORE_CROSSOVER, BEFORE_SELECTION };
 
-	Evolution();
-	~Evolution();
-
 	void doStep();
 	void doGeneration();
 	void doRestart();
@@ -25,6 +23,8 @@ public:
 	bool isBeforeInitialization();
 	bool isBeforeGeneration();
 	bool isBeforeStep();
+	bool isGoalReached();
+
 	State state();
 	Population population();
 	unsigned int generation_id();
@@ -32,6 +32,7 @@ public:
 	void set_goal(double goal);
 	void set_population_size(unsigned int size);
 	void set_initializer(InitializerPtr initializer);
+	void set_reproductor(ReproductorPtr reproductor);
 	void set_mutator(MutatorPtr mutator);
 	void set_crosser(CrosserPtr crosser);
 	void set_alignator(AlignatorPtr alignator);
@@ -39,13 +40,16 @@ public:
 	void set_fitness_functioner(FitnessFunctionerPtr fitness_funtion);
 
 private:
+	void updateBest();
+
 	State state_;
 	
 	// Functors
 	InitializerPtr initializer_;
+	ReproductorPtr reproductor_;
 	MutatorPtr mutator_;
 	CrosserPtr crosser_;
-	AlignatorPtr alignetor_;
+	AlignatorPtr alignator_;
 	SelectorPtr selector_;
 	FitnessFunctionerPtr fitness_function_;
 
@@ -53,6 +57,7 @@ private:
 	unsigned int population_size_;
 	std::atomic<unsigned int> generation_id_;
 	Population population_;
+	bool goal_reached_;
 };
 
 } // Evolution

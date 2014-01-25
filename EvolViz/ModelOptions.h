@@ -34,6 +34,10 @@ namespace common {
 		double value;
 	};
 
+	struct ReproductionOptions {
+		double rate;
+	};
+
 	/* Crossover options */
 	struct CrossOverOptions {
 		double cross_over_factor;
