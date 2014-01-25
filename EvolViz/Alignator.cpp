@@ -3,6 +3,8 @@
 
 namespace model {
 
+const double kNoOverflow = 0.0;
+
 AlignatorPtr Alignator::Factory::produce(const common::RangeAlignmentOptions& options) {
 	options.accept(*this);
 	return last_produced_;
@@ -61,7 +63,7 @@ double Alignator::overflow_x(const Population::Subject& subject) const {
 		return x_min_ - subject.x;
 	if (isOverXRange(subject))
 		return subject.x - x_max_;
-	return 0.0;
+	return kNoOverflow;
 }
 
 double Alignator::overflow_y(const Population::Subject& subject) const {
@@ -69,7 +71,7 @@ double Alignator::overflow_y(const Population::Subject& subject) const {
 		return y_min_ - subject.y;
 	if (isOverYRange(subject))
 		return subject.y - y_max_;
-	return 0.0;
+	return kNoOverflow;
 }
 
 RollingAlignator::RollingAlignator(double x_min, double x_max, double y_min, double y_max)

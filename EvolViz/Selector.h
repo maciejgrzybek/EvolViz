@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include "ModelOptions.h"
+#include "Population.h"
 
 namespace model {
 
