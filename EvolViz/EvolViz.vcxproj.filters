@@ -72,6 +72,9 @@
     <ClCompile Include="FitnessFunctioner.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Reproductor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="evol\Chromosome.hpp">
@@ -156,6 +159,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SafeQueue.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Reproductor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

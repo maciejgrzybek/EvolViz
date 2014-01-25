@@ -27,13 +27,13 @@ void Evolution::doStep() {
 			state_ = BEFORE_SELECTION;
 		break;
 		case BEFORE_SELECTION:
-			(*selector_)(population_);
+			(*selector_)(population_, population_size_);
 			updateBest();
 			state_ = BEFORE_REPRODUCTION;
 		break;
 		default: assert(false);
 	}
-	(*fitness_function_)(subject_);
+	(*fitness_function_)(population_);
 }
 
 void Evolution::doGeneration() {
@@ -104,7 +104,7 @@ void Evolution::set_selector(SelectorPtr selector) {
 
 void Evolution::set_fitness_functioner(FitnessFunctionerPtr fitness_funtion) {
 	fitness_function_ = fitness_funtion;
-	fitness_function_(population_);
+	(*fitness_function_)(population_);
 	updateBest();
 }
 

@@ -31,6 +31,7 @@
     <ClCompile Include="ModelObserver.cpp" />
     <ClCompile Include="Mutator.cpp" />
     <ClCompile Include="Population.cpp" />
+    <ClCompile Include="Reproductor.cpp" />
     <ClCompile Include="Selector.cpp" />
     <ClCompile Include="View.cpp" />
   </ItemGroup>
@@ -59,6 +60,7 @@
     <ClInclude Include="Mutator.h" />
     <ClInclude Include="Population.h" />
     <ClInclude Include="PopulationSnapshot.h" />
+    <ClInclude Include="Reproductor.h" />
     <ClInclude Include="SafeQueue.hpp" />
     <ClInclude Include="Selector.h" />
     <ClInclude Include="View.h" />
