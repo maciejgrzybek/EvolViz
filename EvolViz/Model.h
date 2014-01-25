@@ -1,6 +1,7 @@
 #pragma once
 #include <list>
 #include <map>
+#include <atomic>
 
 #include "ModelOptions.h"
 #include "ModelObserver.h"
@@ -10,12 +11,6 @@
 #include "SafeQueue.hpp"
 
 namespace model {
-
-typedef std::function<void(ModelObserver*)> Notification;
-struct ObservedCommand {
-	std::function<void()> command;
-	Notification callback;
-};
 
 class Model {
 public:
@@ -41,7 +36,6 @@ public:
 
 	// GETTERS
 	common::PopulationSnapshot getPopulationSnapshot();
-	std::string getCurrentFormula();
 	unsigned int getGenerationId();
 
 	// OBSERVERS MANAGMENT
@@ -51,6 +45,14 @@ public:
 	void operator()();
 
 private:
+	typedef std::function<void(ModelObserver*)> Notification;
+	typedef std::function<void()> CommandCall;
+	struct ObservedCommand {
+		ObservedCommand(CommandCall, Notification);
+		CommandCall command;
+		Notification callback;
+	};
+
 	// Every policy covers itselfs and following
 	struct ApplyPolicy {
 		enum policy { INSTANT = 0, STEP, GENERATION, INITIALIZATION, POLICY_SIZE };
@@ -71,6 +73,8 @@ private:
 	common::BlockingQueue<Command::cmd> commands_;
 	utils::SafeQueue<ObservedCommand> evol_commands_[ApplyPolicy::POLICY_SIZE];
 	bool exit_;
+
+	std::atomic<common::PopulationSnapshot> current_snapshot_;
 };
 
 } // namespace model

@@ -1,4 +1,6 @@
 #pragma once
+#include <atomic>
+
 #include "Population.h"
 #include "Initializer.h"
 #include "Mutator.h"
@@ -24,6 +26,8 @@ public:
 	bool isBeforeGeneration();
 	bool isBeforeStep();
 	State state();
+	Population population();
+	unsigned int generation_id();
 
 	void set_goal(double goal);
 	void set_population_size(unsigned int size);
@@ -47,8 +51,8 @@ private:
 
 	double goal_;
 	unsigned int population_size_;
-	unsigned int generation_id_;
-	Population population;
+	std::atomic<unsigned int> generation_id_;
+	Population population_;
 };
 
 } // Evolution
