@@ -25,6 +25,7 @@
     <ClCompile Include="Message.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ModelObserver.cpp" />
+    <ClCompile Include="ModelOptions.cpp" />
     <ClCompile Include="Mutator.cpp" />
     <ClCompile Include="Population.cpp" />
     <ClCompile Include="Reproductor.cpp" />

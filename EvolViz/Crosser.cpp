@@ -21,23 +21,23 @@ void Crosser::Factory::visit(const common::UniversalRandomFixedCrossOver& option
 	last_produced_ = CrosserPtr(new UniFixedCrosser(options.cross_over_factor));
 }
 
-Crosser::Crosser(double cross_over_factor) 
+Crosser::Crosser(const double cross_over_factor)
 	: cross_over_factor_(cross_over_factor) {
 }
 	
-ConstAvgCrosser::ConstAvgCrosser(double cross_over_factor, double x_weight, double y_weight)
+ConstAvgCrosser::ConstAvgCrosser(const double cross_over_factor, const double x_weight, const double y_weight)
 	: Crosser(cross_over_factor), x_weight_(x_weight), y_weight_(y_weight) {
 }
 
-UniAvgCrosser::UniAvgCrosser(double cross_over_factor, common::UniversalRandomOptions x, common::UniversalRandomOptions y)
+UniAvgCrosser::UniAvgCrosser(const double cross_over_factor, const common::UniversalRandomOptions x, const common::UniversalRandomOptions y)
 	: Crosser(cross_over_factor), x_uni_(x), y_uni_(y) {
 }
 
-GaussAvgCrosser::GaussAvgCrosser(double cross_over_factor, common::GaussRandomOptions x, common::GaussRandomOptions y)
+GaussAvgCrosser::GaussAvgCrosser(const double cross_over_factor, const common::GaussRandomOptions x, const common::GaussRandomOptions y)
 	: Crosser(cross_over_factor), x_gauss_(x), y_gauss_(y) {
 }
 
-UniFixedCrosser::UniFixedCrosser(double cross_over_factor)
+UniFixedCrosser::UniFixedCrosser(const double cross_over_factor)
 	: Crosser(cross_over_factor) {
 }
 

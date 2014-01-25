@@ -14,7 +14,7 @@ void Initializer::Factory::visit(const common::RandomInitialization& options) {
 	last_produced_ = InitializerPtr(new RandomInitializer());
 }
 
-PointInitializer::PointInitializer(double x, double y)
+PointInitializer::PointInitializer(const double x, const double y)
 	: x_(x), y_(y) {
 }
 

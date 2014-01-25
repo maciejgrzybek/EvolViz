@@ -24,7 +24,7 @@ public:
 
 class PointInitializer : public Initializer {
 public:
-	PointInitializer(double x, double y);
+	PointInitializer(const double x, const double y);
 	virtual void operator()(Population& population, unsigned int size) const override;
 
 private:

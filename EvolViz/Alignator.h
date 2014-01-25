@@ -24,10 +24,10 @@ public:
 	virtual void operator()(Population& population) const = 0;
 
 protected:
-	double x_min_;
-	double x_max_;
-	double y_min_;
-	double y_max_;
+	const double x_min_;
+	const double x_max_;
+	const double y_min_;
+	const double y_max_;
 };
 
 class RollingAlignator : public Alignator {

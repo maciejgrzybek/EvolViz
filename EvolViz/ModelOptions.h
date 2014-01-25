@@ -60,7 +60,8 @@ namespace common {
 		virtual void accept(MutationOptionsVisitor& visitor) const override;
 	};
 	struct ConstMutation : public MutationOptions {
-		double value;
+		double x;
+		double y;
 		virtual void accept(MutationOptionsVisitor& visitor) const override;
 	};
 

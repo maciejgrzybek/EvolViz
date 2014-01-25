@@ -42,7 +42,7 @@ void Model::setReproductionOptions(const common::ReproductionOptions& options) {
 }
 
 void Model::setMutationOptions(const common::MutationOptions& options) {
-	MutatorPtr mutator = Mutator::produce(options);
+	MutatorPtr mutator = Mutator::Factory().produce(options);
 	ObservedCommand cmd(std::bind(&Evolution::set_mutator, &evol_, mutator),
 						std::bind(&ModelObserver::onMutationOptionsApplied, std::placeholders::_1));
 	evol_commands_[ApplyPolicy::STEP].push(cmd);
