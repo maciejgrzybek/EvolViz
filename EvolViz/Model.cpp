@@ -28,7 +28,7 @@ void Model::setFitnessFunction(const std::string& formula) {
 }
 
 void Model::setInitializationOptions(const common::InitializationOptions& options) {
-	InitializerPtr initializer = Initializer::produce(options);
+	InitializerPtr initializer = Initializer::Factory().produce(options);
 	ObservedCommand cmd(std::bind(&Evolution::set_initializer, &evol_, initializer),
 					    std::bind(&ModelObserver::onInitializationOptionsApplied, std::placeholders::_1));
 	evol_commands_[ApplyPolicy::INITIALIZATION].push(cmd);
