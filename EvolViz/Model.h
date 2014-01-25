@@ -14,9 +14,6 @@ namespace model {
 
 class Model {
 public:
-	Model();
-	~Model();
-
 	// COMMANDS
 	void doStep();
 	void doGeneration();
@@ -30,7 +27,7 @@ public:
 	void setReproductionOptions(const common::ReproductionOptions& options);
 	void setMutationOptions(const common::MutationOptions& options);
 	void setCrossOverOptions(const common::CrossOverOptions& options);
-	void setRangeOptions(const common::RangeAlignmentOptions& type);
+	void setRangeOptions(const common::RangeAlignmentOptions& options);
 	void setSelectionType(const common::SelectionType& type);	
 	void setPopulationSize(const unsigned int& size);
 	void setGoalValue(const double& goal);

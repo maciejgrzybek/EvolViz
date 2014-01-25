@@ -9,7 +9,7 @@ struct Population;
 class Selector {
 public:
 	virtual void operator()(Population& population, unsigned int size) = 0;
-	static std::shared_ptr<Selector> produce(const common::SelectionType options);
+	static std::shared_ptr<Selector> produce(const common::SelectionType type);
 };
 
 typedef std::shared_ptr<Selector> SelectorPtr;

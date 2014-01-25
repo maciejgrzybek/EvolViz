@@ -3,12 +3,6 @@
 
 namespace model {
 
-Model::Model() {
-}
-
-Model::~Model() {
-}
-
 void Model::doStep() {
 	commands_.push(Command::STEP);
 }
@@ -27,51 +21,51 @@ void Model::doImmidiateExit() {
 }
 
 void Model::setFitnessFunction(const std::string& formula) {
-	FitnessFunctionerPtr ptr; //FIXME
-	ObservedCommand cmd(std::bind(&Evolution::set_fitness_functioner, &evol_, ptr),
+	FitnessFunctionerPtr ff = FitnessFunctioner::produce(formula);
+	ObservedCommand cmd(std::bind(&Evolution::set_fitness_functioner, &evol_, ff),
 						std::bind(&ModelObserver::onFitnessFunctionApplied, std::placeholders::_1));
 	evol_commands_[ApplyPolicy::GENERATION].push(cmd);
 }
 
 void Model::setInitializationOptions(const common::InitializationOptions& options) {
-	InitializerPtr ptr; //FIXME
-	ObservedCommand cmd(std::bind(&Evolution::set_initializer, &evol_, ptr),
+	InitializerPtr initializer = Initializer::produce(options);
+	ObservedCommand cmd(std::bind(&Evolution::set_initializer, &evol_, initializer),
 					    std::bind(&ModelObserver::onInitializationOptionsApplied, std::placeholders::_1));
 	evol_commands_[ApplyPolicy::INITIALIZATION].push(cmd);
 }
 
 void Model::setReproductionOptions(const common::ReproductionOptions& options) {
-	ReproductorPtr ptr;
-	ObservedCommand cmd(std::bind(&Evolution::set_reproductor, &evol_, ptr),
+	ReproductorPtr reproductor = Reproductor::produce(options);
+	ObservedCommand cmd(std::bind(&Evolution::set_reproductor, &evol_, reproductor),
 						std::bind(&ModelObserver::onReproductionOptionsApplied, std::placeholders::_1));
 	evol_commands_[ApplyPolicy::INITIALIZATION].push(cmd);
 }
 
 void Model::setMutationOptions(const common::MutationOptions& options) {
-	MutatorPtr ptr; //FIXME
-	ObservedCommand cmd(std::bind(&Evolution::set_mutator, &evol_, ptr),
+	MutatorPtr mutator = Mutator::produce(options);
+	ObservedCommand cmd(std::bind(&Evolution::set_mutator, &evol_, mutator),
 						std::bind(&ModelObserver::onMutationOptionsApplied, std::placeholders::_1));
 	evol_commands_[ApplyPolicy::STEP].push(cmd);
 }
 
 void Model::setCrossOverOptions(const common::CrossOverOptions& options) {
-	CrosserPtr ptr; //FIXME
-	ObservedCommand cmd(std::bind(&Evolution::set_crosser, &evol_, ptr),
-		std::bind(&ModelObserver::onCrossOverOptionsApplied, std::placeholders::_1));
+	CrosserPtr crosser = Crosser::produce(options);
+	ObservedCommand cmd(std::bind(&Evolution::set_crosser, &evol_, crosser),
+						std::bind(&ModelObserver::onCrossOverOptionsApplied, std::placeholders::_1));
 	evol_commands_[ApplyPolicy::STEP].push(cmd);
 }
 
-void Model::setRangeOptions(const common::RangeAlignmentOptions& type) {
-	AlignatorPtr ptr; //FIXME
-	ObservedCommand cmd(std::bind(&Evolution::set_alignator, &evol_, ptr),
+void Model::setRangeOptions(const common::RangeAlignmentOptions& options) {
+	AlignatorPtr alignator = Alignator::produce(options);
+	ObservedCommand cmd(std::bind(&Evolution::set_alignator, &evol_, alignator),
 						std::bind(&ModelObserver::onRangeOptionsApplied, std::placeholders::_1));
 	evol_commands_[ApplyPolicy::STEP].push(cmd);
 }
 
 void Model::setSelectionType(const common::SelectionType& type) {
-	SelectorPtr ptr; //FIXME
-	ObservedCommand cmd(std::bind(&Evolution::set_selector, &evol_, ptr),
-		std::bind(&ModelObserver::onSelectionTypeApplied, std::placeholders::_1));
+	SelectorPtr selector = Selector::produce(type);
+	ObservedCommand cmd(std::bind(&Evolution::set_selector, &evol_, selector),
+						std::bind(&ModelObserver::onSelectionTypeApplied, std::placeholders::_1));
 	evol_commands_[ApplyPolicy::STEP].push(cmd);
 }
 
