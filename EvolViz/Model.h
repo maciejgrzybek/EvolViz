@@ -1,11 +1,14 @@
 #pragma once
+#include <list>
+
 #include "ModelOptions.h"
+#include "ModelObserver.h"
 #include "PopulationSnapshot.h"
+#include "Evolution.h"
 
 namespace model {
 
-class Model
-{
+class Model {
 public:
 	Model();
 	~Model();
@@ -25,13 +28,20 @@ public:
 	void setGoalValue(const double& goal);
 
 	// GETTERS
-	PopulationSnapshot getPopulationSnapshot();
+	common::PopulationSnapshot getPopulationSnapshot();
 	std::string getCurrentFormula();
+
+	// OBSERVERS MANAGMENT
+	void addObserver(ModelObserver* observer);
+	void removeObserver(ModelObserver* observer);
 
 	void operator()();
 
 private:
+	// Every policy covers itselfs and following
 	enum ApplyPolicy { INSTANT, STEP, GENERATION, INITIALIZATION };
+	Evolution evol_manger_;
+	std::list<ModelObserver*> observers_;
 };
 
 } // namespace model

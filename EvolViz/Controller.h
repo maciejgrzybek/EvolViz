@@ -14,7 +14,7 @@ class Controller : public ModelObserver,
 public:
 	Controller(std::shared_ptr<common::BlockingQueue<common::MessagePtr,
 												     common::TimeoutWait<200> > > blockingQueue,
-			   std::shared_ptr<Model> model);
+			   std::shared_ptr<model::Model> model);
 	virtual ~Controller();
 	virtual void operator()();
 
@@ -34,7 +34,7 @@ private:
 	void dispatchMessage(std::unique_ptr<common::Message> message);
 
 	std::shared_ptr<common::BlockingQueue<common::MessagePtr, common::TimeoutWait<200> > > blockingQueue; // timeout set to allow quiting controller when no messages available
-	std::shared_ptr<Model> model;
+	std::shared_ptr<model::Model> model;
 	std::atomic<bool> working;
 };
 

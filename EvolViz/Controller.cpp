@@ -3,7 +3,7 @@
 
 Controller::Controller(std::shared_ptr<common::BlockingQueue<common::MessagePtr,
 															 common::TimeoutWait<200> > > blockingQueue,
-					   std::shared_ptr<Model> model)
+					   std::shared_ptr<model::Model> model)
 	: blockingQueue(blockingQueue),
 	  model(model),
 	  working(false)

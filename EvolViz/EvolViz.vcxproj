@@ -11,7 +11,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Alignator.cpp" />
     <ClCompile Include="Controller.cpp" />
+    <ClCompile Include="Crosser.cpp" />
+    <ClCompile Include="Evolution.cpp" />
     <ClCompile Include="evol\EvolException.cpp" />
     <ClCompile Include="evol\EvolFunctions.cpp" />
     <ClCompile Include="evol\Population.cpp" />
@@ -20,15 +23,23 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">/bigobj</AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">/bigobj</AdditionalOptions>
     </ClCompile>
+    <ClCompile Include="FitnessFunctioner.cpp" />
+    <ClCompile Include="Initializer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Message.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ModelObserver.cpp" />
+    <ClCompile Include="Mutator.cpp" />
+    <ClCompile Include="Population.cpp" />
+    <ClCompile Include="Selector.cpp" />
     <ClCompile Include="View.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Alignator.h" />
     <ClInclude Include="BlockingQueue.hpp" />
     <ClInclude Include="Controller.h" />
+    <ClInclude Include="Crosser.h" />
+    <ClInclude Include="Evolution.h" />
     <ClInclude Include="evol\Chromosome.hpp" />
     <ClInclude Include="evol\debug.h" />
     <ClInclude Include="evol\Evol.hpp" />
@@ -38,10 +49,18 @@
     <ClInclude Include="evol\Population.hpp" />
     <ClInclude Include="evol\Subject.hpp" />
     <ClInclude Include="FitnessFunctionCalculator.h" />
+    <ClInclude Include="FitnessFunctioner.h" />
     <ClInclude Include="GraphDescription.h" />
+    <ClInclude Include="Initializer.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelObserver.h" />
+    <ClInclude Include="ModelOptions.h" />
+    <ClInclude Include="Mutator.h" />
+    <ClInclude Include="Population.h" />
+    <ClInclude Include="PopulationSnapshot.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="Selector.h" />
     <ClInclude Include="View.h" />
     <ClInclude Include="Visitor.h" />
   </ItemGroup>

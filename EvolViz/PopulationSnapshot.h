@@ -1,16 +1,4 @@
-#pragma once
-#include <vector>
-
-namespace model {
-
-struct PopulationSnapshot
-{
-	struct Subject {
-		double x;
-		double y;
-		double value;
-	};
-	std::vector<Subject> subjects;
-};
-
-}
+#include "Population.h"
+namespace common {
+	typedef model::Population PopulationSnapshot;
+} //namespace common
