@@ -1,6 +1,7 @@
 #include "Reproductor.h"
 #include "Population.h"
 #include "EvolFunctions.hpp"
+#include <cmath>
 
 namespace model {
 
@@ -17,7 +18,7 @@ ReproductorImpl::ReproductorImpl(const double rate)
 }
 
 void ReproductorImpl::operator()(Population& population) const {
-	unsigned int create = population.subjects.size() * rate_;
+	unsigned int create = static_cast<unsigned int>(round(static_cast<double>(population.subjects.size()) * rate_));
 	while (create--)
 		population.subjects.push_back(population.subjects[evol::EvolFunctions::random(0, population.subjects.size())]);
 }

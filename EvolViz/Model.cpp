@@ -104,7 +104,14 @@ void Model::operator()() {
 		current_snapshot_ = evol_.population();
 		commands_.pop(command);
 		invokeReadySetters();
-		invokeCommand(command);		
+		
+		NotifyAll(std::bind(&ModelObserver::onProcessingStarted, std::placeholders::_1));
+		invokeCommand(command);
+		NotifyAll(std::bind(&ModelObserver::onProcessingStoped, std::placeholders::_1));
+		current_snapshot_ = evol_.population();
+		NotifyAll(std::bind(&ModelObserver::onStateChanged, std::placeholders::_1));
+		if (evol_.isGoalReached())
+			NotifyAll(std::bind(&ModelObserver::onGoalReached, std::placeholders::_1));
 	}
 }
 
