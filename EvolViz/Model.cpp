@@ -49,14 +49,14 @@ void Model::setMutationOptions(const common::MutationOptions& options) {
 }
 
 void Model::setCrossOverOptions(const common::CrossOverOptions& options) {
-	CrosserPtr crosser = Crosser::produce(options);
+	CrosserPtr crosser = Crosser::Factory().produce(options);
 	ObservedCommand cmd(std::bind(&Evolution::set_crosser, &evol_, crosser),
 						std::bind(&ModelObserver::onCrossOverOptionsApplied, std::placeholders::_1));
 	evol_commands_[ApplyPolicy::STEP].push(cmd);
 }
 
 void Model::setRangeOptions(const common::RangeAlignmentOptions& options) {
-	AlignatorPtr alignator = Alignator::produce(options);
+	AlignatorPtr alignator = Alignator::Factory().produce(options);
 	ObservedCommand cmd(std::bind(&Evolution::set_alignator, &evol_, alignator),
 						std::bind(&ModelObserver::onRangeOptionsApplied, std::placeholders::_1));
 	evol_commands_[ApplyPolicy::STEP].push(cmd);
