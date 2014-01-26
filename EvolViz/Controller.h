@@ -8,7 +8,7 @@
 #include "Model.h"
 #include "ModelObserver.h"
 
-class Controller : public ModelObserver,
+class Controller : public common::ModelObserver,
 				   public common::MessageVisitor
 {
 public:

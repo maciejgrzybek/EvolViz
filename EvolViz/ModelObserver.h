@@ -1,4 +1,6 @@
 #pragma once
+namespace common {
+
 class ModelObserver
 {
 public:
@@ -19,4 +21,6 @@ public:
 	virtual void onPopulationSizeApplied() = 0;
 	virtual void onGoalValueApplied() = 0;
 };
+
+}
 

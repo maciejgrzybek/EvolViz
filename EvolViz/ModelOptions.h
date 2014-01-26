@@ -25,10 +25,14 @@ namespace common {
 	struct UniversalRandomOptions {
 		double min;
 		double max;
+		UniversalRandomOptions();
+		UniversalRandomOptions(double min, double max);
 	};
 	struct GaussRandomOptions {
 		double expected;
 		double variation;
+		GaussRandomOptions();
+		GaussRandomOptions(double expected, double variation);
 	};
 
 	/* Initialization options */
@@ -39,6 +43,7 @@ namespace common {
 	struct PointInitialization : public InitializationOptions {
 		double x;
 		double y;
+		PointInitialization(double x, double y);
 		virtual void accept(InitializationOptionsVisitor& visitor) const override;
 	};
 	struct RandomInitialization : public InitializationOptions {
@@ -46,6 +51,7 @@ namespace common {
 		double x_max;
 		double y_min;
 		double y_max;
+		RandomInitialization(double x_min, double x_max, double y_min, double y_max);
 		virtual void accept(InitializationOptionsVisitor& visitor) const override;
 	};
 
@@ -54,57 +60,69 @@ namespace common {
 	struct MutationOptions {
 		double mutation_rate;
 		virtual void accept(MutationOptionsVisitor& visitor) const = 0;
+		MutationOptions(double mutation_rate);
 	};
 	struct UniversalRandomMutation : public MutationOptions {
 		UniversalRandomOptions x;
 		UniversalRandomOptions y;
+		UniversalRandomMutation(double mutation_rate, UniversalRandomOptions x, UniversalRandomOptions y);
 		virtual void accept(MutationOptionsVisitor& visitor) const override;
 	};
 	struct GaussRandomMutation : public MutationOptions {
 		GaussRandomOptions x;
 		GaussRandomOptions y;
+		GaussRandomMutation(double mutation_rate, GaussRandomOptions x, GaussRandomOptions y);
 		virtual void accept(MutationOptionsVisitor& visitor) const override;
 	};
 	struct ConstMutation : public MutationOptions {
 		double x;
 		double y;
+		ConstMutation(double mutation_rate, double x, double y);
 		virtual void accept(MutationOptionsVisitor& visitor) const override;
 	};
 
 	struct ReproductionOptions {
 		double rate;
+		ReproductionOptions(double rate);
 	};
 
 	/* Crossover options */
 	typedef Visitor<QualityAvgCrossOver, ConstAvgCrossOver, UniversalRandomAvgCrossOver, GaussRandomAvgCrossOver, QualityRandomFixedCrossOver, UniversalRandomFixedCrossOver> CrossOverOptionsVisitor;
 	struct CrossOverOptions {
 		double cross_over_factor;
+		CrossOverOptions(double cross_over_factor);
 		virtual void accept(CrossOverOptionsVisitor& visitor) const = 0;
 	};
 	struct QualityAvgCrossOver : public CrossOverOptions {
 		double normalizator;
+		QualityAvgCrossOver(double cross_over_factor, double normalizator);
 		virtual void accept(CrossOverOptionsVisitor& visitor) const override;
 	};
 	struct ConstAvgCrossOver : public CrossOverOptions {
 		double x_weight[2];
 		double y_weight[2];
+		ConstAvgCrossOver(double cross_over_factor, double x_weight[2], double y_weight[2]);
 		virtual void accept(CrossOverOptionsVisitor& visitor) const override;
 	};
 	struct UniversalRandomAvgCrossOver : public CrossOverOptions {
 		UniversalRandomOptions x[2];
 		UniversalRandomOptions y[2];
+		UniversalRandomAvgCrossOver(double cross_over_factor, UniversalRandomOptions x[2], UniversalRandomOptions y[2]);
 		virtual void accept(CrossOverOptionsVisitor& visitor) const override;
 	};
 	struct GaussRandomAvgCrossOver : public CrossOverOptions {
 		GaussRandomOptions x[2];
 		GaussRandomOptions y[2];
+		GaussRandomAvgCrossOver(double cross_over_factor, GaussRandomOptions x[2], GaussRandomOptions y[2]);
 		virtual void accept(CrossOverOptionsVisitor& visitor) const override;
 	};
 	struct QualityRandomFixedCrossOver : public CrossOverOptions {
 		double normalizator;
+		QualityRandomFixedCrossOver(double cross_over_factor, double normalizator);
 		virtual void accept(CrossOverOptionsVisitor& visitor) const override;
 	};
 	struct UniversalRandomFixedCrossOver : public CrossOverOptions {
+		UniversalRandomFixedCrossOver(double cross_over_factor);
 		virtual void accept(CrossOverOptionsVisitor& visitor) const override;
 	};
 
@@ -115,15 +133,19 @@ namespace common {
 		double x_max;
 		double y_min;
 		double y_max;
+		RangeAlignmentOptions(double x_min, double x_max, double y_min, double y_max);
 		virtual void accept(RangeAlignmentOptionsVisitor& visitor) const = 0;
 	};
 	struct RollingRangeAlignment : public RangeAlignmentOptions {
+		RollingRangeAlignment(double x_min, double x_max, double y_min, double y_max);
 		virtual void accept(RangeAlignmentOptionsVisitor& visitor) const override;
 	};
 	struct MirroringRangeAlignment : public RangeAlignmentOptions {
+		MirroringRangeAlignment(double x_min, double x_max, double y_min, double y_max);
 		virtual void accept(RangeAlignmentOptionsVisitor& visitor) const override;
 	};
 	struct UniversalRandomReinitializationAlignment : public RangeAlignmentOptions {
+		UniversalRandomReinitializationAlignment(double x_min, double x_max, double y_min, double y_max);
 		virtual void accept(RangeAlignmentOptionsVisitor& visitor) const override;
 	};
 

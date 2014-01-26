@@ -37,13 +37,13 @@ public:
 	unsigned int getGenerationId();
 
 	// OBSERVERS MANAGMENT
-	void addObserver(ModelObserver* observer);
-	void removeObserver(ModelObserver* observer);
+	void addObserver(common::ModelObserver* observer);
+	void removeObserver(common::ModelObserver* observer);
 
 	void operator()();
 
 private:
-	typedef std::function<void(ModelObserver*)> Notification;
+	typedef std::function<void(common::ModelObserver*)> Notification;
 	typedef std::function<void()> CommandCall;
 	struct ObservedCommand {
 		ObservedCommand(CommandCall, Notification);
@@ -67,7 +67,7 @@ private:
 	void NotifyAll(Notification notification);
 
 	Evolution evol_;
-	std::list<ModelObserver*> observers_; // FIXME Thread safty
+	std::list<common::ModelObserver*> observers_; // FIXME Thread safty
 	common::BlockingQueue<Command::cmd> commands_;
 	utils::SafeQueue<ObservedCommand> evol_commands_[ApplyPolicy::POLICY_SIZE];
 	bool exit_;

@@ -20,13 +20,13 @@ gsl_rng* EvolFunctions::gslRandomNumberGenerator = NULL;
 
 void EvolFunctions::initialize()
 {
-    initialize(time(NULL));
+    initialize(static_cast<int>(time(NULL)));
 }
 
 #ifdef GSL_AVAILABLE
 void EvolFunctions::initializeGSL()
 {
-    initializeGSL(time(NULL));  
+	initializeGSL(static_cast<int>(time(NULL)));
 }
 
 void EvolFunctions::initializeGSL(int seed)
