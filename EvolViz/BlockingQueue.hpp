@@ -68,7 +68,7 @@ private:
 	std::queue<Type> container;
 };
 
-template <class Type>
+template <class Type, class Comparator = std::less<Type> >
 class PriorityQueueContainer
 {
 protected:
@@ -103,7 +103,7 @@ protected:
 	}
 
 private:
-	std::priority_queue<Type> container;
+	std::priority_queue<Type, std::vector<Type>, Comparator> container;
 };
 
 template <class Type, class WaitingPolicy = NoTimeoutWait, class ContainerPolicy = QueueContainer<Type> >

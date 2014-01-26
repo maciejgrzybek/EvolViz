@@ -1,5 +1,6 @@
 #pragma once
 
+#include <chrono>
 #include <memory>
 
 #include "Visitor.h"
@@ -19,9 +20,20 @@ struct Message;
 
 typedef std::unique_ptr<Message> MessagePtr;
 
+struct MessagePriorityComparator
+{
+	bool operator()(const MessagePtr& a, const MessagePtr& b) const;
+
+private:
+	inline bool isModelMessage(const Message& msg) const;
+};
+
 struct Message
 {
+	Message();
 	virtual void accept(MessageVisitor& visitor) const = 0;
+
+	const std::chrono::time_point<std::chrono::system_clock> creationTime;
 };
 
 struct ViewMessage : Message
