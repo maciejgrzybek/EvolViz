@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <vector>
 #include "ModelOptions.h"
 #include "Population.h"
 
@@ -25,7 +26,7 @@ public:
 	};
 
 	Crosser(const double cross_over_factor);
-	virtual void operator()(Population& population) const = 0;
+	virtual void operator()(Population& population) = 0;
 
 protected:
 	const double cross_over_factor_;
@@ -33,17 +34,20 @@ protected:
 
 class QualityAvgCrosser : public Crosser {
 public:
-	QualityAvgCrosser(const double cross_over_factor);
-	virtual void operator()(Population& population) const override;
+	QualityAvgCrosser(const double cross_over_factor, const double normalizator);
+	virtual void operator()(Population& population) override;
 
 private:
-	Population::Subject crossSubjects(Population::Subject& subject_one, Population::Subject& subject_two) const;
+	void crossSubjects(Population::Subject subject_one, Population::Subject subject_two);
+	const double normalizator_;
+
+	std::vector<Population::Subject> added_subjects_;
 };
 
 class ConstAvgCrosser : public Crosser {
 public:
 	ConstAvgCrosser(const double cross_over_factor, const double x_weight[2], const double y_weight[2]);
-	virtual void operator()(Population& population) const override;
+	virtual void operator()(Population& population) override;
 
 private:
 	Population::Subject crossSubjects(Population::Subject& subject_one, Population::Subject& subject_two) const;
@@ -56,7 +60,7 @@ private:
 class UniAvgCrosser : public Crosser {
 public:
 	UniAvgCrosser(const double cross_over_factor, const common::UniversalRandomOptions x[2], const common::UniversalRandomOptions y[2]);
-	virtual void operator()(Population& population) const override;
+	virtual void operator()(Population& population) override;
 
 private:
 	Population::Subject crossSubjects(Population::Subject& subject_one, Population::Subject& subject_two) const;
@@ -69,7 +73,7 @@ private:
 class GaussAvgCrosser : public Crosser {
 public:
 	GaussAvgCrosser(const double cross_over_factor, const common::GaussRandomOptions x[2], const common::GaussRandomOptions y[2]);
-	virtual void operator()(Population& population) const override;
+	virtual void operator()(Population& population) override;
 
 private:
 	Population::Subject crossSubjects(Population::Subject& subject_one, Population::Subject& subject_two) const;
@@ -81,17 +85,20 @@ private:
 
 class QualityFixedCrosser : public Crosser {
 public:
-	QualityFixedCrosser(const double cross_over_factor);
-	virtual void operator()(Population& population) const override;
+	QualityFixedCrosser(const double cross_over_factor, const double normalizator);
+	virtual void operator()(Population& population) override;
 
 private:
-	Population::Subject crossSubjects(Population::Subject& subject_one, Population::Subject& subject_two) const;
+	void crossSubjects(Population::Subject& subject_one, Population::Subject& subject_two);
+	const double normalizator_;
+
+	std::vector<Population::Subject> added_subjects_;
 };
 
 class UniFixedCrosser : public Crosser {
 public:
 	UniFixedCrosser(const double cross_over_factor);
-	virtual void operator()(Population& population) const override;
+	virtual void operator()(Population& population) override;
 
 private:
 	Population::Subject crossSubjects(Population::Subject& subject_one, Population::Subject& subject_two) const;

@@ -82,6 +82,7 @@ namespace common {
 		virtual void accept(CrossOverOptionsVisitor& visitor) const = 0;
 	};
 	struct QualityAvgCrossOver : public CrossOverOptions {
+		double normalizator;
 		virtual void accept(CrossOverOptionsVisitor& visitor) const override;
 	};
 	struct ConstAvgCrossOver : public CrossOverOptions {
@@ -100,6 +101,7 @@ namespace common {
 		virtual void accept(CrossOverOptionsVisitor& visitor) const override;
 	};
 	struct QualityRandomFixedCrossOver : public CrossOverOptions {
+		double normalizator;
 		virtual void accept(CrossOverOptionsVisitor& visitor) const override;
 	};
 	struct UniversalRandomFixedCrossOver : public CrossOverOptions {
