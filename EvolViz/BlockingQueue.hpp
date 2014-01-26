@@ -30,15 +30,92 @@ protected:
 	}
 };
 
-template <class Type, class WaitingPolicy = NoTimeoutWait>
-class BlockingQueue : private WaitingPolicy
+template <class Type>
+class QueueContainer
+{
+protected:
+	void add(const Type& element)
+	{
+		container.push(element);
+	}
+
+	void add(Type&& element)
+	{
+		container.push(std::move(element));
+	}
+
+	const Type& front() const
+	{
+		return container.front();
+	}
+
+	Type& front()
+	{
+		return container.front();
+	}
+
+	void removeFirstElement()
+	{
+		return container.pop();
+	}
+
+	bool empty() const
+	{
+		return container.empty();
+	}
+
+private:
+	std::queue<Type> container;
+};
+
+template <class Type>
+class PriorityQueueContainer
+{
+protected:
+	void add(const Type& element)
+	{
+		container.push(element);
+	}
+
+	void add(Type&& element)
+	{
+		container.push(std::move(element));
+	}
+
+	const Type& front() const
+	{
+		return container.top();
+	}
+
+	Type& front()
+	{
+		return container.top();
+	}
+
+	void removeFirstElement()
+	{
+		return container.pop();
+	}
+
+	bool empty() const
+	{
+		return container.empty();
+	}
+
+private:
+	std::priority_queue<Type> container;
+};
+
+template <class Type, class WaitingPolicy = NoTimeoutWait, class ContainerPolicy = QueueContainer<Type> >
+class BlockingQueue : private WaitingPolicy,
+				      private ContainerPolicy
 {
 public:
 	void push(const Type& value)
 	{
 		{
 			std::unique_lock<std::mutex> lock(mutex_);
-			queue_.push(value);
+			add(value);
 		}
 		condVar_.notify_one();
 	}
@@ -47,7 +124,7 @@ public:
 	{
 		{
 			std::unique_lock<std::mutex> lock(mutex_);
-			queue_.push(std::move(value));
+			add(std::move(value));
 		}
 		condVar_.notify_one();
 	}
@@ -56,15 +133,14 @@ public:
 	{
 		std::unique_lock<std::mutex> lock(mutex_);
 		// wait until underlying container (queue) become non-empty
-		this->wait(condVar_, lock, [this]{ return !queue_.empty(); });
-		result = std::move(queue_.front());
-		queue_.pop();
+		this->wait(condVar_, lock, [this]{ return !empty(); });
+		result = std::move(front());
+		removeFirstElement();
 	}
 
 private:
 	std::condition_variable condVar_;
 	std::mutex mutex_;
-	std::queue<Type> queue_; // underlying container
 };
 
 } // namespace common
