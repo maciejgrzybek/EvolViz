@@ -42,16 +42,15 @@ void LoterySelector::operator()(Population& population, unsigned int size) const
 	unsigned int tickets_count = ((population.subjects.size() + 1) / 2)*population.subjects.size();
 	std::list<unsigned int> selected;
 	while (selected.size() < size) {
-		unsigned int win_ticket = evol::EvolFunctions::random(1, tickets_count);
-		unsigned int winner;
-		unsigned int current = 1;
-		for (int i = current; win_ticket <= current; ++i, current += i)
+		unsigned int win_ticket = evol::EvolFunctions::random(1, tickets_count);		
+		unsigned int winner = population.subjects.size() - 1;
+		unsigned int current = population.subjects.size() - 1;
+		for (int i = current; current <= win_ticket; --i, current += i)
 			winner = i;
 		winner = population.subjects.size() - winner;
 		assert(winner < population.subjects.size());
 
-		if (std::find(selected.begin(), selected.end(), winner) == selected.end())
-			selected.push_back(winner);
+		selected.push_back(winner);
 	}
 	std::vector<Population::Subject> new_subjects;
 	for (unsigned int selected_element : selected)
@@ -99,8 +98,7 @@ void RouletteSelector::operator()(Population& population, unsigned int size) con
 		}
 		assert(winner < population.subjects.size());
 
-		if (std::find(selected.begin(), selected.end(), winner) == selected.end())
-			selected.push_back(winner);
+		selected.push_back(winner);
 	}
 
 	std::vector<Population::Subject> new_subjects;

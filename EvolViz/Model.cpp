@@ -77,7 +77,7 @@ void Model::setPopulationSize(const unsigned int& size) {
 
 void Model::setGoalValue(const double& goal) {
 	ObservedCommand cmd(std::bind(&Evolution::set_goal, &evol_, goal),
-						std::bind(&common::ModelObserver::onPopulationSizeApplied, std::placeholders::_1));
+						std::bind(&common::ModelObserver::onGoalValueApplied, std::placeholders::_1));
 	evol_commands_[ApplyPolicy::STEP].push(cmd);
 }
 
@@ -100,8 +100,9 @@ void Model::removeObserver(common::ModelObserver* observer) {
 void Model::operator()() {
 	Command::cmd command;
 	exit_ = false;
+
+	current_snapshot_.store(evol_.population());
 	while (!exit_) {		
-		current_snapshot_ = evol_.population();
 		commands_.pop(command);
 		invokeReadySetters();
 		
@@ -111,7 +112,7 @@ void Model::operator()() {
 		if (command == Command::STEP || command == Command::GENERATION)		
 			NotifyAll(std::bind(&common::ModelObserver::onProcessingStoped, std::placeholders::_1));
 
-		current_snapshot_ = evol_.population();
+		current_snapshot_.store(evol_.population());
 		if (command == Command::STEP || command == Command::GENERATION)
 			NotifyAll(std::bind(&common::ModelObserver::onStateChanged, std::placeholders::_1));
 

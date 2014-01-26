@@ -65,8 +65,8 @@ void QualityAvgCrosser::operator()(Population& population) {
 	added_subjects_.clear();
 	unsigned int cross = static_cast<unsigned int>(round(static_cast<double>(population.subjects.size()) * cross_over_factor_));
 	while (cross--)
-		crossSubjects(population.subjects[evol::EvolFunctions::random(0, population.subjects.size())],
-			  		  population.subjects[evol::EvolFunctions::random(0, population.subjects.size())]);
+		crossSubjects(population.subjects[evol::EvolFunctions::random(0, population.subjects.size() - 1)],
+			  		  population.subjects[evol::EvolFunctions::random(0, population.subjects.size() - 1)]);
 
 	// Quality of added elements is unknown so we cannot use it in further crossing
 	population.subjects.insert(population.subjects.end(), added_subjects_.begin(), added_subjects_.end());
@@ -88,8 +88,8 @@ void QualityAvgCrosser::crossSubjects(Population::Subject subject_one, Populatio
 void ConstAvgCrosser::operator()(Population& population) {
 	unsigned int cross = static_cast<unsigned int>(round(static_cast<double>(population.subjects.size()) * cross_over_factor_));
 	while (cross--)
-		population.subjects.push_back(crossSubjects(population.subjects[evol::EvolFunctions::random(0, population.subjects.size())],
-													population.subjects[evol::EvolFunctions::random(0, population.subjects.size())]));
+		population.subjects.push_back(crossSubjects(population.subjects[evol::EvolFunctions::random(0, population.subjects.size() - 1)],
+													population.subjects[evol::EvolFunctions::random(0, population.subjects.size() - 1)]));
 }
 
 Population::Subject ConstAvgCrosser::crossSubjects(Population::Subject& subject_one, Population::Subject& subject_two) const {
@@ -108,8 +108,8 @@ Population::Subject ConstAvgCrosser::crossSubjects(Population::Subject& subject_
 void UniAvgCrosser::operator()(Population& population) {
 	unsigned int cross = static_cast<unsigned int>(round(static_cast<double>(population.subjects.size()) * cross_over_factor_));
 	while (cross--)
-		population.subjects.push_back(crossSubjects(population.subjects[evol::EvolFunctions::random(0, population.subjects.size())],
-													population.subjects[evol::EvolFunctions::random(0, population.subjects.size())]));
+		population.subjects.push_back(crossSubjects(population.subjects[evol::EvolFunctions::random(0, population.subjects.size() - 1)],
+													population.subjects[evol::EvolFunctions::random(0, population.subjects.size() - 1)]));
 }
 
 Population::Subject UniAvgCrosser::crossSubjects(Population::Subject& subject_one, Population::Subject& subject_two) const {
@@ -132,8 +132,8 @@ Population::Subject UniAvgCrosser::crossSubjects(Population::Subject& subject_on
 void GaussAvgCrosser::operator()(Population& population) {
 	unsigned int cross = static_cast<unsigned int>(round(static_cast<double>(population.subjects.size()) * cross_over_factor_));
 	while (cross--)
-		population.subjects.push_back(crossSubjects(population.subjects[evol::EvolFunctions::random(0, population.subjects.size())],
-													population.subjects[evol::EvolFunctions::random(0, population.subjects.size())]));
+		population.subjects.push_back(crossSubjects(population.subjects[evol::EvolFunctions::random(0, population.subjects.size() - 1)],
+													population.subjects[evol::EvolFunctions::random(0, population.subjects.size() - 1)]));
 }
 
 Population::Subject GaussAvgCrosser::crossSubjects(Population::Subject& subject_one, Population::Subject& subject_two) const {
@@ -157,8 +157,8 @@ void QualityFixedCrosser::operator()(Population& population) {
 	added_subjects_.clear();
 	unsigned int cross = static_cast<unsigned int>(round(static_cast<double>(population.subjects.size()) * cross_over_factor_));
 	while (cross--)
-		crossSubjects(population.subjects[evol::EvolFunctions::random(0, population.subjects.size())],
-		population.subjects[evol::EvolFunctions::random(0, population.subjects.size())]);
+		crossSubjects(population.subjects[evol::EvolFunctions::random(0, population.subjects.size() - 1)],
+					  population.subjects[evol::EvolFunctions::random(0, population.subjects.size() - 1)]);
 
 	// Quality of added elements is unknown so we cannot use it in further crossing
 	population.subjects.insert(population.subjects.end(), added_subjects_.begin(), added_subjects_.end());
@@ -181,8 +181,8 @@ void QualityFixedCrosser::crossSubjects(Population::Subject& subject_one, Popula
 void UniFixedCrosser::operator()(Population& population) {
 	unsigned int cross = static_cast<unsigned int>(round(static_cast<double>(population.subjects.size()) * cross_over_factor_));
 	while (cross--)
-		population.subjects.push_back(crossSubjects(population.subjects[evol::EvolFunctions::random(0, population.subjects.size())],
-													population.subjects[evol::EvolFunctions::random(0, population.subjects.size())]));
+		population.subjects.push_back(crossSubjects(population.subjects[evol::EvolFunctions::random(0, population.subjects.size() - 1)],
+													population.subjects[evol::EvolFunctions::random(0, population.subjects.size() - 1)]));
 }
 
 Population::Subject UniFixedCrosser::crossSubjects(Population::Subject& subject_one, Population::Subject& subject_two) const {

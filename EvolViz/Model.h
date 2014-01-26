@@ -1,8 +1,8 @@
 #pragma once
 #include <list>
 #include <map>
-#include <atomic>
 
+#include "atomic.h"
 #include "ModelOptions.h"
 #include "ModelObserver.h"
 #include "PopulationSnapshot.h"
@@ -72,7 +72,7 @@ private:
 	utils::SafeQueue<ObservedCommand> evol_commands_[ApplyPolicy::POLICY_SIZE];
 	bool exit_;
 
-	std::atomic<common::PopulationSnapshot> current_snapshot_;
+	utils::atomic<common::PopulationSnapshot> current_snapshot_;
 };
 
 } // namespace model

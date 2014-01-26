@@ -38,6 +38,8 @@ void Evolution::doStep() {
 }
 
 void Evolution::doGeneration() {
+	if (isBeforeInitialization())
+		doStep();
 	do {
 		doStep();
 	} while (!isBeforeGeneration());

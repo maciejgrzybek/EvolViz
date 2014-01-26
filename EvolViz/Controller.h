@@ -1,7 +1,7 @@
 #pragma once
 
-#include <atomic>
 #include <memory>
+#include <atomic>
 
 #include "BlockingQueue.hpp"
 #include "Message.h"

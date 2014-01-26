@@ -36,6 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Alignator.h" />
+    <ClInclude Include="atomic.h" />
     <ClInclude Include="BlockingQueue.hpp" />
     <ClInclude Include="Controller.h" />
     <ClInclude Include="Crosser.h" />

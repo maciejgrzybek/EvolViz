@@ -39,7 +39,7 @@ ConstMutator::ConstMutator(const double mutation_rate, const double x, const dou
 void UniRandMutator::operator()(Population& population) const {
 	unsigned int mutate = static_cast<unsigned int>(round(static_cast<double>(population.subjects.size()) * mutation_rate_));
 	while (mutate--)
-		mutateSubject(population.subjects[evol::EvolFunctions::random(0, population.subjects.size())]);
+		mutateSubject(population.subjects[evol::EvolFunctions::random(0, population.subjects.size() - 1)]);
 }
 
 void UniRandMutator::mutateSubject(Population::Subject& subject) const {
@@ -50,7 +50,7 @@ void UniRandMutator::mutateSubject(Population::Subject& subject) const {
 void GaussRandMutator::operator()(Population& population) const {
 	unsigned int mutate = static_cast<unsigned int>(round(static_cast<double>(population.subjects.size()) * mutation_rate_));
 	while (mutate--)
-		mutateSubject(population.subjects[evol::EvolFunctions::random(0, population.subjects.size())]);
+		mutateSubject(population.subjects[evol::EvolFunctions::random(0, population.subjects.size() - 1)]);
 }
 
 void GaussRandMutator::mutateSubject(Population::Subject& subject) const {
@@ -61,7 +61,7 @@ void GaussRandMutator::mutateSubject(Population::Subject& subject) const {
 void ConstMutator::operator()(Population& population) const {
 	unsigned int mutate = static_cast<unsigned int>(round(static_cast<double>(population.subjects.size()) * mutation_rate_));
 	while (mutate--)
-		mutateSubject(population.subjects[evol::EvolFunctions::random(0, population.subjects.size())]);
+		mutateSubject(population.subjects[evol::EvolFunctions::random(0, population.subjects.size() - 1)]);
 }
 
 void ConstMutator::mutateSubject(Population::Subject& subject) const {
