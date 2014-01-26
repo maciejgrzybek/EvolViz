@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include "ModelOptions.h"
+#include "Population.h"
 
 namespace model {
 
@@ -34,6 +35,7 @@ public:
 	virtual void operator()(Population& population) const override;
 
 private:
+	Population::Subject crossSubjects(Population::Subject& subject_one, Population::Subject& subject_two) const;
 	const double x_weight_;
 	const double y_weight_;
 };
@@ -44,6 +46,7 @@ public:
 	virtual void operator()(Population& population) const override;
 
 private:
+	Population::Subject crossSubjects(Population::Subject& subject_one, Population::Subject& subject_two) const;
 	const common::UniversalRandomOptions x_uni_;
 	const common::UniversalRandomOptions y_uni_;
 };
@@ -54,6 +57,7 @@ public:
 	virtual void operator()(Population& population) const override;
 
 private:
+	Population::Subject crossSubjects(Population::Subject& subject_one, Population::Subject& subject_two) const;
 	const common::GaussRandomOptions x_gauss_;
 	const common::GaussRandomOptions y_gauss_;
 };
@@ -62,6 +66,9 @@ class UniFixedCrosser : public Crosser {
 public:
 	UniFixedCrosser(const double cross_over_factor);
 	virtual void operator()(Population& population) const override;
+
+private:
+	Population::Subject crossSubjects(Population::Subject& subject_one, Population::Subject& subject_two) const;
 };
 
 typedef std::shared_ptr<Crosser> CrosserPtr;

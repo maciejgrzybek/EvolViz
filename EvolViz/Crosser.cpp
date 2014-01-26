@@ -1,4 +1,6 @@
 #include "Crosser.h"
+#include "EvolFunctions.hpp"
+
 namespace model {
 
 CrosserPtr Crosser::Factory::produce(const common::CrossOverOptions& options) {
@@ -42,19 +44,51 @@ UniFixedCrosser::UniFixedCrosser(const double cross_over_factor)
 }
 
 void ConstAvgCrosser::operator()(Population& population) const {
-	// FIXME implement this
+	unsigned int cross = static_cast<unsigned int>(round(static_cast<double>(population.subjects.size()) * cross_over_factor_));
+	while (cross--)
+		population.subjects.push_back(crossSubjects(population.subjects[evol::EvolFunctions::random(0, population.subjects.size())],
+													population.subjects[evol::EvolFunctions::random(0, population.subjects.size())]));
+}
+
+Population::Subject ConstAvgCrosser::crossSubjects(Population::Subject& subject_one, Population::Subject& subject_two) const {
+	Population::Subject result = { 0.0, 0.0, 0.0 };
+	return result; // FIXME implement this
 }
 
 void UniAvgCrosser::operator()(Population& population) const {
-	// FIXME implement this
+	unsigned int cross = static_cast<unsigned int>(round(static_cast<double>(population.subjects.size()) * cross_over_factor_));
+	while (cross--)
+		population.subjects.push_back(crossSubjects(population.subjects[evol::EvolFunctions::random(0, population.subjects.size())],
+													population.subjects[evol::EvolFunctions::random(0, population.subjects.size())]));
+}
+
+Population::Subject UniAvgCrosser::crossSubjects(Population::Subject& subject_one, Population::Subject& subject_two) const {
+	Population::Subject result = { 0.0, 0.0, 0.0 };
+	return result; // FIXME implement this
 }
 
 void GaussAvgCrosser::operator()(Population& population) const {
-	// FIXME implement this
+	unsigned int cross = static_cast<unsigned int>(round(static_cast<double>(population.subjects.size()) * cross_over_factor_));
+	while (cross--)
+		population.subjects.push_back(crossSubjects(population.subjects[evol::EvolFunctions::random(0, population.subjects.size())],
+													population.subjects[evol::EvolFunctions::random(0, population.subjects.size())]));
+}
+
+Population::Subject GaussAvgCrosser::crossSubjects(Population::Subject& subject_one, Population::Subject& subject_two) const {
+	Population::Subject result = { 0.0, 0.0, 0.0 };
+	return result; // FIXME implement this
 }
 
 void UniFixedCrosser::operator()(Population& population) const {
-	// FIXME implement this
+	unsigned int cross = static_cast<unsigned int>(round(static_cast<double>(population.subjects.size()) * cross_over_factor_));
+	while (cross--)
+		population.subjects.push_back(crossSubjects(population.subjects[evol::EvolFunctions::random(0, population.subjects.size())],
+													population.subjects[evol::EvolFunctions::random(0, population.subjects.size())]));
+}
+
+Population::Subject UniFixedCrosser::crossSubjects(Population::Subject& subject_one, Population::Subject& subject_two) const {
+	Population::Subject result = { 0.0, 0.0, 0.0 };
+	return result; // FIXME implement this
 }
 
 } // namespace model
