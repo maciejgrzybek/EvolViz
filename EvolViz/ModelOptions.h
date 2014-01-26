@@ -7,10 +7,12 @@ namespace common {
 	struct UniversalRandomMutation;
 	struct GaussRandomMutation;
 	struct ConstMutation;
+	struct QualityAvgCrossOver;
 	struct ConstAvgCrossOver;
 	struct UniversalRandomAvgCrossOver;
 	struct GaussRandomAvgCrossOver;
 	struct UniversalRandomFixedCrossOver;
+	struct QualityRandomFixedCrossOver;
 	struct RollingRangeAlignment;
 	struct MirroringRangeAlignment;
 	struct UniversalRandomReinitializationAlignment;
@@ -74,24 +76,30 @@ namespace common {
 	};
 
 	/* Crossover options */
-	typedef Visitor<ConstAvgCrossOver, UniversalRandomAvgCrossOver, GaussRandomAvgCrossOver, UniversalRandomFixedCrossOver> CrossOverOptionsVisitor;
+	typedef Visitor<QualityAvgCrossOver, ConstAvgCrossOver, UniversalRandomAvgCrossOver, GaussRandomAvgCrossOver, QualityRandomFixedCrossOver, UniversalRandomFixedCrossOver> CrossOverOptionsVisitor;
 	struct CrossOverOptions {
 		double cross_over_factor;
 		virtual void accept(CrossOverOptionsVisitor& visitor) const = 0;
 	};
+	struct QualityAvgCrossOver : public CrossOverOptions {
+		virtual void accept(CrossOverOptionsVisitor& visitor) const override;
+	};
 	struct ConstAvgCrossOver : public CrossOverOptions {
-		double x_weight;
-		double y_weight;
+		double x_weight[2];
+		double y_weight[2];
 		virtual void accept(CrossOverOptionsVisitor& visitor) const override;
 	};
 	struct UniversalRandomAvgCrossOver : public CrossOverOptions {
-		UniversalRandomOptions x;
-		UniversalRandomOptions y;
+		UniversalRandomOptions x[2];
+		UniversalRandomOptions y[2];
 		virtual void accept(CrossOverOptionsVisitor& visitor) const override;
 	};
 	struct GaussRandomAvgCrossOver : public CrossOverOptions {
-		GaussRandomOptions x;
-		GaussRandomOptions y;
+		GaussRandomOptions x[2];
+		GaussRandomOptions y[2];
+		virtual void accept(CrossOverOptionsVisitor& visitor) const override;
+	};
+	struct QualityRandomFixedCrossOver : public CrossOverOptions {
 		virtual void accept(CrossOverOptionsVisitor& visitor) const override;
 	};
 	struct UniversalRandomFixedCrossOver : public CrossOverOptions {
