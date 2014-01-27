@@ -17,8 +17,9 @@ void Controller::operator()()
 	while (working)
 	{
 		common::MessagePtr msg;
-		blockingQueue->pop(msg);
-		dispatchMessage(std::move(msg));
+        bool wasAnythingPopped = blockingQueue->pop(msg);
+        if (wasAnythingPopped)
+            dispatchMessage(std::move(msg));
 	}
 }
 
@@ -42,10 +43,80 @@ void Controller::visit(const common::FitnessFunctionChangeRequestedMessage& mess
 	// FIXME implement this
 }
 
+void Controller::visit(const common::PerformSingleStepMessage& message)
+{
+    // FIXME implement this
+}
+
+void Controller::visit(const common::EvaluateGenerationMessage& message)
+{
+    // FIXME implement this
+}
+
 void Controller::visit(const common::StateChangedMessage& message)
 {
 	// FIXME implement this
 	// ask Model for fresh state (be aware of thread-safety!)
+}
+
+void Controller::visit(const common::GoalReachedMessage& message)
+{
+    // FIXME implement this
+}
+
+void Controller::visit(const common::ProcessingStartedMessage& message)
+{
+    // FIXME implement this
+}
+
+void Controller::visit(const common::ProcessingStoppedMessage& message)
+{
+    // FIXME implement this
+}
+
+void Controller::visit(const common::FitnessFunctionAppliedMessage& message)
+{
+    // FIXME implement this
+}
+
+void Controller::visit(const common::InitializationOptionsAppliedMessage& message)
+{
+    // FIXME implement this
+}
+
+void Controller::visit(const common::ReproductionOptionsAppliedMessage& message)
+{
+    // FIXME implement this
+}
+
+void Controller::visit(const common::MutationOptionsAppliedMessage& message)
+{
+    // FIXME implement this
+}
+
+void Controller::visit(const common::CrossOverOptionsAppliedMessage& message)
+{
+    // FIXME implement this
+}
+
+void Controller::visit(const common::RangeOptionsAppliedMessage& message)
+{
+    // FIXME implement this
+}
+
+void Controller::visit(const common::SelectionTypeChangeAppliedMessage& message)
+{
+    // FIXME implement this
+}
+
+void Controller::visit(const common::PopulationSizeChangeAppliedMessage& message)
+{
+    // FIXME implement this
+}
+
+void Controller::visit(const common::GoalValueChangeAppliedMessage& message)
+{
+    // FIXME implement this
 }
 
 void Controller::onStateChanged()

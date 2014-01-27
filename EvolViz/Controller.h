@@ -26,9 +26,23 @@ public:
 	virtual void visit(const common::StartRequestedMessage& message);
 	virtual void visit(const common::StopRequestedMessage& message);
 	virtual void visit(const common::FitnessFunctionChangeRequestedMessage& message);
+    virtual void visit(const common::PerformSingleStepMessage& message);
+    virtual void visit(const common::EvaluateGenerationMessage& message);
 
 	// model events
 	virtual void visit(const common::StateChangedMessage& message);
+    virtual void visit(const common::GoalReachedMessage& message);
+    virtual void visit(const common::ProcessingStartedMessage& message);
+    virtual void visit(const common::ProcessingStoppedMessage& message);
+    virtual void visit(const common::FitnessFunctionAppliedMessage& message);
+    virtual void visit(const common::InitializationOptionsAppliedMessage& message);
+    virtual void visit(const common::ReproductionOptionsAppliedMessage& message);
+    virtual void visit(const common::MutationOptionsAppliedMessage& message);
+    virtual void visit(const common::CrossOverOptionsAppliedMessage& message);
+    virtual void visit(const common::RangeOptionsAppliedMessage& message);
+    virtual void visit(const common::SelectionTypeChangeAppliedMessage& message);
+    virtual void visit(const common::PopulationSizeChangeAppliedMessage& message);
+    virtual void visit(const common::GoalValueChangeAppliedMessage& message);
 
 	virtual void onStateChanged();
 	virtual void onGoalReached();

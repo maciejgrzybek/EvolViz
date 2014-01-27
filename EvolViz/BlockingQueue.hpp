@@ -129,13 +129,16 @@ public:
 		condVar_.notify_one();
 	}
 
-	void pop(Type& result)
+    bool pop(Type& result)
 	{
 		std::unique_lock<std::mutex> lock(mutex_);
 		// wait until underlying container (queue) become non-empty
         this->wait(condVar_, lock, [this]{ return !this->empty(); });
+        if (this->empty())
+            return false;
         result = std::move(this->front());
         this->removeFirstElement();
+        return true;
 	}
 
 private:

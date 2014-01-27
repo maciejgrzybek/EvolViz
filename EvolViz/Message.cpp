@@ -39,6 +39,16 @@ void FitnessFunctionChangeRequestedMessage::accept(MessageVisitor& visitor) cons
 	visitor.visit(*this);
 }
 
+void PerformSingleStepMessage::accept(MessageVisitor& visitor) const
+{
+    visitor.visit(*this);
+}
+
+void EvaluateGenerationMessage::accept(MessageVisitor& visitor) const
+{
+    visitor.visit(*this);
+}
+
 // model observed events
 
 void StateChangedMessage::accept(MessageVisitor& visitor) const

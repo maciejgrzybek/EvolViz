@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 
+#include "Controller.h"
 #include "View.h"
 
 namespace Ui {
@@ -15,7 +16,8 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget* parent = 0);
+    explicit MainWindow(std::shared_ptr<Controller::BlockingQueue> blockingQueue,
+                        QWidget* parent = 0);
     virtual ~MainWindow();
 
 protected slots:
@@ -24,8 +26,11 @@ protected slots:
     void restart();
     void exit();
 
+    void showInitializationPropertiesWindow(int choosenInitializationType);
+
 private:
     Ui::MainWindow* ui;
+    std::shared_ptr<Controller::BlockingQueue> blockingQueue;
 };
 
 #endif // MAINWINDOW_H

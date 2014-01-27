@@ -11,6 +11,8 @@ namespace common
 struct StartRequestedMessage;
 struct StopRequestedMessage;
 struct FitnessFunctionChangeRequestedMessage;
+struct PerformSingleStepMessage;
+struct EvaluateGenerationMessage;
 
 struct StateChangedMessage;
 struct GoalReachedMessage;
@@ -26,7 +28,11 @@ struct SelectionTypeChangeAppliedMessage;
 struct PopulationSizeChangeAppliedMessage;
 struct GoalValueChangeAppliedMessage;
 
-typedef Visitor<StartRequestedMessage, StopRequestedMessage, FitnessFunctionChangeRequestedMessage, // view messages
+typedef Visitor<StartRequestedMessage, // view messages
+                StopRequestedMessage,
+                FitnessFunctionChangeRequestedMessage,
+                PerformSingleStepMessage,
+                EvaluateGenerationMessage,
 				StateChangedMessage, // model messages below
 				GoalReachedMessage,
 				ProcessingStartedMessage,
@@ -77,6 +83,16 @@ struct StopRequestedMessage : ViewMessage
 struct FitnessFunctionChangeRequestedMessage : ViewMessage
 {
 	virtual void accept(MessageVisitor& visitor) const;
+};
+
+struct PerformSingleStepMessage : ViewMessage
+{
+    virtual void accept(MessageVisitor& visitor) const;
+};
+
+struct EvaluateGenerationMessage : ViewMessage
+{
+    virtual void accept(MessageVisitor& visitor) const;
 };
 
 struct ModelMessage : Message
