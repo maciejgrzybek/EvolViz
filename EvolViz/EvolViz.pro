@@ -18,7 +18,7 @@ LIBS += -L../gsl/lib -lgsl
 LIBS += -L../mu/lib -lmuparser
 
 SOURCES += main.cpp\
-    mainwindow.cpp \
+    MainWindow.cpp \
     Alignator.cpp \
     Controller.cpp \
     Crosser.cpp \
@@ -38,7 +38,7 @@ SOURCES += main.cpp\
     Selector.cpp \
     View.cpp
 
-HEADERS  += mainwindow.h \
+HEADERS  += MainWindow.h \
     Alignator.h \
     atomic.h \
     BlockingQueue.hpp \
@@ -64,4 +64,4 @@ HEADERS  += mainwindow.h \
     View.h \
     Visitor.h
 
-FORMS    += mainwindow.ui
+FORMS    += MainWindow.ui
