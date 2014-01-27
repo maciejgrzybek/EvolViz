@@ -46,4 +46,64 @@ void StateChangedMessage::accept(MessageVisitor& visitor) const
 	visitor.visit(*this);
 }
 
+void GoalReachedMessage::accept(MessageVisitor& visitor) const
+{
+	visitor.visit(*this);
+}
+
+void ProcessingStartedMessage::accept(MessageVisitor& visitor) const
+{
+	visitor.visit(*this);
+}
+
+void ProcessingStoppedMessage::accept(MessageVisitor& visitor) const
+{
+	visitor.visit(*this);
+}
+
+void FitnessFunctionAppliedMessage::accept(MessageVisitor& visitor) const
+{
+	visitor.visit(*this);
+}
+
+void InitializationOptionsAppliedMessage::accept(MessageVisitor& visitor) const
+{
+	visitor.visit(*this);
+}
+
+void ReproductionOptionsAppliedMessage::accept(MessageVisitor& visitor) const
+{
+	visitor.visit(*this);
+}
+
+void MutationOptionsAppliedMessage::accept(MessageVisitor& visitor) const
+{
+	visitor.visit(*this);
+}
+
+void CrossOverOptionsAppliedMessage::accept(MessageVisitor& visitor) const
+{
+	visitor.visit(*this);
+}
+
+void RangeOptionsAppliedMessage::accept(MessageVisitor& visitor) const
+{
+	visitor.visit(*this);
+}
+
+void SelectionTypeChangeAppliedMessage::accept(MessageVisitor& visitor) const
+{
+	visitor.visit(*this);
+}
+
+void PopulationSizeChangeAppliedMessage::accept(MessageVisitor& visitor) const
+{
+	visitor.visit(*this);
+}
+
+void GoalValueChangeAppliedMessage::accept(MessageVisitor& visitor) const
+{
+	visitor.visit(*this);
+}
+
 } // namespace common
