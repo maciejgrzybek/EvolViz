@@ -87,10 +87,10 @@ protected:
 		return container.top();
 	}
 
-	Type& front()
-	{
-		return container.top();
-	}
+    Type& front()
+    {
+        return const_cast<Type&>(container.top());
+    }
 
 	void removeFirstElement()
 	{
@@ -115,7 +115,7 @@ public:
 	{
 		{
 			std::unique_lock<std::mutex> lock(mutex_);
-			add(value);
+            this->add(value);
 		}
 		condVar_.notify_one();
 	}
@@ -124,7 +124,7 @@ public:
 	{
 		{
 			std::unique_lock<std::mutex> lock(mutex_);
-			add(std::move(value));
+            this->add(std::move(value));
 		}
 		condVar_.notify_one();
 	}
@@ -133,9 +133,9 @@ public:
 	{
 		std::unique_lock<std::mutex> lock(mutex_);
 		// wait until underlying container (queue) become non-empty
-		this->wait(condVar_, lock, [this]{ return !empty(); });
-		result = std::move(front());
-		removeFirstElement();
+        this->wait(condVar_, lock, [this]{ return !this->empty(); });
+        result = std::move(this->front());
+        this->removeFirstElement();
 	}
 
 private:
