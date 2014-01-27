@@ -15,6 +15,7 @@ namespace model {
 class Evolution {
 public:
 	enum State { BEFORE_INITIALIZATION, BEFORE_GENERATION, BEFORE_REPRODUCTION = BEFORE_GENERATION, BEFORE_MUTATION, BEFORE_CROSSOVER, BEFORE_SELECTION };
+    Evolution();
 
 	void doStep();
 	void doGeneration();

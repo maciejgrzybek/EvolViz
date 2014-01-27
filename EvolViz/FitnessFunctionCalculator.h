@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include <exprtk/exprtk.hpp>
+#include <mu/muParser.h>
 
 namespace common {
 
@@ -22,9 +22,9 @@ public:
 	double operator()(double x, double y);
 
 private:
-	exprtk::expression<double> expression_;
 	double x_;
 	double y_;
+    mu::Parser calculator_;
 };
 
 } // namespace common

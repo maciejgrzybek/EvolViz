@@ -12,18 +12,18 @@ SelectorPtr Selector::Factory::produce(const common::SelectionOptions& options) 
 	return last_produced_;
 }
 
-void Selector::Factory::visit(const common::EliteSelection& options) {
+void Selector::Factory::visit(const common::EliteSelection& /*options*/) {
 	last_produced_ = SelectorPtr(new EliteSelector());
 }
 
-void Selector::Factory::visit(const common::LoterySelection& options) {
+void Selector::Factory::visit(const common::LoterySelection& /*options*/) {
 	last_produced_ = SelectorPtr(new LoterySelector());
 }
-void Selector::Factory::visit(const common::TournamentSelection& options) {
+void Selector::Factory::visit(const common::TournamentSelection& /*options*/) {
 	last_produced_ = SelectorPtr(new TournamentSelector());
 }
 
-void Selector::Factory::visit(const common::RouletteSelection& options) {
+void Selector::Factory::visit(const common::RouletteSelection& /*options*/) {
 	last_produced_ = SelectorPtr(new RouletteSelector());
 }
 
@@ -33,7 +33,7 @@ void EliteSelector::operator()(Population& population, unsigned int size) const 
 	std::sort(population.subjects.begin(), population.subjects.end());
 	population.subjects = std::vector<Population::Subject>(population.subjects.begin(),
 														   population.subjects.begin() + size);
-};
+}
 
 void LoterySelector::operator()(Population& population, unsigned int size) const {
 	if (population.subjects.size() < size)
@@ -56,15 +56,15 @@ void LoterySelector::operator()(Population& population, unsigned int size) const
 	for (unsigned int selected_element : selected)
 		new_subjects.push_back(population.subjects[selected_element]);
 	std::swap(population.subjects, new_subjects);
-};
+}
 
 void TournamentSelector::operator()(Population& population, unsigned int size) const {
 	if (population.subjects.size() < size)
 		return
 	std::sort(population.subjects.begin(), population.subjects.end());
 	while (population.subjects.size() > size) {
-		unsigned int fighters[] = { evol::EvolFunctions::random(0, population.subjects.size() - 1),
-									evol::EvolFunctions::random(0, population.subjects.size() - 1) };
+        int fighters[] = { evol::EvolFunctions::random(0, population.subjects.size() - 1),
+                           evol::EvolFunctions::random(0, population.subjects.size() - 1) };
 		if (fighters[0] == fighters[1])
 			continue;
 		double fighter_power[] = { population.subjects[fighters[0]].value, population.subjects[fighters[1]].value };
@@ -74,7 +74,7 @@ void TournamentSelector::operator()(Population& population, unsigned int size) c
 			looser = fighters[0];
 		population.subjects.erase(population.subjects.begin() + looser);
 	}
-};
+}
 
 void RouletteSelector::operator()(Population& population, unsigned int size) const {
 	if (population.subjects.size() < size)
@@ -105,6 +105,6 @@ void RouletteSelector::operator()(Population& population, unsigned int size) con
 	for (unsigned int selected_element : selected)
 		new_subjects.push_back(population.subjects[selected_element]);
 	std::swap(population.subjects, new_subjects);
-};
+}
 
 } // namespace model

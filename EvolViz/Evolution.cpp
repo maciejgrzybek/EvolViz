@@ -4,6 +4,10 @@
 
 namespace model {
 
+Evolution::Evolution()
+    : state_(BEFORE_INITIALIZATION) {
+}
+
 void Evolution::doStep() {
 	switch (state_) {
 		case BEFORE_INITIALIZATION:

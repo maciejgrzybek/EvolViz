@@ -14,7 +14,7 @@ public:
 		return content_;
 	}
 
-	void store(T& new_content) {
+    void store(T new_content) {
 		std::lock_guard<std::mutex> lock(mutex_);
 		content_ = new_content;
 	}

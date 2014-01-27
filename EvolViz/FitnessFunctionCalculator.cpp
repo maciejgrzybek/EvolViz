@@ -14,22 +14,19 @@ const std::string& FitnessFunctionCalculator::InvalidFormulaException::formula()
 }
 
 FitnessFunctionCalculator::FitnessFunctionCalculator(const std::string& formula) {
-	exprtk::symbol_table<double> symbol_table;
-	symbol_table.add_variable("x", x_);
-	symbol_table.add_variable("y", y_);
-	symbol_table.add_constants();
-
-	expression_.register_symbol_table(symbol_table);
-
-	exprtk::parser<double> parser;
-	if (!parser.compile(formula, expression_))
-		throw InvalidFormulaException(formula);
+    try {
+      calculator_.DefineVar("x", &x_);
+      calculator_.DefineVar("y", &y_);
+      calculator_.SetExpr(formula);
+    } catch (mu::Parser::exception_type&) {
+      throw InvalidFormulaException(formula);
+    }
 }
 
 double FitnessFunctionCalculator::operator()(double x, double y) {
 	x_ = x;
 	y_ = y;
-	return expression_.value();
+    return calculator_.Eval();
 }
 
 } // namespace common

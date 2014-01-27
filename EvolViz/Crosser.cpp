@@ -42,15 +42,15 @@ QualityAvgCrosser::QualityAvgCrosser(const double cross_over_factor, const doubl
 }
 
 ConstAvgCrosser::ConstAvgCrosser(const double cross_over_factor, const double x_weight[2], const double y_weight[2])
-	: Crosser(cross_over_factor), x_weight_first_(x_weight[0]), x_weight_second_(x_weight[1]), y_weight_first_(y_weight[0]), y_weight_second_(y_weight[1]) {
+    : Crosser(cross_over_factor), x_weight_first_(x_weight[0]), y_weight_first_(y_weight[0]), x_weight_second_(x_weight[1]), y_weight_second_(y_weight[1]) {
 }
 
 UniAvgCrosser::UniAvgCrosser(const double cross_over_factor, const common::UniversalRandomOptions x[2], const common::UniversalRandomOptions y[2])
-	: Crosser(cross_over_factor), x_uni_first_(x[0]), x_uni_second_(x[1]), y_uni_first_(y[0]), y_uni_second_(y[1]) {
+    : Crosser(cross_over_factor), x_uni_first_(x[0]), y_uni_first_(y[0]), x_uni_second_(x[1]), y_uni_second_(y[1]) {
 }
 
 GaussAvgCrosser::GaussAvgCrosser(const double cross_over_factor, const common::GaussRandomOptions x[2], const common::GaussRandomOptions y[2])
-	: Crosser(cross_over_factor), x_gauss_first_(x[0]), x_gauss_second_(x[1]), y_gauss_first_(y[0]), y_gauss_second_(y[1]) {
+    : Crosser(cross_over_factor), x_gauss_first_(x[0]), y_gauss_first_(y[0]), x_gauss_second_(x[1]), y_gauss_second_(y[1]) {
 }
 
 QualityFixedCrosser::QualityFixedCrosser(const double cross_over_factor, const double normalizator)
@@ -137,9 +137,9 @@ void GaussAvgCrosser::operator()(Population& population) {
 }
 
 Population::Subject GaussAvgCrosser::crossSubjects(Population::Subject& subject_one, Population::Subject& subject_two) const {
-	const double x_weight_first = evol::EvolFunctions::gaussRandom(x_gauss_first_.expected, x_gauss_first_.variation);
-	const double x_weight_second = evol::EvolFunctions::gaussRandom(x_gauss_second_.expected, x_gauss_second_.variation);
+	const double x_weight_first = evol::EvolFunctions::gaussRandom(x_gauss_first_.expected, x_gauss_first_.variation);	
 	const double y_weight_first = evol::EvolFunctions::gaussRandom(y_gauss_first_.expected, y_gauss_first_.variation);
+    const double x_weight_second = evol::EvolFunctions::gaussRandom(x_gauss_second_.expected, x_gauss_second_.variation);
 	const double y_weight_second = evol::EvolFunctions::gaussRandom(y_gauss_second_.expected, y_gauss_second_.variation);
 	const double pool_x = x_weight_first + x_weight_second;
 	const double pc_first_x = subject_one.x / pool_x;
@@ -170,7 +170,6 @@ void QualityFixedCrosser::crossSubjects(Population::Subject& subject_one, Popula
 
 	const double pool = nv[0] + nv[1];
 	const double pc_first = nv[0] / pool;
-	const double pc_second = nv[1] / pool;
 	const double new_x = evol::EvolFunctions::random() < pc_first ? subject_one.x : subject_two.x;
 	const double new_y = evol::EvolFunctions::random() < pc_first ? subject_one.y : subject_two.y;
 	const Population::Subject result = { new_x, new_y, 0.0 };
