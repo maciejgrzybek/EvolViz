@@ -82,6 +82,8 @@ struct StopRequestedMessage : ViewMessage
 
 struct FitnessFunctionChangeRequestedMessage : ViewMessage
 {
+    FitnessFunctionChangeRequestedMessage(const std::string& str);
+    const std::string formula;
 	virtual void accept(MessageVisitor& visitor) const;
 };
 

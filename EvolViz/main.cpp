@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
     MainWindow w(bq);
 
     const std::shared_ptr<model::Model> m = std::make_shared<model::Model>();
-    Controller c(bq, m);
+    Controller c(bq, m, w);
     m->addObserver(&c);
     std::thread modelThread(std::ref(*m)); // TODO should be copy of shared_ptr
     std::thread controllerThread(std::ref(c));

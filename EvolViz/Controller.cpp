@@ -1,10 +1,13 @@
 #include "Controller.h"
+#include "View.h"
 
 
 Controller::Controller(std::shared_ptr<BlockingQueue> blockingQueue,
-					   std::shared_ptr<model::Model> model)
+                       std::shared_ptr<model::Model> model,
+                       View& view)
 	: blockingQueue(blockingQueue),
-	  model(model),
+      model(model),
+      view(view),
 	  working(false)
 {}
 
@@ -40,7 +43,9 @@ void Controller::visit(const common::StopRequestedMessage& message)
 
 void Controller::visit(const common::FitnessFunctionChangeRequestedMessage& message)
 {
-	// FIXME implement this
+    // TODO check whether in proper state (whether CAN change fitness function)!
+    model->setFitnessFunction(message.formula);
+    view.changeFitnessFunction(message.formula);
 }
 
 void Controller::visit(const common::PerformSingleStepMessage& message)

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>837</width>
-    <height>483</height>
+    <height>499</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -38,9 +38,16 @@
          <property name="title">
           <string>Fitness function</string>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_7">
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
           <item>
-           <widget class="QLineEdit" name="lineEdit"/>
+           <widget class="QLineEdit" name="fitnessFunctionLineEdit"/>
+          </item>
+          <item>
+           <widget class="QPushButton" name="fitnessFunctionCommit">
+            <property name="text">
+             <string>Commit</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>

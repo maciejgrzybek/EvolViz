@@ -34,6 +34,10 @@ void StopRequestedMessage::accept(MessageVisitor& visitor) const
 	visitor.visit(*this);
 }
 
+FitnessFunctionChangeRequestedMessage::FitnessFunctionChangeRequestedMessage(const std::string& str)
+    : formula(str)
+{}
+
 void FitnessFunctionChangeRequestedMessage::accept(MessageVisitor& visitor) const
 {
 	visitor.visit(*this);

@@ -8,6 +8,8 @@
 #include "Model.h"
 #include "ModelObserver.h"
 
+class View;
+
 class Controller : public common::ModelObserver,
 				   public common::MessageVisitor
 {
@@ -16,7 +18,8 @@ public:
 								  common::PriorityQueueContainer<common::MessagePtr,
 																 common::MessagePriorityComparator> > BlockingQueue;
 	Controller(std::shared_ptr<BlockingQueue> blockingQueue,
-			   std::shared_ptr<model::Model> model);
+               std::shared_ptr<model::Model> model,
+               View& view);
 	virtual ~Controller();
 	virtual void operator()();
 
@@ -90,6 +93,7 @@ private:
 
     std::shared_ptr<BlockingQueue> blockingQueue;
 	std::shared_ptr<model::Model> model;
+    View& view;
 	std::atomic<bool> working;
 };
 

@@ -16,10 +16,11 @@ MainWindow::MainWindow(std::shared_ptr<Controller::BlockingQueue> blockingQueue,
     connect(ui->action_Restart, SIGNAL(triggered(bool)), SLOT(restart()));
     connect(ui->action_Exit, SIGNAL(triggered(bool)), SLOT(exit()));
 
+    connect(ui->fitnessFunctionCommit, SIGNAL(clicked()), SLOT(fitnessFunctionChangeRequested()));
     connect(ui->initializationType, SIGNAL(activated(int)), SLOT(showInitializationPropertiesWindow(int)));
 
     connect(this, SIGNAL(drawSnapshotSig(common::PopulationSnapshot)), SLOT(drawSnapshot(common::PopulationSnapshot)));
-    connect(this, SIGNAL(drawFitnessFunctionSig(std::string)), SLOT(drawFitnessFunction(std::string)));
+    connect(this, SIGNAL(drawFitnessFunctionSig(QString)), SLOT(drawFitnessFunction(QString)));
 }
 
 void MainWindow::drawSnapshot(const common::PopulationSnapshot& snapshot)
@@ -28,10 +29,15 @@ void MainWindow::drawSnapshot(const common::PopulationSnapshot& snapshot)
     // draw points from snapshot on graphicsView
 }
 
-void MainWindow::drawFitnessFunction(const std::string& formula)
+void MainWindow::drawFitnessFunction(const QString& formula)
 {
     // TODO:
     // parse formula and draw it
+}
+
+void MainWindow::fitnessFunctionChangeRequested()
+{
+    blockingQueue->push(common::MessagePtr(new common::FitnessFunctionChangeRequestedMessage(ui->fitnessFunctionLineEdit->text().toStdString())));
 }
 
 void MainWindow::performSingleStep()
@@ -72,7 +78,7 @@ void MainWindow::drawGraph(const common::PopulationSnapshot& snapshot)
 
 void MainWindow::changeFitnessFunction(const std::string& formula)
 {
-    emit drawFitnessFunctionSig(formula);
+    emit drawFitnessFunctionSig(QString::fromStdString(formula));
 }
 
 void MainWindow::onFunctionParsingCompleted()

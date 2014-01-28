@@ -28,11 +28,13 @@ public:
 
 signals:
     void drawSnapshotSig(const common::PopulationSnapshot& snapshot);
-    void drawFitnessFunctionSig(const std::string& formula);
+    void drawFitnessFunctionSig(const QString& formula);
 
 protected slots:
     void drawSnapshot(const common::PopulationSnapshot& snapshot);
-    void drawFitnessFunction(const std::string& formula);
+    void drawFitnessFunction(const QString& formula);
+
+    void fitnessFunctionChangeRequested();
 
     void performSingleStep();
     void evaluateGeneration();
