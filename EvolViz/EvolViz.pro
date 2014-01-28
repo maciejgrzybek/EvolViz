@@ -36,7 +36,9 @@ SOURCES += main.cpp\
     Population.cpp \
     Reproductor.cpp \
     Selector.cpp \
-    View.cpp
+    View.cpp \
+    PointInitializationDialog.cpp \
+    RandomInitializationDialog.cpp
 
 HEADERS  += MainWindow.h \
     Alignator.h \
@@ -62,6 +64,10 @@ HEADERS  += MainWindow.h \
     SafeQueue.hpp \
     Selector.h \
     View.h \
-    Visitor.h
+    Visitor.h \
+    PointInitializationDialog.h \
+    RandomInitializationDialog.h
 
-FORMS    += MainWindow.ui
+FORMS    += MainWindow.ui \
+    PointInitializationDialog.ui \
+    RandomInitializationDialog.ui

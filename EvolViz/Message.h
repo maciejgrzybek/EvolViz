@@ -13,6 +13,7 @@ struct StopRequestedMessage;
 struct FitnessFunctionChangeRequestedMessage;
 struct PerformSingleStepMessage;
 struct EvaluateGenerationMessage;
+struct InitializationOptionsChangeRequest;
 
 struct StateChangedMessage;
 struct GoalReachedMessage;
@@ -33,6 +34,7 @@ typedef Visitor<StartRequestedMessage, // view messages
                 FitnessFunctionChangeRequestedMessage,
                 PerformSingleStepMessage,
                 EvaluateGenerationMessage,
+                InitializationOptionsChangeRequest,
 				StateChangedMessage, // model messages below
 				GoalReachedMessage,
 				ProcessingStartedMessage,
@@ -94,6 +96,21 @@ struct PerformSingleStepMessage : ViewMessage
 
 struct EvaluateGenerationMessage : ViewMessage
 {
+    virtual void accept(MessageVisitor& visitor) const;
+};
+
+struct InitializationOptionsChangeRequest : ViewMessage
+{
+    enum Type { Point, Random };
+    InitializationOptionsChangeRequest(Type type);
+
+    const Type type;
+
+    double x1; // min
+    double y1; // min
+    double x2; // max
+    double y2; // max
+
     virtual void accept(MessageVisitor& visitor) const;
 };
 

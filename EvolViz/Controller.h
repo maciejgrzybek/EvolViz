@@ -31,6 +31,7 @@ public:
 	virtual void visit(const common::FitnessFunctionChangeRequestedMessage& message);
     virtual void visit(const common::PerformSingleStepMessage& message);
     virtual void visit(const common::EvaluateGenerationMessage& message);
+    virtual void visit(const common::InitializationOptionsChangeRequest& message);
 
 	// model events
 	virtual void visit(const common::StateChangedMessage& message);

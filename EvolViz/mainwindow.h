@@ -41,7 +41,7 @@ protected slots:
     void restart();
     void exit();
 
-    void showInitializationPropertiesWindow(int choosenInitializationType);
+    void showInitializationPropertiesWindow(int chosenInitializationType);
 
 private:
     Ui::MainWindow* ui;

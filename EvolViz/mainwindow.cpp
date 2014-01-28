@@ -3,6 +3,9 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 
+#include "PointInitializationDialog.h"
+#include "RandomInitializationDialog.h"
+
 MainWindow::MainWindow(std::shared_ptr<Controller::BlockingQueue> blockingQueue,
                        QWidget* parent)
     : QMainWindow(parent),
@@ -61,9 +64,37 @@ void MainWindow::exit()
     blockingQueue->push(common::MessagePtr(new common::StopRequestedMessage));
 }
 
-void MainWindow::showInitializationPropertiesWindow(int choosenInitializationType)
+void MainWindow::showInitializationPropertiesWindow(int chosenInitializationType)
 {
-
+    switch (chosenInitializationType)
+    {
+        case 0: // point
+        {
+            auto d = new PointInitializationDialog(this);
+            const int result = d->exec();
+            if (result != QDialog::Accepted)
+                break;
+            auto opts = new common::InitializationOptionsChangeRequest(common::InitializationOptionsChangeRequest::Point);
+            opts->x1 = d->getX();
+            opts->y1 = d->getY();
+            blockingQueue->push(common::MessagePtr(opts));
+            break;
+        }
+        case 1: // random
+        {
+            auto d = new RandomInitializationDialog(this);
+            const int result = d->exec();
+            if (result != QDialog::Accepted)
+                break;
+            auto opts = new common::InitializationOptionsChangeRequest(common::InitializationOptionsChangeRequest::Random);
+            opts->x1 = d->getXmin();
+            opts->y1 = d->getYmin();
+            opts->x2 = d->getXmax();
+            opts->y2 = d->getYmax();
+            blockingQueue->push(common::MessagePtr(opts));
+            break;
+        }
+    }
 }
 
 MainWindow::~MainWindow()

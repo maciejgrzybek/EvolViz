@@ -53,6 +53,15 @@ void EvaluateGenerationMessage::accept(MessageVisitor& visitor) const
     visitor.visit(*this);
 }
 
+InitializationOptionsChangeRequest::InitializationOptionsChangeRequest(Type type)
+    : type(type)
+{}
+
+void InitializationOptionsChangeRequest::accept(MessageVisitor& visitor) const
+{
+    visitor.visit(*this);
+}
+
 // model observed events
 
 void StateChangedMessage::accept(MessageVisitor& visitor) const

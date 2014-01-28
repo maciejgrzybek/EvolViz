@@ -58,6 +58,11 @@ void Controller::visit(const common::EvaluateGenerationMessage& message)
     // FIXME implement this
 }
 
+void Controller::visit(const common::InitializationOptionsChangeRequest& message)
+{
+    // FIXME implement this
+}
+
 void Controller::visit(const common::StateChangedMessage& message)
 {
 	// FIXME implement this
