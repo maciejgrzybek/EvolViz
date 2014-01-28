@@ -92,7 +92,7 @@ void RouletteSelector::operator()(Population& population, unsigned int size) con
 		double current = 0.0;
 		for (Population::Subject& subject : population.subjects) {
 			current += subject.value;
-			if (current > win_value)
+            if (current >= win_value)
 				break;
 			++winner;
 		}
