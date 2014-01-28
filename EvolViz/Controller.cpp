@@ -115,6 +115,14 @@ void Controller::visit(const common::RangeOptionsChangeRequestedMessage& message
     state |= RangeOptionsChangeRequested;
 }
 
+void Controller::visit(const common::SelectionOptionsChangeRequestedMessage& message)
+{
+    model->setSelectionType(*message.options);
+
+    state ^= SelectionTypeChangeApplied;
+    state |= SelectionTypeChangeRequested;
+}
+
 void Controller::visit(const common::StateChangedMessage& message)
 {
     common::PopulationSnapshot snapshot = model->getPopulationSnapshot();

@@ -61,6 +61,15 @@ void RangeOptionsChangeRequestedMessage::accept(MessageVisitor& visitor) const
     visitor.visit(*this);
 }
 
+SelectionOptionsChangeRequestedMessage::SelectionOptionsChangeRequestedMessage(std::shared_ptr<SelectionOptions> options)
+    : options(options)
+{}
+
+void SelectionOptionsChangeRequestedMessage::accept(MessageVisitor& visitor) const
+{
+    visitor.visit(*this);
+}
+
 void PerformSingleStepMessage::accept(MessageVisitor& visitor) const
 {
     visitor.visit(*this);
