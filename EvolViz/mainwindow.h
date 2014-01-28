@@ -44,7 +44,6 @@ protected slots:
     void drawFitnessFunction(const QString& formula, double width, double height);
 
     void fitnessFunctionChangeRequested();
-    void reproductionFactoryChangeRequested();
 
     void performSingleStep();
     void evaluateGeneration();
@@ -55,7 +54,9 @@ protected slots:
 
     void showInitializationPropertiesWindow();
     void showInitializationPropertiesWindow(int chosenInitializationType);
+    void reproductionFactorChangeRequested();
     void rangeOptionsChangeRequest();
+    void selectionTypeChangeRequest(int chosenSelectionType);
 
 private:
     Ui::MainWindow* ui;

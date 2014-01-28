@@ -129,7 +129,7 @@ public:
             for (int j = 0; j < rect.height(); ++j)
             {
                 const double value = (*calculator)(i * widthFactor, j * heightFactor);
-                const double normalization = getNormalization(value, minMax);
+                const double normalization = std::min(getNormalization(value, minMax), 1.0);
 
                 painter.setPen(QPen(QColor(255 * normalization, 0, 0), 1));
                 painter.drawPoint(i, j);
@@ -158,6 +158,8 @@ private:
     {
         const double distance = minMax.second - minMax.first;
         const double v = value - minMax.first;
+        if (distance == 0)
+            return 1.0;
         return v/distance;
     }
 
@@ -196,8 +198,6 @@ MainWindow::MainWindow(std::shared_ptr<Controller::BlockingQueue> blockingQueue,
       resizeNotifications(false)
 {
     ui->setupUi(this);
-
-    connect(this, SIGNAL(resized()), SLOT(windowResized()));
 
     connect(ui->actionPerform_single_step, SIGNAL(triggered(bool)), SLOT(performSingleStep()));
     connect(ui->actionEvaluate_generation, SIGNAL(triggered(bool)), SLOT(evaluateGeneration()));
@@ -248,11 +248,6 @@ void MainWindow::drawFitnessFunction(const QString& formula, double width, doubl
 void MainWindow::fitnessFunctionChangeRequested()
 {
     blockingQueue->push(common::MessagePtr(new common::FitnessFunctionChangeRequestedMessage(ui->fitnessFunctionLineEdit->text().toStdString())));
-}
-
-void MainWindow::reproductionFactoryChangeRequested()
-{
-    blockingQueue->push(common::MessagePtr(new common::ReproductionOptionsChangeRequestedMessage(ui->doubleSpinBox->value())));
 }
 
 void MainWindow::performSingleStep()
@@ -322,6 +317,12 @@ void MainWindow::showInitializationPropertiesWindow(int chosenInitializationType
     }
 }
 
+void MainWindow::reproductionFactorChangeRequested()
+{
+    common::MessagePtr msg(new common::ReproductionOptionsChangeRequestedMessage(ui->reproductionFactor->value()));
+    blockingQueue->push(std::move(msg));
+}
+
 void MainWindow::rangeOptionsChangeRequest()
 {
     std::shared_ptr<common::RangeAlignmentOptions> options;
@@ -345,6 +346,30 @@ void MainWindow::rangeOptionsChangeRequest()
     }
 
     common::MessagePtr msg(new common::RangeOptionsChangeRequestedMessage(options));
+    blockingQueue->push(std::move(msg));
+}
+
+void MainWindow::selectionTypeChangeRequest(int /*chosenSelectionType*/)
+{
+    std::shared_ptr<common::SelectionOptions> options;
+
+    switch (ui->selectionType->currentIndex())
+    {
+        case 0: // elite
+            options.reset(new common::EliteSelection);
+            break;
+        case 1: // lot
+            options.reset(new common::LoterySelection);
+            break;
+        case 2: // tourn
+            options.reset(new common::TournamentSelection);
+            break;
+        case 3: // roulette
+            options.reset(new common::RouletteSelection);
+            break;
+    }
+
+    common::MessagePtr msg(new common::SelectionOptionsChangeRequestedMessage(options));
     blockingQueue->push(std::move(msg));
 }
 

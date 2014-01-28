@@ -128,7 +128,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QDoubleSpinBox" name="doubleSpinBox">
+           <widget class="QDoubleSpinBox" name="reproductionFactor">
             <property name="decimals">
              <number>4</number>
             </property>
