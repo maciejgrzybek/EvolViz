@@ -6,6 +6,8 @@
 #include "Controller.h"
 #include "View.h"
 
+class QGraphicsScene;
+
 namespace Ui {
 class MainWindow;
 }
@@ -26,6 +28,9 @@ public:
     virtual void onFunctionParsingCompleted();
     virtual void onFunctionParsingFailed();
 
+    virtual void onExecutionAvailable();
+    virtual void onExecutionNoMoreAvailable();
+
 signals:
     void drawSnapshotSig(const common::PopulationSnapshot& snapshot);
     void drawFitnessFunctionSig(const QString& formula);
@@ -35,17 +40,21 @@ protected slots:
     void drawFitnessFunction(const QString& formula);
 
     void fitnessFunctionChangeRequested();
+    void reproductionFactoryChangeRequested();
 
     void performSingleStep();
     void evaluateGeneration();
     void restart();
     void exit();
 
+    void showInitializationPropertiesWindow();
     void showInitializationPropertiesWindow(int chosenInitializationType);
 
 private:
     Ui::MainWindow* ui;
+    std::vector<QDialog*> initializationOptions;
     std::shared_ptr<Controller::BlockingQueue> blockingQueue;
+    QGraphicsScene* scene;
 };
 
 #endif // MAINWINDOW_H
