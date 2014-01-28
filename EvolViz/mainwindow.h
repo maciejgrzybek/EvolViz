@@ -16,8 +16,7 @@ class MainWindow : public QMainWindow,
     Q_OBJECT
 
 public:
-    explicit MainWindow(std::shared_ptr<Controller::BlockingQueue> blockingQueue,
-                        QWidget* parent = 0);
+    explicit MainWindow(std::shared_ptr<Controller::BlockingQueue> blockingQueue, QWidget* parent = nullptr);
     virtual ~MainWindow();
 
     virtual void drawGraph(const common::PopulationSnapshot& snapshot);
@@ -33,6 +32,13 @@ signals:
     void drawSnapshotSig(const common::PopulationSnapshot& snapshot);
     void drawFitnessFunctionSig(const QString& formula, double width, double height);
 
+protected:
+    virtual void resizeEvent(QResizeEvent* event)
+    {
+       QMainWindow::resizeEvent(event);
+       windowResized();
+    }
+
 protected slots:
     void drawSnapshot(const common::PopulationSnapshot& snapshot);
     void drawFitnessFunction(const QString& formula, double width, double height);
@@ -44,6 +50,8 @@ protected slots:
     void evaluateGeneration();
     void restart();
     void exit();
+
+    void windowResized();
 
     void showInitializationPropertiesWindow();
     void showInitializationPropertiesWindow(int chosenInitializationType);
@@ -58,6 +66,8 @@ private:
     QPixmap background;
     double width;
     double height;
+    QString formula;
+    bool resizeNotifications;
 };
 
 #endif // MAINWINDOW_H

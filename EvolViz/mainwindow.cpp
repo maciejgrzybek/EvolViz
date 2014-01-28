@@ -188,15 +188,16 @@ private:
     double height;
 };
 
-MainWindow::MainWindow(std::shared_ptr<Controller::BlockingQueue> blockingQueue,
-                       QWidget* parent)
+MainWindow::MainWindow(std::shared_ptr<Controller::BlockingQueue> blockingQueue, QWidget* parent)
     : QMainWindow(parent),
       ui(new Ui::MainWindow),
       blockingQueue(blockingQueue),
-      image(nullptr)
+      image(nullptr),
+      resizeNotifications(false)
 {
     ui->setupUi(this);
-    //image = new Image("sin(x) + sin(y)", 5, 5);
+
+    connect(this, SIGNAL(resized()), SLOT(windowResized()));
 
     connect(ui->actionPerform_single_step, SIGNAL(triggered(bool)), SLOT(performSingleStep()));
     connect(ui->actionEvaluate_generation, SIGNAL(triggered(bool)), SLOT(evaluateGeneration()));
@@ -230,8 +231,10 @@ void MainWindow::drawSnapshot(const common::PopulationSnapshot& snapshot)
 
 void MainWindow::drawFitnessFunction(const QString& formula, double width, double height)
 {
+    resizeNotifications = true;
     this->width = width;
     this->height = height;
+    this->formula = formula;
     delete image;
     image = new Image(formula.toStdString(), width, height);
     image->prepare(QRectF(0, 0, ui->image->size().width(), ui->image->size().height()));
@@ -271,6 +274,12 @@ void MainWindow::restart()
 void MainWindow::exit()
 {
     blockingQueue->push(common::MessagePtr(new common::StopRequestedMessage));
+}
+
+void MainWindow::windowResized()
+{
+    if (resizeNotifications)
+        drawFitnessFunction(formula, width, height);
 }
 
 void MainWindow::showInitializationPropertiesWindow()
