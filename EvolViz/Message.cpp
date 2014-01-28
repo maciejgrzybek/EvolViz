@@ -52,6 +52,15 @@ void ReproductionOptionsChangeRequestedMessage::accept(MessageVisitor& visitor) 
     visitor.visit(*this);
 }
 
+RangeOptionsChangeRequestedMessage::RangeOptionsChangeRequestedMessage(std::shared_ptr<RangeAlignmentOptions> options)
+    : options(options)
+{}
+
+void RangeOptionsChangeRequestedMessage::accept(MessageVisitor& visitor) const
+{
+    visitor.visit(*this);
+}
+
 void PerformSingleStepMessage::accept(MessageVisitor& visitor) const
 {
     visitor.visit(*this);

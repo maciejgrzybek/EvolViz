@@ -48,7 +48,14 @@ void Controller::visit(const common::FitnessFunctionChangeRequestedMessage& mess
 {
     // TODO check whether in proper state (whether CAN change fitness function)!
     model->setFitnessFunction(message.formula);
-    view.changeFitnessFunction(message.formula);
+    double width = 0;
+    double height = 0;
+    if (rangeOptionsSet)
+    {
+        width = rangeOptionsSet->x_max - rangeOptionsSet->x_min;
+        height = rangeOptionsSet->y_max - rangeOptionsSet->y_min;
+    }
+    view.changeFitnessFunction(message.formula, width, height);
 }
 
 void Controller::visit(const common::PerformSingleStepMessage& message)
@@ -96,6 +103,16 @@ void Controller::visit(const common::ReproductionOptionsChangeRequestedMessage& 
 
     state ^= ReproductionOptionsChangeApplied;
     state |= ReproductionOptionsChangeRequested;
+}
+
+void Controller::visit(const common::RangeOptionsChangeRequestedMessage& message)
+{
+    model->setRangeOptions(*message.options);
+
+    rangeOptionsSet = message.options;
+
+    state ^= RangeOptionsChangeApplied;
+    state |= RangeOptionsChangeRequested;
 }
 
 void Controller::visit(const common::StateChangedMessage& message)

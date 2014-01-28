@@ -98,14 +98,22 @@ private:
 class Image
 {
 public:
-    Image(const std::string& formula, int width, int height)
-        : calculator(formula),
+    Image(const QPixmap& pixmap, double width, double height)
+        : image(pixmap),
+          width(width),
+          height(height)
+    {}
+
+    Image(const std::string& formula, double width, double height)
+        : calculator(new common::FitnessFunctionCalculator(formula)),
           width(width),
           height(height)
     {}
 
     void prepare(const QRectF& crect)
     {
+        assert(calculator); // FIXME not valid when default constructor used!
+
         const QRectF rect = crect.normalized();
         image = QPixmap(rect.width(), rect.height());
         QPainter painter;
@@ -120,7 +128,7 @@ public:
         {
             for (int j = 0; j < rect.height(); ++j)
             {
-                const double value = calculator(i * widthFactor, j * heightFactor);
+                const double value = (*calculator)(i * widthFactor, j * heightFactor);
                 const double normalization = getNormalization(value, minMax);
 
                 painter.setPen(QPen(QColor(255 * normalization, 0, 0), 1));
@@ -164,7 +172,7 @@ private:
         {
             for (int j = 0; j < height; ++j)
             {
-                const double value = calculator(i, j);
+                const double value = (*calculator)(i, j);
                 if (value < min)
                     min = value;
                 if (value > max)
@@ -175,26 +183,20 @@ private:
         return std::make_pair(min, max);
     }
 
-    mutable common::FitnessFunctionCalculator calculator;
-    int height;
-    int width;
+    std::unique_ptr<common::FitnessFunctionCalculator> calculator;
+    double width;
+    double height;
 };
 
 MainWindow::MainWindow(std::shared_ptr<Controller::BlockingQueue> blockingQueue,
                        QWidget* parent)
     : QMainWindow(parent),
       ui(new Ui::MainWindow),
-      blockingQueue(blockingQueue)
-      //scene(new SceneWithFunctionInBackground("sin(x) + sin(y)", 5, 5))
+      blockingQueue(blockingQueue),
+      image(nullptr)
 {
     ui->setupUi(this);
-    image = new Image("sin(x) + sin(y)", 5, 5);
-
-
-//    ui->graphicsView->setScene(scene);
-//    ui->graphicsView->scale(1, 1);
-//    ui->graphicsView->fitInView(0, 0, 5, 5);
-
+    //image = new Image("sin(x) + sin(y)", 5, 5);
 
     connect(ui->actionPerform_single_step, SIGNAL(triggered(bool)), SLOT(performSingleStep()));
     connect(ui->actionEvaluate_generation, SIGNAL(triggered(bool)), SLOT(evaluateGeneration()));
@@ -205,9 +207,10 @@ MainWindow::MainWindow(std::shared_ptr<Controller::BlockingQueue> blockingQueue,
     connect(ui->initializationType, SIGNAL(activated(int)), SLOT(showInitializationPropertiesWindow(int)));
     connect(ui->initializationToolButton, SIGNAL(clicked()), SLOT(showInitializationPropertiesWindow()));
     connect(ui->reproductionFactorCommitButton, SIGNAL(clicked()), SLOT(reproductionFactorChangeRequested()));
+    connect(ui->rangeCommitButton, SIGNAL(clicked()), SLOT(rangeOptionsChangeRequest()));
 
     connect(this, SIGNAL(drawSnapshotSig(common::PopulationSnapshot)), SLOT(drawSnapshot(common::PopulationSnapshot)));
-    connect(this, SIGNAL(drawFitnessFunctionSig(QString)), SLOT(drawFitnessFunction(QString)));
+    connect(this, SIGNAL(drawFitnessFunctionSig(QString, double, double)), SLOT(drawFitnessFunction(QString, double, double)));
 
     initializationOptions.push_back(new PointInitializationDialog(this));
     initializationOptions.push_back(new RandomInitializationDialog(this));
@@ -215,20 +218,26 @@ MainWindow::MainWindow(std::shared_ptr<Controller::BlockingQueue> blockingQueue,
 
 void MainWindow::drawSnapshot(const common::PopulationSnapshot& snapshot)
 {
-    drawFitnessFunction("sin(x) + sin(y)");
-    //scene->clear();
+    delete image;
+    image = new Image(background, width, height);
     for (auto& item : snapshot.subjects)
         image->drawPoint(item.x, item.y);
-        //scene->addEllipse(item.x, item.y, 1, 1, QPen(QColor(Qt::yellow)));
 
     ui->image->setPixmap(image->image);
+
+    lastSnapshot = snapshot;
 }
 
-void MainWindow::drawFitnessFunction(const QString& formula)
+void MainWindow::drawFitnessFunction(const QString& formula, double width, double height)
 {
+    this->width = width;
+    this->height = height;
     delete image;
-    image = new Image(formula.toStdString(), 5, 5);
+    image = new Image(formula.toStdString(), width, height);
     image->prepare(QRectF(0, 0, ui->image->size().width(), ui->image->size().height()));
+
+    background = image->image;
+    drawSnapshot(lastSnapshot);
 
     ui->image->setPixmap(image->image);
 }
@@ -304,8 +313,35 @@ void MainWindow::showInitializationPropertiesWindow(int chosenInitializationType
     }
 }
 
+void MainWindow::rangeOptionsChangeRequest()
+{
+    std::shared_ptr<common::RangeAlignmentOptions> options;
+
+    const double x_min = ui->rangeXMin->value();
+    const double x_max = ui->rangeXMax->value();
+    const double y_min = ui->rangeYMin->value();
+    const double y_max = ui->rangeYMax->value();
+
+    switch (ui->rangeComboBox->currentIndex())
+    {
+        case 0: // rolling
+            options.reset(new common::RollingRangeAlignment(x_min, x_max, y_min, y_max));
+            break;
+        case 1: // mirroring
+            options.reset(new common::MirroringRangeAlignment(x_min, x_max, y_min, y_max));
+            break;
+        case 2: // universal
+            options.reset(new common::UniversalRandomReinitializationAlignment(x_min, x_max, y_min, y_max));
+            break;
+    }
+
+    common::MessagePtr msg(new common::RangeOptionsChangeRequestedMessage(options));
+    blockingQueue->push(std::move(msg));
+}
+
 MainWindow::~MainWindow()
 {
+    delete image;
     delete ui;
 }
 
@@ -314,9 +350,9 @@ void MainWindow::drawGraph(const common::PopulationSnapshot& snapshot)
     emit drawSnapshotSig(snapshot);
 }
 
-void MainWindow::changeFitnessFunction(const std::string& formula)
+void MainWindow::changeFitnessFunction(const std::string& formula, double width, double height)
 {
-    emit drawFitnessFunctionSig(QString::fromStdString(formula));
+    emit drawFitnessFunctionSig(QString::fromStdString(formula), width, height);
 }
 
 void MainWindow::onFunctionParsingCompleted()

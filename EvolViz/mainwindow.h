@@ -6,8 +6,6 @@
 #include "Controller.h"
 #include "View.h"
 
-class QGraphicsScene;
-
 namespace Ui {
 class MainWindow;
 }
@@ -23,7 +21,7 @@ public:
     virtual ~MainWindow();
 
     virtual void drawGraph(const common::PopulationSnapshot& snapshot);
-    virtual void changeFitnessFunction(const std::string& formula);
+    virtual void changeFitnessFunction(const std::string& formula, double width, double height);
 
     virtual void onFunctionParsingCompleted();
     virtual void onFunctionParsingFailed();
@@ -33,11 +31,11 @@ public:
 
 signals:
     void drawSnapshotSig(const common::PopulationSnapshot& snapshot);
-    void drawFitnessFunctionSig(const QString& formula);
+    void drawFitnessFunctionSig(const QString& formula, double width, double height);
 
 protected slots:
     void drawSnapshot(const common::PopulationSnapshot& snapshot);
-    void drawFitnessFunction(const QString& formula);
+    void drawFitnessFunction(const QString& formula, double width, double height);
 
     void fitnessFunctionChangeRequested();
     void reproductionFactoryChangeRequested();
@@ -49,12 +47,17 @@ protected slots:
 
     void showInitializationPropertiesWindow();
     void showInitializationPropertiesWindow(int chosenInitializationType);
+    void rangeOptionsChangeRequest();
 
 private:
     Ui::MainWindow* ui;
     std::vector<QDialog*> initializationOptions;
     std::shared_ptr<Controller::BlockingQueue> blockingQueue;
-    QGraphicsScene* scene;
+    class Image* image;
+    common::PopulationSnapshot lastSnapshot;
+    QPixmap background;
+    double width;
+    double height;
 };
 
 #endif // MAINWINDOW_H

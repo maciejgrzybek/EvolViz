@@ -33,6 +33,7 @@ public:
     virtual void visit(const common::EvaluateGenerationMessage& message);
     virtual void visit(const common::InitializationOptionsChangeRequest& message);
     virtual void visit(const common::ReproductionOptionsChangeRequestedMessage& message);
+    virtual void visit(const common::RangeOptionsChangeRequestedMessage& message);
 
 	// model events
 	virtual void visit(const common::StateChangedMessage& message);
@@ -99,5 +100,7 @@ private:
     View& view;
 	std::atomic<bool> working;
     int state;
+
+    std::shared_ptr<common::RangeAlignmentOptions> rangeOptionsSet;
 };
 
