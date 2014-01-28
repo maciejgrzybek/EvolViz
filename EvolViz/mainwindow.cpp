@@ -17,6 +17,21 @@ MainWindow::MainWindow(std::shared_ptr<Controller::BlockingQueue> blockingQueue,
     connect(ui->action_Exit, SIGNAL(triggered(bool)), SLOT(exit()));
 
     connect(ui->initializationType, SIGNAL(activated(int)), SLOT(showInitializationPropertiesWindow(int)));
+
+    connect(this, SIGNAL(drawSnapshotSig(common::PopulationSnapshot)), SLOT(drawSnapshot(common::PopulationSnapshot)));
+    connect(this, SIGNAL(drawFitnessFunctionSig(std::string)), SLOT(drawFitnessFunction(std::string)));
+}
+
+void MainWindow::drawSnapshot(const common::PopulationSnapshot& snapshot)
+{
+    // TODO
+    // draw points from snapshot on graphicsView
+}
+
+void MainWindow::drawFitnessFunction(const std::string& formula)
+{
+    // TODO:
+    // parse formula and draw it
 }
 
 void MainWindow::performSingleStep()
@@ -48,4 +63,24 @@ void MainWindow::showInitializationPropertiesWindow(int choosenInitializationTyp
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::drawGraph(const common::PopulationSnapshot& snapshot)
+{
+    emit drawSnapshotSig(snapshot);
+}
+
+void MainWindow::changeFitnessFunction(const std::string& formula)
+{
+    emit drawFitnessFunctionSig(formula);
+}
+
+void MainWindow::onFunctionParsingCompleted()
+{
+
+}
+
+void MainWindow::onFunctionParsingFailed()
+{
+
 }

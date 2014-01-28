@@ -1,14 +1,14 @@
 #pragma once
 
-#include "GraphDescription.h"
+#include "Model.h"
 
 class View
 {
 public:
 	virtual ~View();
 
-	virtual void drawGraph(const common::GraphDescription& graph) = 0;
-	virtual void changeFitnessFunction(/* some struct describing fitness function */) = 0;
+    virtual void drawGraph(const common::PopulationSnapshot& snapshot) = 0;
+    virtual void changeFitnessFunction(const std::string& formula) = 0;
 
 	virtual void onFunctionParsingCompleted() = 0;
 	virtual void onFunctionParsingFailed() = 0;

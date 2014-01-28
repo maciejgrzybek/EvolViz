@@ -9,6 +9,7 @@
 int main(int argc, char* argv[])
 {
     QApplication a(argc, argv);
+    qRegisterMetaType<common::PopulationSnapshot>("PopulationSnapshot");
     const std::shared_ptr<Controller::BlockingQueue> bq = std::make_shared<Controller::BlockingQueue>();
     MainWindow w(bq);
 
