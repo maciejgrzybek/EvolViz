@@ -32,6 +32,7 @@ public:
     virtual void visit(const common::PerformSingleStepMessage& message);
     virtual void visit(const common::EvaluateGenerationMessage& message);
     virtual void visit(const common::InitializationOptionsChangeRequest& message);
+    virtual void visit(const common::ReproductionOptionsChangeRequestedMessage& message);
 
 	// model events
 	virtual void visit(const common::StateChangedMessage& message);
@@ -89,12 +90,14 @@ private:
 		ProcessingInProgress					= 0x0100000,
 		ProcessingStopRequested					= 0x0200000,
 		ProcessingStopped						= 0x0400000
-	};
+    };
 	void dispatchMessage(std::unique_ptr<common::Message> message);
+    void updateControlls();
 
     std::shared_ptr<BlockingQueue> blockingQueue;
 	std::shared_ptr<model::Model> model;
     View& view;
 	std::atomic<bool> working;
+    int state;
 };
 

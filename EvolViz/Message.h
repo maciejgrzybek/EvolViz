@@ -14,6 +14,7 @@ struct FitnessFunctionChangeRequestedMessage;
 struct PerformSingleStepMessage;
 struct EvaluateGenerationMessage;
 struct InitializationOptionsChangeRequest;
+struct ReproductionOptionsChangeRequestedMessage;
 
 struct StateChangedMessage;
 struct GoalReachedMessage;
@@ -35,6 +36,7 @@ typedef Visitor<StartRequestedMessage, // view messages
                 PerformSingleStepMessage,
                 EvaluateGenerationMessage,
                 InitializationOptionsChangeRequest,
+                ReproductionOptionsChangeRequestedMessage,
 				StateChangedMessage, // model messages below
 				GoalReachedMessage,
 				ProcessingStartedMessage,
@@ -87,6 +89,13 @@ struct FitnessFunctionChangeRequestedMessage : ViewMessage
     FitnessFunctionChangeRequestedMessage(const std::string& str);
     const std::string formula;
 	virtual void accept(MessageVisitor& visitor) const;
+};
+
+struct ReproductionOptionsChangeRequestedMessage : ViewMessage
+{
+    ReproductionOptionsChangeRequestedMessage(double value);
+    const double value;
+    virtual void accept(MessageVisitor& visitor) const;
 };
 
 struct PerformSingleStepMessage : ViewMessage

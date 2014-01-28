@@ -43,6 +43,15 @@ void FitnessFunctionChangeRequestedMessage::accept(MessageVisitor& visitor) cons
 	visitor.visit(*this);
 }
 
+ReproductionOptionsChangeRequestedMessage::ReproductionOptionsChangeRequestedMessage(double value)
+    : value(value)
+{}
+
+void ReproductionOptionsChangeRequestedMessage::accept(MessageVisitor& visitor) const
+{
+    visitor.visit(*this);
+}
+
 void PerformSingleStepMessage::accept(MessageVisitor& visitor) const
 {
     visitor.visit(*this);

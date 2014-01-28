@@ -8,8 +8,11 @@ Controller::Controller(std::shared_ptr<BlockingQueue> blockingQueue,
 	: blockingQueue(blockingQueue),
       model(model),
       view(view),
-	  working(false)
-{}
+      working(false),
+      state(0)
+{
+    updateControlls();
+}
 
 Controller::~Controller()
 {}
@@ -49,29 +52,61 @@ void Controller::visit(const common::FitnessFunctionChangeRequestedMessage& mess
 }
 
 void Controller::visit(const common::PerformSingleStepMessage& message)
-{
-    // FIXME implement this
+{/*
+    if (state & State::FitnessFunctionChangeApplied
+        && state & State::CrossOverOptionsChangeApplied
+        && state & State::MutationOptionsChangeApplied
+        && state & State::RangeOptionsChangeApplied
+        && state & State::GoalValueChangeApplied
+        && state & State::InitializationOptionsChangeApplied)*/
+    {
+        model->doStep();
+    }
 }
 
 void Controller::visit(const common::EvaluateGenerationMessage& message)
 {
-    // FIXME implement this
+//    if (state & State::FitnessFunctionChangeApplied
+//        && state & State::CrossOverOptionsChangeApplied
+//        && state & State::MutationOptionsChangeApplied
+//        && state & State::RangeOptionsChangeApplied
+//        && state & State::GoalValueChangeApplied
+//        && state & State::InitializationOptionsChangeApplied)
+    {
+        model->doGeneration();
+    }
 }
 
 void Controller::visit(const common::InitializationOptionsChangeRequest& message)
 {
-    // FIXME implement this
+    // TODO check whether it is appropriate moment to change initialization options
+    if (message.type == common::InitializationOptionsChangeRequest::Point)
+        model->setInitializationOptions(common::PointInitialization(message.x1, message.y1));
+    else
+        model->setInitializationOptions(common::RandomInitialization(message.x1, message.x2, message.y1, message.y2));
+
+    state ^= InitializationOptionsChangeApplied;
+    state |= InitializationOptionsChangeRequested;
+}
+
+void Controller::visit(const common::ReproductionOptionsChangeRequestedMessage& message)
+{
+    // TODO check state
+    model->setReproductionOptions(common::ReproductionOptions(message.value));
+
+    state ^= ReproductionOptionsChangeApplied;
+    state |= ReproductionOptionsChangeRequested;
 }
 
 void Controller::visit(const common::StateChangedMessage& message)
 {
-	// FIXME implement this
-	// ask Model for fresh state (be aware of thread-safety!)
+    common::PopulationSnapshot snapshot = model->getPopulationSnapshot();
+    view.drawGraph(snapshot);
 }
 
-void Controller::visit(const common::GoalReachedMessage& message)
+void Controller::visit(const common::GoalReachedMessage&)
 {
-    // FIXME implement this
+    state |= GoalReached;
 }
 
 void Controller::visit(const common::ProcessingStartedMessage& message)
@@ -84,49 +119,58 @@ void Controller::visit(const common::ProcessingStoppedMessage& message)
     // FIXME implement this
 }
 
-void Controller::visit(const common::FitnessFunctionAppliedMessage& message)
+void Controller::visit(const common::FitnessFunctionAppliedMessage&)
 {
-    // FIXME implement this
+    state ^= FitnessFunctionChangeRequested;
+    state |= FitnessFunctionChangeApplied;
 }
 
-void Controller::visit(const common::InitializationOptionsAppliedMessage& message)
+void Controller::visit(const common::InitializationOptionsAppliedMessage&)
 {
-    // FIXME implement this
+    state ^= InitializationOptionsChangeRequested;
+    state |= InitializationOptionsChangeApplied;
 }
 
-void Controller::visit(const common::ReproductionOptionsAppliedMessage& message)
+void Controller::visit(const common::ReproductionOptionsAppliedMessage&)
 {
-    // FIXME implement this
+    state ^= ReproductionOptionsChangeRequested;
+    state |= ReproductionOptionsChangeApplied;
 }
 
-void Controller::visit(const common::MutationOptionsAppliedMessage& message)
+void Controller::visit(const common::MutationOptionsAppliedMessage&)
 {
-    // FIXME implement this
+    state ^= MutationOptionsChangeRequested;
+    state |= MutationOptionsChangeApplied;
 }
 
-void Controller::visit(const common::CrossOverOptionsAppliedMessage& message)
+void Controller::visit(const common::CrossOverOptionsAppliedMessage&)
 {
-    // FIXME implement this
+    state ^= CrossOverOptionsChangeRequested;
+    state |= CrossOverOptionsChangeApplied;
 }
 
-void Controller::visit(const common::RangeOptionsAppliedMessage& message)
+void Controller::visit(const common::RangeOptionsAppliedMessage&)
 {
-    // FIXME implement this
+    state ^= RangeOptionsChangeRequested;
+    state |= RangeOptionsChangeApplied;
 }
 
-void Controller::visit(const common::SelectionTypeChangeAppliedMessage& message)
+void Controller::visit(const common::SelectionTypeChangeAppliedMessage&)
 {
-    // FIXME implement this
+    state ^= SelectionTypeChangeRequested;
+    state |= SelectionTypeChangeApplied;
 }
 
-void Controller::visit(const common::PopulationSizeChangeAppliedMessage& message)
+void Controller::visit(const common::PopulationSizeChangeAppliedMessage&)
 {
-    // FIXME implement this
+    state ^= PopulationSizeChangeRequested;
+    state |= PopulationSizeChangeApplied;
 }
 
-void Controller::visit(const common::GoalValueChangeAppliedMessage& message)
+void Controller::visit(const common::GoalValueChangeAppliedMessage&)
 {
-    // FIXME implement this
+    state ^= GoalValueChangeRequested;
+    state |= GoalValueChangeApplied;
 }
 
 void Controller::onStateChanged()
@@ -138,7 +182,8 @@ void Controller::onStateChanged()
 
 void Controller::onGoalReached()
 {
-	// FIXME implement this
+    common::MessagePtr msg(new common::GoalReachedMessage);
+    blockingQueue->push(std::move(msg));
 }
 
 void Controller::onProcessingStarted()
@@ -153,50 +198,74 @@ void Controller::onProcessingStoped()
 
 void Controller::onFitnessFunctionApplied()
 {
-	// FIXME implement this
+    common::MessagePtr msg(new common::FitnessFunctionAppliedMessage);
+    blockingQueue->push(std::move(msg));
 }
 
 void Controller::onInitializationOptionsApplied()
 {
-	// FIXME implement this
+    common::MessagePtr msg(new common::InitializationOptionsAppliedMessage);
+    blockingQueue->push(std::move(msg));
 }
 
 void Controller::onReproductionOptionsApplied()
 {
-	// FIXME implement this
+    common::MessagePtr msg(new common::ReproductionOptionsAppliedMessage);
+    blockingQueue->push(std::move(msg));
 }
 
 void Controller::onMutationOptionsApplied()
 {
-	// FIXME implement this
+    common::MessagePtr msg(new common::MutationOptionsAppliedMessage);
+    blockingQueue->push(std::move(msg));
 }
 
 void Controller::onCrossOverOptionsApplied()
 {
-	// FIXME implement this
+    common::MessagePtr msg(new common::CrossOverOptionsAppliedMessage);
+    blockingQueue->push(std::move(msg));
 }
 
 void Controller::onRangeOptionsApplied()
 {
-	// FIXME implement this
+    common::MessagePtr msg(new common::RangeOptionsAppliedMessage);
+    blockingQueue->push(std::move(msg));
 }
 
 void Controller::onSelectionTypeApplied()
 {
-	// FIXME implement this
+    common::MessagePtr msg(new common::SelectionTypeChangeAppliedMessage);
+    blockingQueue->push(std::move(msg));
 }
 
 void Controller::onPopulationSizeApplied()
 {
-	// FIXME implement this
+    common::MessagePtr msg(new common::PopulationSizeChangeAppliedMessage);
+    blockingQueue->push(std::move(msg));
 }
 
 void Controller::onGoalValueApplied()
 {
-	// FIXME implement this
+    common::MessagePtr msg(new common::GoalValueChangeAppliedMessage);
+    blockingQueue->push(std::move(msg));
 }
 
 void Controller::dispatchMessage(std::unique_ptr<common::Message> message)
 {
 	message->accept(*this);
+}
+
+void Controller::updateControlls()
+{
+    view.onExecutionAvailable();/*
+    if (state & State::FitnessFunctionChangeApplied
+        && state & State::CrossOverOptionsChangeApplied
+        && state & State::MutationOptionsChangeApplied
+        && state & State::RangeOptionsChangeApplied
+        && state & State::GoalValueChangeApplied
+        && state & State::InitializationOptionsChangeApplied
+        && !(state & State::GoalReached))
+        view.onExecutionAvailable();
+    else
+        view.onExecutionNoMoreAvailable();*/
 }

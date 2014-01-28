@@ -12,5 +12,8 @@ public:
 
 	virtual void onFunctionParsingCompleted() = 0;
 	virtual void onFunctionParsingFailed() = 0;
+
+    virtual void onExecutionAvailable() = 0;
+    virtual void onExecutionNoMoreAvailable() = 0;
 };
 

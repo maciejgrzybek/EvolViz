@@ -1,6 +1,7 @@
+#include <cassert>
 #include <memory>
 
-#include <QGraphicsScene>
+#include <QPainter>
 
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
@@ -8,17 +9,192 @@
 #include "PointInitializationDialog.h"
 #include "RandomInitializationDialog.h"
 
+#include "FitnessFunctionCalculator.h"
+
+class SceneWithFunctionInBackground// : public QGraphicsScene
+{
+public:
+    SceneWithFunctionInBackground(const std::string& formula)
+        : //QGraphicsScene(),
+          calculator(formula),
+          formula(formula),
+          width(width),
+          height(height)
+    {}
+
+protected:
+    virtual void drawBackground(QPainter* painter, const QRectF& crect)
+    {
+        if (backgroundImage.size().width() != crect.width() || backgroundImage.size().height() != crect.height())
+            prepareBackground(crect);
+
+        painter->drawImage(crect.x(), crect.y(), backgroundImage);
+    }
+
+private:
+    void prepareBackground(const QRectF& crect)
+    {
+        const QRectF rect = crect.normalized();
+        backgroundImage = QImage(rect.width(), rect.height(), QImage::Format_RGB32);
+        QPainter painter;
+        painter.begin(&backgroundImage);
+
+        const std::pair<double, double> minMax = getMinMaxOfFunction(rect.width(), rect.height());
+
+        const int weightFactor = rect.width()/width;
+        const int heightFactor = rect.height()/height;
+
+        for (int i = 0; i < rect.width(); ++i)
+        {
+            for (int j = 0; j < rect.height(); ++j)
+            {
+                const double value = calculator(i/weightFactor, j/heightFactor);
+                const double normalization = getNormalization(value, minMax);
+
+                painter.setPen(QPen(QColor(255 * normalization, 0, 0), 1));
+                painter.drawPoint(i, j);
+            }
+        }
+
+        painter.end();
+    }
+
+    double getNormalization(double value, std::pair<double, double> minMax) const
+    {
+        const double distance = minMax.second - minMax.first;
+        const double v = value - minMax.first;
+        return v/distance;
+    }
+
+    std::pair<double, double> getMinMaxOfFunction(double width, double height) const
+    {
+        assert(width > 0 && height > 0);
+
+        double min = std::numeric_limits<double>::max();
+        double max = std::numeric_limits<double>::min();
+
+        for (int i = 0; i < width; ++i)
+        {
+            for (int j = 0; j < height; ++j)
+            {
+                const double value = calculator(i, j);
+                if (value < min)
+                    min = value;
+                if (value > max)
+                    max = value;
+            }
+        }
+
+        return std::make_pair(min, max);
+    }
+
+    mutable common::FitnessFunctionCalculator calculator;
+    std::string formula;
+    QImage backgroundImage;
+    int width;
+    int height;
+};
+
+class Image
+{
+public:
+    Image(const std::string& formula, int width, int height)
+        : calculator(formula),
+          width(width),
+          height(height)
+    {}
+
+    void prepare(const QRectF& crect)
+    {
+        const QRectF rect = crect.normalized();
+        image = QPixmap(rect.width(), rect.height());
+        QPainter painter;
+        painter.begin(&image);
+
+        const std::pair<double, double> minMax = getMinMaxOfFunction(rect.width(), rect.height());
+
+        const double widthFactor = width/rect.width();
+        const double heightFactor = height/rect.height();
+
+        for (int i = 0; i < rect.width(); ++i)
+        {
+            for (int j = 0; j < rect.height(); ++j)
+            {
+                const double value = calculator(i * widthFactor, j * heightFactor);
+                const double normalization = getNormalization(value, minMax);
+
+                painter.setPen(QPen(QColor(255 * normalization, 0, 0), 1));
+                painter.drawPoint(i, j);
+            }
+        }
+
+        painter.end();
+    }
+
+    void drawPoint(double x, double y)
+    {
+        const double widthFactor = (double)width/image.width();
+        const double heightFactor = (double)height/image.height();
+
+        QPainter painter;
+        painter.begin(&image);
+        painter.setPen(QPen(QColor(Qt::yellow), 2));
+        painter.drawPoint(x/widthFactor, y/heightFactor);
+        painter.end();
+    }
+
+    QPixmap image;
+
+private:
+    double getNormalization(double value, std::pair<double, double> minMax) const
+    {
+        const double distance = minMax.second - minMax.first;
+        const double v = value - minMax.first;
+        return v/distance;
+    }
+
+    std::pair<double, double> getMinMaxOfFunction(double width, double height) const
+    {
+        assert(width > 0 && height > 0);
+
+        double min = std::numeric_limits<double>::max();
+        double max = std::numeric_limits<double>::min();
+
+        for (int i = 0; i < width; ++i)
+        {
+            for (int j = 0; j < height; ++j)
+            {
+                const double value = calculator(i, j);
+                if (value < min)
+                    min = value;
+                if (value > max)
+                    max = value;
+            }
+        }
+
+        return std::make_pair(min, max);
+    }
+
+    mutable common::FitnessFunctionCalculator calculator;
+    int height;
+    int width;
+};
+
 MainWindow::MainWindow(std::shared_ptr<Controller::BlockingQueue> blockingQueue,
                        QWidget* parent)
     : QMainWindow(parent),
       ui(new Ui::MainWindow),
-      blockingQueue(blockingQueue),
-      scene(new QGraphicsScene(0, 0, 50, 50))
+      blockingQueue(blockingQueue)
+      //scene(new SceneWithFunctionInBackground("sin(x) + sin(y)", 5, 5))
 {
     ui->setupUi(this);
+    image = new Image("sin(x) + sin(y)", 5, 5);
 
-    ui->graphicsView->setScene(scene);
-    ui->graphicsView->scale(1, 1);
+
+//    ui->graphicsView->setScene(scene);
+//    ui->graphicsView->scale(1, 1);
+//    ui->graphicsView->fitInView(0, 0, 5, 5);
+
 
     connect(ui->actionPerform_single_step, SIGNAL(triggered(bool)), SLOT(performSingleStep()));
     connect(ui->actionEvaluate_generation, SIGNAL(triggered(bool)), SLOT(evaluateGeneration()));
@@ -39,17 +215,22 @@ MainWindow::MainWindow(std::shared_ptr<Controller::BlockingQueue> blockingQueue,
 
 void MainWindow::drawSnapshot(const common::PopulationSnapshot& snapshot)
 {
-    scene->clear();
+    drawFitnessFunction("sin(x) + sin(y)");
+    //scene->clear();
     for (auto& item : snapshot.subjects)
-        scene->addEllipse(item.x*10, item.y*10, 1, 1);
-    // TODO
-    // draw points from snapshot on graphicsView
+        image->drawPoint(item.x, item.y);
+        //scene->addEllipse(item.x, item.y, 1, 1, QPen(QColor(Qt::yellow)));
+
+    ui->image->setPixmap(image->image);
 }
 
 void MainWindow::drawFitnessFunction(const QString& formula)
 {
-    // TODO:
-    // parse formula and draw it
+    delete image;
+    image = new Image(formula.toStdString(), 5, 5);
+    image->prepare(QRectF(0, 0, ui->image->size().width(), ui->image->size().height()));
+
+    ui->image->setPixmap(image->image);
 }
 
 void MainWindow::fitnessFunctionChangeRequested()
