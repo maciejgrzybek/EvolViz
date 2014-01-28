@@ -210,12 +210,19 @@ MainWindow::MainWindow(std::shared_ptr<Controller::BlockingQueue> blockingQueue,
     connect(ui->reproductionFactorCommitButton, SIGNAL(clicked()), SLOT(reproductionFactorChangeRequested()));
     connect(ui->rangeCommitButton, SIGNAL(clicked()), SLOT(rangeOptionsChangeRequest()));
     connect(ui->selectionType, SIGNAL(currentIndexChanged(int)), SLOT(selectionTypeChangeRequest(int)));
+    connect(ui->goalCommitButton, SIGNAL(clicked()), SLOT(goalChangeRequest()));
 
     connect(this, SIGNAL(drawSnapshotSig(common::PopulationSnapshot)), SLOT(drawSnapshot(common::PopulationSnapshot)));
     connect(this, SIGNAL(drawFitnessFunctionSig(QString, double, double)), SLOT(drawFitnessFunction(QString, double, double)));
 
     initializationOptions.push_back(new PointInitializationDialog(this));
     initializationOptions.push_back(new RandomInitializationDialog(this));
+}
+
+void MainWindow::resizeEvent(QResizeEvent* event)
+{
+   QMainWindow::resizeEvent(event);
+   windowResized();
 }
 
 void MainWindow::drawSnapshot(const common::PopulationSnapshot& snapshot)
@@ -371,6 +378,12 @@ void MainWindow::selectionTypeChangeRequest(int /*chosenSelectionType*/)
     }
 
     common::MessagePtr msg(new common::SelectionOptionsChangeRequestedMessage(options));
+    blockingQueue->push(std::move(msg));
+}
+
+void MainWindow::goalChangeRequest()
+{
+    common::MessagePtr msg(new common::GoalChangeRequestedMessage(ui->goalValue->value()));
     blockingQueue->push(std::move(msg));
 }
 

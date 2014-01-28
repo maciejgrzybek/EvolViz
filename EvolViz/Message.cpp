@@ -70,6 +70,15 @@ void SelectionOptionsChangeRequestedMessage::accept(MessageVisitor& visitor) con
     visitor.visit(*this);
 }
 
+GoalChangeRequestedMessage::GoalChangeRequestedMessage(double goal)
+    : goal(goal)
+{}
+
+void GoalChangeRequestedMessage::accept(MessageVisitor& visitor) const
+{
+    visitor.visit(*this);
+}
+
 void PerformSingleStepMessage::accept(MessageVisitor& visitor) const
 {
     visitor.visit(*this);

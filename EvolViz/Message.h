@@ -18,6 +18,7 @@ struct InitializationOptionsChangeRequest;
 struct ReproductionOptionsChangeRequestedMessage;
 struct RangeOptionsChangeRequestedMessage;
 struct SelectionOptionsChangeRequestedMessage;
+struct GoalChangeRequestedMessage;
 
 struct StateChangedMessage;
 struct GoalReachedMessage;
@@ -42,6 +43,7 @@ typedef Visitor<StartRequestedMessage, // view messages
                 ReproductionOptionsChangeRequestedMessage,
                 RangeOptionsChangeRequestedMessage,
                 SelectionOptionsChangeRequestedMessage,
+                GoalChangeRequestedMessage,
 				StateChangedMessage, // model messages below
 				GoalReachedMessage,
 				ProcessingStartedMessage,
@@ -115,6 +117,14 @@ struct SelectionOptionsChangeRequestedMessage : ViewMessage
 {
     SelectionOptionsChangeRequestedMessage(std::shared_ptr<SelectionOptions> options);
     std::shared_ptr<SelectionOptions> options;
+
+    virtual void accept(MessageVisitor& visitor) const;
+};
+
+struct GoalChangeRequestedMessage : ViewMessage
+{
+    GoalChangeRequestedMessage(double goal);
+    const double goal;
 
     virtual void accept(MessageVisitor& visitor) const;
 };

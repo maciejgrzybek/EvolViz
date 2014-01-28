@@ -123,6 +123,14 @@ void Controller::visit(const common::SelectionOptionsChangeRequestedMessage& mes
     state |= SelectionTypeChangeRequested;
 }
 
+void Controller::visit(const common::GoalChangeRequestedMessage& message)
+{
+    model->setGoalValue(message.goal);
+
+    state ^= GoalValueChangeApplied;
+    state |= GoalValueChangeRequested;
+}
+
 void Controller::visit(const common::StateChangedMessage& message)
 {
     common::PopulationSnapshot snapshot = model->getPopulationSnapshot();

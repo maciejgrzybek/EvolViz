@@ -35,6 +35,7 @@ public:
     virtual void visit(const common::ReproductionOptionsChangeRequestedMessage& message);
     virtual void visit(const common::RangeOptionsChangeRequestedMessage& message);
     virtual void visit(const common::SelectionOptionsChangeRequestedMessage& message);
+    virtual void visit(const common::GoalValueChangeAppliedMessage& message);
 
 	// model events
 	virtual void visit(const common::StateChangedMessage& message);
@@ -49,7 +50,7 @@ public:
     virtual void visit(const common::RangeOptionsAppliedMessage& message);
     virtual void visit(const common::SelectionTypeChangeAppliedMessage& message);
     virtual void visit(const common::PopulationSizeChangeAppliedMessage& message);
-    virtual void visit(const common::GoalValueChangeAppliedMessage& message);
+    virtual void visit(const common::GoalChangeRequestedMessage& message);
 
 	virtual void onStateChanged();
 	virtual void onGoalReached();

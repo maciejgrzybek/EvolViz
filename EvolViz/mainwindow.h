@@ -33,11 +33,7 @@ signals:
     void drawFitnessFunctionSig(const QString& formula, double width, double height);
 
 protected:
-    virtual void resizeEvent(QResizeEvent* event)
-    {
-       QMainWindow::resizeEvent(event);
-       windowResized();
-    }
+    virtual void resizeEvent(QResizeEvent* event);
 
 protected slots:
     void drawSnapshot(const common::PopulationSnapshot& snapshot);
@@ -57,6 +53,7 @@ protected slots:
     void reproductionFactorChangeRequested();
     void rangeOptionsChangeRequest();
     void selectionTypeChangeRequest(int chosenSelectionType);
+    void goalChangeRequest();
 
 private:
     Ui::MainWindow* ui;
