@@ -15,13 +15,18 @@ int main(int argc, char* argv[])
 
     const std::shared_ptr<model::Model> m = std::make_shared<model::Model>();
     Controller c(bq, m);
-    std::thread t(std::ref(c));
+    m->addObserver(&c);
+    std::thread modelThread(std::ref(*m)); // TODO should be copy of shared_ptr
+    std::thread controllerThread(std::ref(c));
 
     w.show();
 
     const int exitCode = a.exec();
+    m->doExit();
     c.asyncStop();
-    t.join();
+
+    modelThread.join();
+    controllerThread.join();
 
     return exitCode;
 }
