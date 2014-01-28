@@ -20,8 +20,16 @@ public:
     int getYmin() const;
     int getYmax() const;
 
+public slots:
+    virtual void accept();
+    virtual void reject();
+
 private:
     Ui::RandomInitializationDialog *ui;
+    int x1;
+    int x2;
+    int y1;
+    int y2;
 };
 
 #endif // RANDOMINITIALIZATIONDIALOG_H

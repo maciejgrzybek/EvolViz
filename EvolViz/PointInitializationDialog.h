@@ -18,7 +18,14 @@ public:
     int getX() const;
     int getY() const;
 
+public slots:
+    virtual void accept();
+    virtual void reject();
+
 private:
+    int x;
+    int y;
+
     Ui::PointInitializationDialog *ui;
 };
 
