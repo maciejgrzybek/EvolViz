@@ -29,10 +29,9 @@ void Selector::Factory::visit(const common::RouletteSelection& /*options*/) {
 
 void EliteSelector::operator()(Population& population, unsigned int size) const {
 	if (population.subjects.size() < size)
-		return
+        return;
 	std::sort(population.subjects.begin(), population.subjects.end());
-	population.subjects = std::vector<Population::Subject>(population.subjects.begin(),
-														   population.subjects.begin() + size);
+    population.subjects.erase(population.subjects.begin() + size, population.subjects.end());
 }
 
 void LoterySelector::operator()(Population& population, unsigned int size) const {
@@ -45,7 +44,7 @@ void LoterySelector::operator()(Population& population, unsigned int size) const
 		unsigned int win_ticket = evol::EvolFunctions::random(1, tickets_count);		
 		unsigned int winner = population.subjects.size() - 1;
 		unsigned int current = population.subjects.size() - 1;
-		for (int i = current; current <= win_ticket; --i, current += i)
+        for (int i = current; current < win_ticket; --i, current += (i+1))
 			winner = i;
 		winner = population.subjects.size() - winner;
 		assert(winner < population.subjects.size());

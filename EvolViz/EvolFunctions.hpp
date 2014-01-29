@@ -1,6 +1,7 @@
 #ifndef _EVOL_FUNCTIONS_H_
 #define _EVOL_FUNCTIONS_H_
 #include <memory>
+#include <random>
 #ifdef GSL_AVAILABLE
 #include <gsl/gsl_rng.h>
 #endif
@@ -19,6 +20,11 @@ struct EvolFunctions
      * True if seed is initialized
      */
     static bool isInitialized;
+
+    /**
+     * C++11 std random generator
+     */
+    static std::mt19937 randomNumberGenerator;
 
 #ifdef GSL_AVAILABLE
     /**

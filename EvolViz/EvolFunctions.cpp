@@ -12,6 +12,7 @@ namespace evol
 {
 
 bool EvolFunctions::isInitialized = false;
+std::mt19937 EvolFunctions::randomNumberGenerator;
 
 #ifdef GSL_AVAILABLE
 bool EvolFunctions::isGSLInitialized = false;
@@ -48,7 +49,7 @@ void EvolFunctions::initialize(int seed)
 {
     if(!isInitialized)
     {
-        srand(seed);
+        randomNumberGenerator.seed(seed);
         isInitialized = true;
     }
 }
@@ -56,19 +57,22 @@ void EvolFunctions::initialize(int seed)
 double EvolFunctions::random()
 {
     initialize();
-    return (double)rand()/RAND_MAX;
+    std::uniform_real_distribution<double> distribuant(0.0, 1.0);
+    return distribuant(randomNumberGenerator);
 }
 
 int EvolFunctions::random(int begin, int end)
 {
     initialize();
-    return rand()%(end-begin+1)+begin;
+    std::uniform_int_distribution<int> distribuant(begin, end);
+    return distribuant(randomNumberGenerator);
 }
 
 double EvolFunctions::random(double begin, double end)
 {
-	initialize();
-	return begin + (random() * (end - begin));
+    initialize();
+    std::uniform_real_distribution<double> distribuant(begin, end);
+    return distribuant(randomNumberGenerator);
 }
 
 #ifdef GSL_AVAILABLE
