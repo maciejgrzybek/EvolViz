@@ -12,6 +12,9 @@ void Model::doGeneration() {
 void Model::doRestart() {
 	commands_.push(Command::RESTART);
 }
+void Model::doCommit() {
+    commands_.push(Command::COMMIT);
+}
 void Model::doExit() {
 	commands_.push(Command::EXIT);
 }
@@ -104,20 +107,8 @@ void Model::operator()() {
 	current_snapshot_.store(evol_.population());
 	while (!exit_) {		
 		commands_.pop(command);
-		invokeReadySetters();
-		
-		if (command == Command::STEP || command == Command::GENERATION)
-			NotifyAll(std::bind(&common::ModelObserver::onProcessingStarted, std::placeholders::_1));
+		invokeReadySetters();		
 		invokeCommand(command);
-		if (command == Command::STEP || command == Command::GENERATION)		
-			NotifyAll(std::bind(&common::ModelObserver::onProcessingStoped, std::placeholders::_1));
-
-		current_snapshot_.store(evol_.population());
-		if (command == Command::STEP || command == Command::GENERATION)
-			NotifyAll(std::bind(&common::ModelObserver::onStateChanged, std::placeholders::_1));
-
-		if (evol_.isGoalReached())
-			NotifyAll(std::bind(&common::ModelObserver::onGoalReached, std::placeholders::_1));
 	}
 }
 
@@ -140,18 +131,31 @@ void Model::invokeAllFromSafeQueue(utils::SafeQueue<ObservedCommand>& queue) {
 
 void Model::invokeCommand(Command::cmd command) {
 	switch (command) {
-		case Command::STEP:
-			evol_.doStep();
+		case Command::STEP:			
+		case Command::GENERATION:            
+            NotifyAll(std::bind(&common::ModelObserver::onProcessingStarted, std::placeholders::_1));
+            if (command == Command::STEP)
+                evol_.doStep();
+            else
+                evol_.doGeneration();
+            NotifyAll(std::bind(&common::ModelObserver::onProcessingStoped, std::placeholders::_1));
+
+            current_snapshot_.store(evol_.population());
+            NotifyAll(std::bind(&common::ModelObserver::onStateChanged, std::placeholders::_1));
+
+            if (evol_.isGoalReached())
+                NotifyAll(std::bind(&common::ModelObserver::onGoalReached, std::placeholders::_1));
 		break;
-		case Command::GENERATION:
-			evol_.doGeneration();
-		break;
-		case Command::RESTART:
+		case Command::RESTART:        
 			evol_.doRestart();
-		break;
+        break;
+        case Command::COMMIT:
+            // NoOperation, it's just about invoking setters.
+        break;
 		case Command::EXIT:
 			exit_ = true;
-		break;
+		break;        
+        default: assert(false);
 	}
 }
 

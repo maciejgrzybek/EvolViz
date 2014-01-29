@@ -18,6 +18,7 @@ public:
 	void doStep();
 	void doGeneration();
 	void doRestart();
+    void doCommit();
 	void doExit();
 	void doImmidiateExit();
 	
@@ -56,7 +57,7 @@ private:
 		enum policy { INSTANT = 0, STEP, GENERATION, INITIALIZATION, POLICY_SIZE };
 	};
 	struct Command {
-		enum cmd { STEP, GENERATION, RESTART, EXIT };
+        enum cmd { COMMIT, STEP, GENERATION, RESTART, EXIT };
 	};
 
 	void invokeReadySetters();
