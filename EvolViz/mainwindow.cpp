@@ -9,6 +9,11 @@
 #include "PointInitializationDialog.h"
 #include "RandomInitializationDialog.h"
 
+#include "ConstMutationDialog.h"
+#include "GaussMutationDialog.h"
+
+#include "ModelOptions.h"
+
 #include "FitnessFunctionCalculator.h"
 
 class SceneWithFunctionInBackground// : public QGraphicsScene
@@ -211,12 +216,17 @@ MainWindow::MainWindow(std::shared_ptr<Controller::BlockingQueue> blockingQueue,
     connect(ui->rangeCommitButton, SIGNAL(clicked()), SLOT(rangeOptionsChangeRequest()));
     connect(ui->selectionType, SIGNAL(currentIndexChanged(int)), SLOT(selectionTypeChangeRequest(int)));
     connect(ui->goalCommitButton, SIGNAL(clicked()), SLOT(goalChangeRequest()));
+    connect(ui->mutationToolButton, SIGNAL(clicked()), SLOT(showMutationPropertiesWindow()));
 
     connect(this, SIGNAL(drawSnapshotSig(common::PopulationSnapshot)), SLOT(drawSnapshot(common::PopulationSnapshot)));
     connect(this, SIGNAL(drawFitnessFunctionSig(QString, double, double)), SLOT(drawFitnessFunction(QString, double, double)));
 
     initializationOptions.push_back(new PointInitializationDialog(this));
     initializationOptions.push_back(new RandomInitializationDialog(this));
+
+    mutationOptions.push_back(new MutationOptionsDialog("Min", "Max", "Min", "Max", this));
+    mutationOptions.push_back(new MutationOptionsDialog("Variation", "Expected", "Variation", "Expected", this));
+    mutationOptions.push_back(new ConstMutationDialog(this));
 }
 
 void MainWindow::resizeEvent(QResizeEvent* event)
@@ -385,6 +395,91 @@ void MainWindow::goalChangeRequest()
 {
     common::MessagePtr msg(new common::GoalChangeRequestedMessage(ui->goalValue->value()));
     blockingQueue->push(std::move(msg));
+}
+
+void MainWindow::mutationChangeRequest()
+{
+    std::shared_ptr<common::MutationOptions> options;
+
+    const double factor = ui->mutationFactor->value();
+
+    switch (ui->mutationType->currentIndex())
+    {
+        case 0: // universal
+        {
+            MutationOptionsDialog* dialog = dynamic_cast<MutationOptionsDialog*>(mutationOptions[1]);
+            common::UniversalRandomOptions x(dialog->getX1(), dialog->getX2());
+            common::UniversalRandomOptions y(dialog->getY1(), dialog->getY2());
+            options.reset(new common::UniversalRandomMutation(factor, x, y));
+            break;
+        }
+        case 1: // gauss
+        {
+            MutationOptionsDialog* dialog = dynamic_cast<MutationOptionsDialog*>(mutationOptions[1]);
+            common::GaussRandomOptions x(dialog->getX1(), dialog->getX2());
+            common::GaussRandomOptions y(dialog->getY1(), dialog->getY2());
+            options.reset(new common::GaussRandomMutation(factor, x, y));
+            break;
+        }
+        case 2: // const
+            break;
+    }
+
+    common::MessagePtr msg(new common::MutationChangeRequestedMessage(options));
+}
+
+void MainWindow::showMutationPropertiesWindow()
+{
+    showMutationPropertiesWindow(ui->mutationType->currentIndex());
+}
+
+void MainWindow::showMutationPropertiesWindow(int chosenMutationType)
+{
+    const double factor = ui->mutationFactor->value();
+
+    switch (chosenMutationType)
+    {
+        case 0: // universal
+        {
+            MutationOptionsDialog* dialog = dynamic_cast<MutationOptionsDialog*>(mutationOptions[0]);
+            assert(dialog != nullptr);
+            const int result = dialog->exec();
+            if (result != QDialog::Accepted)
+                break;
+
+            common::UniversalRandomOptions x(dialog->getX1(), dialog->getX2());
+            common::UniversalRandomOptions y(dialog->getY1(), dialog->getY2());
+            std::shared_ptr<common::MutationOptions> options(new common::UniversalRandomMutation(factor, x, y));
+            blockingQueue->push(common::MessagePtr(new common::MutationChangeRequestedMessage(options)));
+            break;
+        }
+        case 1: // gauss
+        {
+            MutationOptionsDialog* dialog = dynamic_cast<MutationOptionsDialog*>(mutationOptions[1]);
+            assert(dialog != nullptr);
+            const int result = dialog->exec();
+            if (result != QDialog::Accepted)
+                break;
+
+            common::GaussRandomOptions x(dialog->getX1(), dialog->getX2());
+            common::GaussRandomOptions y(dialog->getY1(), dialog->getY2());
+            std::shared_ptr<common::MutationOptions> options(new common::GaussRandomMutation(factor, x, y));
+            blockingQueue->push(common::MessagePtr(new common::MutationChangeRequestedMessage(options)));
+            break;
+        }
+        case 2: // const
+        {
+            ConstMutationDialog* dialog = dynamic_cast<ConstMutationDialog*>(mutationOptions[2]);
+            assert(dialog != nullptr);
+            const int result = dialog->exec();
+            if (result != QDialog::Accepted)
+                break;
+
+            std::shared_ptr<common::MutationOptions> options(new common::ConstMutation(factor, dialog->getX(), dialog->getY()));
+            blockingQueue->push(common::MessagePtr(new common::MutationChangeRequestedMessage(options)));
+            break;
+        }
+    }
 }
 
 MainWindow::~MainWindow()

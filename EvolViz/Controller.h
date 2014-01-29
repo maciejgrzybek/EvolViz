@@ -51,6 +51,7 @@ public:
     virtual void visit(const common::SelectionTypeChangeAppliedMessage& message);
     virtual void visit(const common::PopulationSizeChangeAppliedMessage& message);
     virtual void visit(const common::GoalChangeRequestedMessage& message);
+    virtual void visit(const common::MutationChangeRequestedMessage& message);
 
 	virtual void onStateChanged();
 	virtual void onGoalReached();

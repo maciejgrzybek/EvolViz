@@ -15,16 +15,16 @@ public:
     explicit PointInitializationDialog(QWidget *parent = 0);
     ~PointInitializationDialog();
 
-    int getX() const;
-    int getY() const;
+    double getX() const;
+    double getY() const;
 
 public slots:
     virtual void accept();
     virtual void reject();
 
 private:
-    int x;
-    int y;
+    double x;
+    double y;
 
     Ui::PointInitializationDialog *ui;
 };

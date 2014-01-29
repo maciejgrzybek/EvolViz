@@ -166,7 +166,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QDoubleSpinBox" name="doubleSpinBox_2">
+             <widget class="QDoubleSpinBox" name="mutationFactor">
               <property name="decimals">
                <number>4</number>
               </property>
@@ -183,7 +183,10 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_9">
             <item>
-             <widget class="QComboBox" name="comboBox_3">
+             <widget class="QComboBox" name="mutationType">
+              <property name="currentIndex">
+               <number>1</number>
+              </property>
               <item>
                <property name="text">
                 <string>UniversalRandom</string>

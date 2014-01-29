@@ -38,7 +38,9 @@ SOURCES += main.cpp\
     Selector.cpp \
     View.cpp \
     PointInitializationDialog.cpp \
-    RandomInitializationDialog.cpp
+    RandomInitializationDialog.cpp \
+    GaussMutationDialog.cpp \
+    ConstMutationDialog.cpp
 
 HEADERS  += MainWindow.h \
     Alignator.h \
@@ -66,8 +68,12 @@ HEADERS  += MainWindow.h \
     View.h \
     Visitor.h \
     PointInitializationDialog.h \
-    RandomInitializationDialog.h
+    RandomInitializationDialog.h \
+    GaussMutationDialog.h \
+    ConstMutationDialog.h
 
 FORMS    += MainWindow.ui \
     PointInitializationDialog.ui \
-    RandomInitializationDialog.ui
+    RandomInitializationDialog.ui \
+    GaussMutationDialog.ui \
+    ConstMutationDialog.ui

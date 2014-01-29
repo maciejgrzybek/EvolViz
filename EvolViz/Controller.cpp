@@ -131,6 +131,14 @@ void Controller::visit(const common::GoalChangeRequestedMessage& message)
     state |= GoalValueChangeRequested;
 }
 
+void Controller::visit(const common::MutationChangeRequestedMessage& message)
+{
+    model->setMutationOptions(*message.options);
+
+    state ^= MutationOptionsChangeApplied;
+    state |= MutationOptionsChangeRequested;
+}
+
 void Controller::visit(const common::StateChangedMessage& message)
 {
     common::PopulationSnapshot snapshot = model->getPopulationSnapshot();

@@ -54,10 +54,14 @@ protected slots:
     void rangeOptionsChangeRequest();
     void selectionTypeChangeRequest(int chosenSelectionType);
     void goalChangeRequest();
+    void mutationChangeRequest();
+    void showMutationPropertiesWindow();
+    void showMutationPropertiesWindow(int chosenMutationType);
 
 private:
     Ui::MainWindow* ui;
     std::vector<QDialog*> initializationOptions;
+    std::vector<QDialog*> mutationOptions;
     std::shared_ptr<Controller::BlockingQueue> blockingQueue;
     class Image* image;
     common::PopulationSnapshot lastSnapshot;

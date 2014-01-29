@@ -29,12 +29,12 @@ void PointInitializationDialog::reject()
     QDialog::reject();
 }
 
-int PointInitializationDialog::getX() const
+double PointInitializationDialog::getX() const
 {
     return ui->x->value();
 }
 
-int PointInitializationDialog::getY() const
+double PointInitializationDialog::getY() const
 {
     return ui->y->value();
 }

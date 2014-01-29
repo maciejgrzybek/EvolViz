@@ -79,6 +79,15 @@ void GoalChangeRequestedMessage::accept(MessageVisitor& visitor) const
     visitor.visit(*this);
 }
 
+MutationChangeRequestedMessage::MutationChangeRequestedMessage(std::shared_ptr<MutationOptions> options)
+    : options(options)
+{}
+
+void MutationChangeRequestedMessage::accept(MessageVisitor& visitor) const
+{
+    visitor.visit(*this);
+}
+
 void PerformSingleStepMessage::accept(MessageVisitor& visitor) const
 {
     visitor.visit(*this);
