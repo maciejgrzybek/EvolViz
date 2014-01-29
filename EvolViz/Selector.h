@@ -42,7 +42,11 @@ public:
 
 class RouletteSelector : public Selector {
 public:
+    RouletteSelector(double normalizator);
 	virtual void operator()(Population& population, unsigned int size) const override;
+
+private:
+    double normalizator_;
 };
 
 typedef std::shared_ptr<Selector> SelectorPtr;

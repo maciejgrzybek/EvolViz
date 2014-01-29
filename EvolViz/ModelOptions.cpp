@@ -129,4 +129,8 @@ UniversalRandomReinitializationAlignment::UniversalRandomReinitializationAlignme
 	: RangeAlignmentOptions(x_min, x_max, y_min, y_max) {
 }
 
+RouletteSelection::RouletteSelection(double normalizator)
+    : normalizator(normalizator) {
+}
+
 } // namespace model

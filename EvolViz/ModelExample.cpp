@@ -56,7 +56,7 @@ void engage() {
 
 	// INITIALIZATION
 	std::cout << "Inicjalizacja" << std::endl;
-	model.setFitnessFunction("sin(x) + sin(y)");
+    model.setFitnessFunction("2");
 	model.setInitializationOptions(common::RandomInitialization(0, 5, 0, 5));
 	model.setReproductionOptions(common::ReproductionOptions(2.0));
 	model.setMutationOptions(common::GaussRandomMutation(0.25, common::GaussRandomOptions(0.0, 0.3), common::GaussRandomOptions(0.0, 0.3)));

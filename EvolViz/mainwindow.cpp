@@ -383,7 +383,7 @@ void MainWindow::selectionTypeChangeRequest(int /*chosenSelectionType*/)
             options.reset(new common::TournamentSelection);
             break;
         case 3: // roulette
-            options.reset(new common::RouletteSelection);
+            options.reset(new common::RouletteSelection(-2.0)); //FIXME
             break;
     }
 

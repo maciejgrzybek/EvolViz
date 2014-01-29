@@ -23,8 +23,12 @@ void Selector::Factory::visit(const common::TournamentSelection& /*options*/) {
 	last_produced_ = SelectorPtr(new TournamentSelector());
 }
 
-void Selector::Factory::visit(const common::RouletteSelection& /*options*/) {
-	last_produced_ = SelectorPtr(new RouletteSelector());
+void Selector::Factory::visit(const common::RouletteSelection& options) {
+    last_produced_ = SelectorPtr(new RouletteSelector(options.normalizator));
+}
+
+RouletteSelector::RouletteSelector(double normalizator)
+    : normalizator_(normalizator) {
 }
 
 void EliteSelector::operator()(Population& population, unsigned int size) const {
@@ -81,8 +85,8 @@ void RouletteSelector::operator()(Population& population, unsigned int size) con
 	std::sort(population.subjects.begin(), population.subjects.end());
 	
 	double pool = 0.0;
-	for (Population::Subject& subject : population.subjects)
-		pool += subject.value;
+    for (Population::Subject& subject : population.subjects)
+        pool += std::abs(subject.value - normalizator_);
 
 	std::list<unsigned int> selected;
 	while (selected.size() < size) {
@@ -90,12 +94,11 @@ void RouletteSelector::operator()(Population& population, unsigned int size) con
 		unsigned int winner = 0;
 		double current = 0.0;
 		for (Population::Subject& subject : population.subjects) {
-			current += subject.value;
+            current += std::abs(subject.value - normalizator_);
             if (current >= win_value)
 				break;
 			++winner;
 		}
-		assert(winner < population.subjects.size());
 
 		selected.push_back(winner);
 	}

@@ -164,6 +164,8 @@ namespace common {
 		virtual void accept(SelectionOptionsVisitor& visitor) const override;
 	};
 	struct RouletteSelection : public SelectionOptions {
-		virtual void accept(SelectionOptionsVisitor& visitor) const override;
+        double normalizator;
+        RouletteSelection(double normalizator);
+		virtual void accept(SelectionOptionsVisitor& visitor) const override;              
 	};
 } // namespace common
