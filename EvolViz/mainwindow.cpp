@@ -71,7 +71,7 @@ private:
         return v/distance;
     }
 
-    std::pair<double, double> getMinMaxOfFunction(double width, double height) const
+    std::pair<double, double> getMinMaxOfFunction(int width, int height) const
     {
         assert(width > 0 && height > 0);
 
@@ -124,7 +124,7 @@ public:
         QPainter painter;
         painter.begin(&image);
 
-        const std::pair<double, double> minMax = getMinMaxOfFunction(rect.width(), rect.height());
+        const std::pair<double, double> minMax = getMinMaxOfFunction(width, height);
 
         const double widthFactor = width/rect.width();
         const double heightFactor = height/rect.height();
@@ -135,6 +135,7 @@ public:
             {
                 const double value = (*calculator)(i * widthFactor, j * heightFactor);
                 const double normalization = std::min(getNormalization(value, minMax), 1.0);
+                assert(normalization >= 0.0 && normalization <= 1.0);
 
                 painter.setPen(QPen(QColor(255 * normalization, 0, 0), 1));
                 painter.drawPoint(i, j);
@@ -165,7 +166,8 @@ private:
         const double v = value - minMax.first;
         if (distance == 0)
             return 1.0;
-        return v/distance;
+        const double result = std::max(std::min(v/distance, 1.0), 0.0);
+        return result;
     }
 
     std::pair<double, double> getMinMaxOfFunction(double width, double height) const
