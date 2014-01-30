@@ -29,10 +29,11 @@ void Evolution::doStep() {
 		break;
 		case BEFORE_CROSSOVER:
 			(*crosser_)(population_);
+            (*alignator_)(population_);
 			state_ = BEFORE_SELECTION;
 		break;
 		case BEFORE_SELECTION:
-			(*selector_)(population_, population_size_);
+            (*selector_)(population_, population_size_);
 			updateGoalReached();
 			state_ = BEFORE_REPRODUCTION;
 		break;
