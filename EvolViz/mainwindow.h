@@ -57,6 +57,7 @@ protected slots:
     void mutationChangeRequest();
     void showMutationPropertiesWindow();
     void showMutationPropertiesWindow(int chosenMutationType);
+    void populationSizeChangeRequest();
 
 private:
     Ui::MainWindow* ui;

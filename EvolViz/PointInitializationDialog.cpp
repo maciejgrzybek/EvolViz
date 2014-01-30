@@ -5,7 +5,7 @@ PointInitializationDialog::PointInitializationDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::PointInitializationDialog),
     x(0),
-    y(0)
+    y(5)
 {
     ui->setupUi(this);
 }

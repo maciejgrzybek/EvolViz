@@ -39,10 +39,27 @@
     </widget>
    </item>
    <item row="0" column="1">
-    <widget class="QDoubleSpinBox" name="x"/>
+    <widget class="QDoubleSpinBox" name="x">
+     <property name="decimals">
+      <number>6</number>
+     </property>
+     <property name="maximum">
+      <double>999999.989999999990687</double>
+     </property>
+    </widget>
    </item>
    <item row="1" column="1">
-    <widget class="QDoubleSpinBox" name="y"/>
+    <widget class="QDoubleSpinBox" name="y">
+     <property name="decimals">
+      <number>6</number>
+     </property>
+     <property name="maximum">
+      <double>999999.989999999990687</double>
+     </property>
+     <property name="value">
+      <double>5.000000000000000</double>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

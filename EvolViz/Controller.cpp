@@ -139,6 +139,14 @@ void Controller::visit(const common::MutationChangeRequestedMessage& message)
     state |= MutationOptionsChangeRequested;
 }
 
+void Controller::visit(const common::PopulationSizeChangeRequestedMessage& message)
+{
+    model->setPopulationSize(message.size);
+
+    state ^= PopulationSizeChangeApplied;
+    state |= PopulationSizeChangeRequested;
+}
+
 void Controller::visit(const common::StateChangedMessage& message)
 {
     common::PopulationSnapshot snapshot = model->getPopulationSnapshot();

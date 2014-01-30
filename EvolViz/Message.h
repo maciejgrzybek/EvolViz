@@ -20,6 +20,7 @@ struct RangeOptionsChangeRequestedMessage;
 struct SelectionOptionsChangeRequestedMessage;
 struct GoalChangeRequestedMessage;
 struct MutationChangeRequestedMessage;
+struct PopulationSizeChangeRequestedMessage;
 
 struct StateChangedMessage;
 struct GoalReachedMessage;
@@ -46,6 +47,7 @@ typedef Visitor<StartRequestedMessage, // view messages
                 SelectionOptionsChangeRequestedMessage,
                 GoalChangeRequestedMessage,
                 MutationChangeRequestedMessage,
+                PopulationSizeChangeRequestedMessage,
 				StateChangedMessage, // model messages below
 				GoalReachedMessage,
 				ProcessingStartedMessage,
@@ -135,6 +137,14 @@ struct MutationChangeRequestedMessage : ViewMessage
 {
     MutationChangeRequestedMessage(std::shared_ptr<common::MutationOptions> options);
     std::shared_ptr<common::MutationOptions> options;
+
+    virtual void accept(MessageVisitor& visitor) const;
+};
+
+struct PopulationSizeChangeRequestedMessage : ViewMessage
+{
+    PopulationSizeChangeRequestedMessage(int size);
+    const int size;
 
     virtual void accept(MessageVisitor& visitor) const;
 };

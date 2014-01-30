@@ -219,6 +219,7 @@ MainWindow::MainWindow(std::shared_ptr<Controller::BlockingQueue> blockingQueue,
     connect(ui->selectionType, SIGNAL(currentIndexChanged(int)), SLOT(selectionTypeChangeRequest(int)));
     connect(ui->goalCommitButton, SIGNAL(clicked()), SLOT(goalChangeRequest()));
     connect(ui->mutationToolButton, SIGNAL(clicked()), SLOT(showMutationPropertiesWindow()));
+    connect(ui->populationCommitButton, SIGNAL(clicked()), SLOT(populationSizeChangeRequest()));
 
     connect(this, SIGNAL(drawSnapshotSig(common::PopulationSnapshot)), SLOT(drawSnapshot(common::PopulationSnapshot)));
     connect(this, SIGNAL(drawFitnessFunctionSig(QString, double, double)), SLOT(drawFitnessFunction(QString, double, double)));
@@ -482,6 +483,12 @@ void MainWindow::showMutationPropertiesWindow(int chosenMutationType)
             break;
         }
     }
+}
+
+void MainWindow::populationSizeChangeRequest()
+{
+    common::MessagePtr msg(new common::PopulationSizeChangeRequestedMessage(ui->populationSize->value()));
+    blockingQueue->push(std::move(msg));
 }
 
 MainWindow::~MainWindow()

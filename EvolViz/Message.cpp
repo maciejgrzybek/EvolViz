@@ -88,6 +88,15 @@ void MutationChangeRequestedMessage::accept(MessageVisitor& visitor) const
     visitor.visit(*this);
 }
 
+PopulationSizeChangeRequestedMessage::PopulationSizeChangeRequestedMessage(int size)
+    : size(size)
+{}
+
+void PopulationSizeChangeRequestedMessage::accept(MessageVisitor& visitor) const
+{
+    visitor.visit(*this);
+}
+
 void PerformSingleStepMessage::accept(MessageVisitor& visitor) const
 {
     visitor.visit(*this);

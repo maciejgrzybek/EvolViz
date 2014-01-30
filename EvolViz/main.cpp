@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
     m->setMutationOptions(common::GaussRandomMutation(0.25, common::GaussRandomOptions(0.0, 0.3), common::GaussRandomOptions(0.0, 0.3)));
     m->setCrossOverOptions(common::QualityAvgCrossOver(1.0, -2.0));
     m->setRangeOptions(common::MirroringRangeAlignment(0, 5, 0, 5));
-    m->setSelectionType(common::RouletteSelection());
+    m->setSelectionType(common::EliteSelection());
     m->setPopulationSize(1000);
     m->setGoalValue(2);
 
