@@ -12,6 +12,7 @@
 #include "ConstMutationDialog.h"
 #include "GaussMutationDialog.h"
 
+#include "CrossOverOptionsDialog.h"
 #include "QualityAvgCrossOverDialog.h"
 
 #include "ModelOptions.h"
@@ -140,6 +141,7 @@ MainWindow::MainWindow(std::shared_ptr<Controller::BlockingQueue> blockingQueue,
     connect(ui->populationCommitButton, SIGNAL(clicked()), SLOT(populationSizeChangeRequest()));
     connect(ui->crossOverCommitButton, SIGNAL(clicked()), SLOT(crossOverChangeRequest()));
     connect(ui->crossOverToolButton, SIGNAL(clicked()), SLOT(showCrossOverProperties()));
+    connect(ui->crossOverType, SIGNAL(activated(int)), SLOT(crossOverTypeChange(int)));
 
     connect(this, SIGNAL(drawSnapshotSig(common::PopulationSnapshot)), SLOT(drawSnapshot(common::PopulationSnapshot)));
     connect(this, SIGNAL(drawFitnessFunctionSig(QString, double, double)), SLOT(drawFitnessFunction(QString, double, double)));
@@ -148,9 +150,13 @@ MainWindow::MainWindow(std::shared_ptr<Controller::BlockingQueue> blockingQueue,
     initializationOptions.push_back(new RandomInitializationDialog(this));
 
     mutationOptions.push_back(new MutationOptionsDialog("Min", "Max", "Min", "Max", this));
-    mutationOptions.push_back(new MutationOptionsDialog("Variation", "Expected", "Variation", "Expected", this));
+    mutationOptions.push_back(new MutationOptionsDialog("Expected", "Variation", "Expected", "Variation", this));
     mutationOptions.push_back(new ConstMutationDialog(this));
 
+    crossOverOptions.push_back(new QualityAvgCrossOverDialog(this));
+    crossOverOptions.push_back(new MutationOptionsDialog("", "", "", "", this)); // TODO rename texts appropriately
+    crossOverOptions.push_back(new CrossOverOptionsDialog(this, "X min", "X max", "Y min", "Y max", "min", "max"));
+    crossOverOptions.push_back(new CrossOverOptionsDialog(this, "X min", "X max", "Y min", "Y max", "expected", "variation"));
     crossOverOptions.push_back(new QualityAvgCrossOverDialog(this));
 }
 
@@ -449,50 +455,102 @@ void MainWindow::crossOverChangeRequest()
             blockingQueue->push(std::move(message));
             break;
         }
+        case 1: // const avg
+        {
+            MutationOptionsDialog* dialog = dynamic_cast<MutationOptionsDialog*>(crossOverOptions[1]);
+            const double x[2] = { dialog->getX1(), dialog->getX2() };
+            const double y[2] = { dialog->getY1(), dialog->getY2() };
+            const std::shared_ptr<common::CrossOverOptions> options(new common::ConstAvgCrossOver(factor, x, y));
+
+            common::MessagePtr message(new common::CrossOverChangeRequestedMessage(options));
+            blockingQueue->push(std::move(message));
+            break;
+        }
+        case 2: // universal random
+        {
+            CrossOverOptionsDialog* dialog
+                    = dynamic_cast<CrossOverOptionsDialog*>(crossOverOptions[2]);
+            assert(dialog != nullptr);
+            break;
+        }
+        case 3: // gauss random
+        {
+            CrossOverOptionsDialog* dialog
+                    = dynamic_cast<CrossOverOptionsDialog*>(crossOverOptions[3]);
+            assert(dialog != nullptr);
+            const common::GaussRandomOptions x[2]
+                    = { common::GaussRandomOptions(dialog->getXmin().first,
+                        dialog->getXmin().second),
+                        common::GaussRandomOptions(dialog->getXmax().first,
+                        dialog->getXmax().second)};
+
+            const common::GaussRandomOptions y[2]
+                    = { common::GaussRandomOptions(dialog->getYmin().first,
+                        dialog->getYmin().second),
+                        common::GaussRandomOptions(dialog->getYmax().first,
+                        dialog->getYmax().second)};
+            const std::shared_ptr<common::CrossOverOptions> options(new common::GaussRandomAvgCrossOver(factor, x, y));
+
+            common::MessagePtr message(new common::CrossOverChangeRequestedMessage(options));
+            blockingQueue->push(std::move(message));
+            break;
+        }
+        case 4: // quality random fixed
+        {
+            QualityAvgCrossOverDialog* dialog
+                    = dynamic_cast<QualityAvgCrossOverDialog*>(crossOverOptions[4]);
+            assert(dialog != nullptr);
+
+            const std::shared_ptr<common::CrossOverOptions> options(
+                        new common::QualityRandomFixedCrossOver(factor, dialog->getNormalizator()));
+
+            common::MessagePtr message(new common::CrossOverChangeRequestedMessage(options));
+            blockingQueue->push(std::move(message));
+            break;
+        }
+        case 5: // universal random fixed
+        {
+            const std::shared_ptr<common::CrossOverOptions> options(
+                        new common::UniversalRandomFixedCrossOver(factor));
+            common::MessagePtr message(new common::CrossOverChangeRequestedMessage(options));
+            blockingQueue->push(std::move(message));
+            break;
+        }
     }
 }
 
 void MainWindow::showCrossOverProperties()
 {
-    const double factor = ui->crossOverFactor->value();
-
     switch (ui->crossOverType->currentIndex())
     {
         case 0: // quality avg
+        case 1: // const avg
+        case 2: // universal random
+        case 3: // gauss random
+        case 4: // quality random fixed
         {
-            QualityAvgCrossOverDialog* dialog = dynamic_cast<QualityAvgCrossOverDialog*>(crossOverOptions[0]);
+            QDialog* dialog = crossOverOptions[ui->crossOverType->currentIndex()];
             assert(dialog != nullptr);
             const int result = dialog->exec();
             if (result != QDialog::Accepted)
                 break;
 
-            const std::shared_ptr<common::CrossOverOptions> options(
-                        new common::QualityAvgCrossOver(factor, dialog->getNormalizator()));
-            common::MessagePtr message(new common::CrossOverChangeRequestedMessage(options));
-            blockingQueue->push(std::move(message));
+            crossOverChangeRequest();
             break;
-        }
-        case 1: // const avg
-        {
-            assert(false && "NYI");
-        }
-        case 2: // universal random
-        {
-            assert(false && "NYI");
-        }
-        case 3: // gauss random
-        {
-            assert(false && "NYI");
-        }
-        case 4: // quality random fixed
-        {
-            assert(false && "NYI");
         }
         case 5: // universal random fixed
         {
-            assert(false && "NYI");
+            assert(false && "Option should be disabled but was not.");
         }
     }
+}
+
+void MainWindow::crossOverTypeChange(int chosenType)
+{
+    if (chosenType == 5) // universal random fixed
+        ui->crossOverToolButton->setEnabled(false);
+    else
+        ui->crossOverToolButton->setEnabled(true);
 }
 
 MainWindow::~MainWindow()

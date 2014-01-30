@@ -12,7 +12,7 @@ class QualityAvgCrossOverDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit QualityAvgCrossOverDialog(QWidget *parent = 0);
+    explicit QualityAvgCrossOverDialog(QWidget* parent = 0, const QString& text = "Normalizator");
     ~QualityAvgCrossOverDialog();
 
     double getNormalizator() const;

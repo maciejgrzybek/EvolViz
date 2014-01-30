@@ -81,7 +81,7 @@ QualityAvgCrossOver::QualityAvgCrossOver(double cross_over_factor, double normal
 	: CrossOverOptions(cross_over_factor), normalizator(normalizator) {
 }
 
-ConstAvgCrossOver::ConstAvgCrossOver(double cross_over_factor, double x_weight[2], double y_weight[2]) 
+ConstAvgCrossOver::ConstAvgCrossOver(double cross_over_factor, const double x_weight[], const double y_weight[])
 	: CrossOverOptions(cross_over_factor) {
 	this->x_weight[0] = x_weight[0];
 	this->x_weight[1] = x_weight[1];
@@ -89,7 +89,7 @@ ConstAvgCrossOver::ConstAvgCrossOver(double cross_over_factor, double x_weight[2
 	this->y_weight[1] = y_weight[1];
 }
 
-UniversalRandomAvgCrossOver::UniversalRandomAvgCrossOver(double cross_over_factor, UniversalRandomOptions x[2], UniversalRandomOptions y[2]) 
+UniversalRandomAvgCrossOver::UniversalRandomAvgCrossOver(double cross_over_factor, const UniversalRandomOptions x[2], const UniversalRandomOptions y[2])
 	: CrossOverOptions(cross_over_factor) {
 	this->x[0] = x[0];
 	this->x[1] = x[1];
@@ -97,7 +97,7 @@ UniversalRandomAvgCrossOver::UniversalRandomAvgCrossOver(double cross_over_facto
 	this->y[1] = y[1];
 }
 
-GaussRandomAvgCrossOver::GaussRandomAvgCrossOver(double cross_over_factor, GaussRandomOptions x[2], GaussRandomOptions y[2])
+GaussRandomAvgCrossOver::GaussRandomAvgCrossOver(double cross_over_factor, const GaussRandomOptions x[], const GaussRandomOptions y[])
 	: CrossOverOptions(cross_over_factor) {
 	this->x[0] = x[0];
 	this->x[1] = x[1];

@@ -12,7 +12,7 @@ class ConstMutationDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit ConstMutationDialog(QWidget* parent = 0);
+    explicit ConstMutationDialog(QWidget* parent = 0, const QString& text1 = "X", const QString& text2 = "Y");
     ~ConstMutationDialog();
 
     double getX() const;

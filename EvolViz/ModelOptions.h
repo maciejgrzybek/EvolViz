@@ -101,19 +101,19 @@ namespace common {
 	struct ConstAvgCrossOver : public CrossOverOptions {
 		double x_weight[2];
 		double y_weight[2];
-		ConstAvgCrossOver(double cross_over_factor, double x_weight[2], double y_weight[2]);
+        ConstAvgCrossOver(double cross_over_factor, const double x_weight[2], const double y_weight[2]);
 		virtual void accept(CrossOverOptionsVisitor& visitor) const override;
 	};
 	struct UniversalRandomAvgCrossOver : public CrossOverOptions {
 		UniversalRandomOptions x[2];
 		UniversalRandomOptions y[2];
-		UniversalRandomAvgCrossOver(double cross_over_factor, UniversalRandomOptions x[2], UniversalRandomOptions y[2]);
+        UniversalRandomAvgCrossOver(double cross_over_factor, const UniversalRandomOptions x[2], const UniversalRandomOptions y[2]);
 		virtual void accept(CrossOverOptionsVisitor& visitor) const override;
 	};
 	struct GaussRandomAvgCrossOver : public CrossOverOptions {
 		GaussRandomOptions x[2];
 		GaussRandomOptions y[2];
-		GaussRandomAvgCrossOver(double cross_over_factor, GaussRandomOptions x[2], GaussRandomOptions y[2]);
+        GaussRandomAvgCrossOver(double cross_over_factor, const GaussRandomOptions x[2], const GaussRandomOptions y[2]);
 		virtual void accept(CrossOverOptionsVisitor& visitor) const override;
 	};
 	struct QualityRandomFixedCrossOver : public CrossOverOptions {

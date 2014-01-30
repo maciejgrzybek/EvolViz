@@ -1,13 +1,15 @@
 #include "ConstMutationDialog.h"
 #include "ui_ConstMutationDialog.h"
 
-ConstMutationDialog::ConstMutationDialog(QWidget* parent)
+ConstMutationDialog::ConstMutationDialog(QWidget* parent, const QString& text1, const QString& text2)
     : QDialog(parent),
       ui(new Ui::ConstMutationDialog),
       x(0.0),
       y(0.0)
 {
     ui->setupUi(this);
+    ui->label->setText(text1);
+    ui->label_2->setText(text2);
 }
 
 void ConstMutationDialog::accept()

@@ -60,6 +60,7 @@ protected slots:
     void populationSizeChangeRequest();
     void crossOverChangeRequest();
     void showCrossOverProperties();
+    void crossOverTypeChange(int chosenType);
 
 private:
     Ui::MainWindow* ui;

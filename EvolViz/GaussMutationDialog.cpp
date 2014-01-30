@@ -2,10 +2,10 @@
 #include "ui_GaussMutationDialog.h"
 
 MutationOptionsDialog::MutationOptionsDialog(const QString& text1,
-                                         const QString& text2,
-                                         const QString& text3,
-                                         const QString& text4,
-                                         QWidget* parent)
+                                             const QString& text2,
+                                             const QString& text3,
+                                             const QString& text4,
+                                             QWidget* parent)
     : QDialog(parent),
       ui(new Ui::GaussMutationDialog),
       x1(0.0),
