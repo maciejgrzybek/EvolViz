@@ -64,14 +64,14 @@ public:
         painter.end();
     }
 
-    void drawPoint(double x, double y)
+    void drawPoint(double x, double y, const QColor& color = QColor(Qt::yellow))
     {
         const double widthFactor = (double)width/image.width();
         const double heightFactor = (double)height/image.height();
 
         QPainter painter;
         painter.begin(&image);
-        painter.setPen(QPen(QColor(Qt::yellow), 2));
+        painter.setPen(QPen(color, 2));
         painter.drawPoint(x/widthFactor, y/heightFactor);
         painter.end();
     }
@@ -171,8 +171,18 @@ void MainWindow::drawSnapshot(const common::PopulationSnapshot& snapshot)
 {
     delete image;
     image = new Image(background, width, height);
+
+    common::PopulationSnapshot::Subject subject;
+    subject.value = std::numeric_limits<double>::min();
+
     for (auto& item : snapshot.subjects)
+    {
         image->drawPoint(item.x, item.y);
+        if (item.value > subject.value)
+            subject = item;
+    }
+
+    image->drawPoint(subject.x, subject.y, QColor(Qt::blue));
 
     ui->image->setPixmap(image->image);
 
