@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>894</width>
-    <height>727</height>
+    <height>598</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,7 +33,7 @@
           <bool>false</bool>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color: green;</string>
+          <string notr="true">background-color: white;</string>
          </property>
          <property name="text">
           <string/>
@@ -70,6 +70,12 @@
        <enum>QFrame::Raised</enum>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
        <item>
         <widget class="QFrame" name="frame_left">
          <property name="frameShape">
@@ -79,6 +85,12 @@
           <enum>QFrame::Raised</enum>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_8">
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
           <item>
            <widget class="QGroupBox" name="groupBox">
             <property name="title">
@@ -286,6 +298,12 @@
           <enum>QFrame::Raised</enum>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_9">
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
           <item>
            <widget class="QGroupBox" name="groupBox_7">
             <property name="title">
