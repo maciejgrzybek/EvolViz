@@ -34,14 +34,26 @@ void Controller::asyncStop()
 	working = false;
 }
 
-void Controller::visit(const common::StartRequestedMessage& message)
+void Controller::visit(const common::StartRequestedMessage& /*message*/)
 {
 	// FIXME implement this
 }
 
-void Controller::visit(const common::StopRequestedMessage& message)
+void Controller::visit(const common::StopRequestedMessage& /*message*/)
 {
 	// FIXME implement this
+}
+
+void Controller::visit(const common::RestartRequestedMessage& /*message*/)
+{
+    model->doRestart();
+}
+
+void Controller::visit(const common::ExitRequestedMessage& /*message*/)
+{
+    model->doExit();
+    view.exit();
+    working = false;
 }
 
 void Controller::visit(const common::FitnessFunctionChangeRequestedMessage& message)
@@ -174,14 +186,12 @@ void Controller::visit(const common::ProcessingStoppedMessage& message)
 
 void Controller::visit(const common::FitnessFunctionAppliedMessage& message)
 {
-    double width = 0;
-    double height = 0;
     if (rangeOptionsSet)
     {
-        width = rangeOptionsSet->x_max - rangeOptionsSet->x_min;
-        height = rangeOptionsSet->y_max - rangeOptionsSet->y_min;
+        const double width = rangeOptionsSet->x_max - rangeOptionsSet->x_min;
+        const double height = rangeOptionsSet->y_max - rangeOptionsSet->y_min;
+        view.changeFitnessFunction(message.fitnessFunction, width, height);
     }
-    view.changeFitnessFunction(message.fitnessFunction, width, height);
 
     fitnessFunctionLastApplied = message.fitnessFunction;
 

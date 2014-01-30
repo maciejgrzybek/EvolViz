@@ -28,6 +28,8 @@ public:
 	// view events
 	virtual void visit(const common::StartRequestedMessage& message);
 	virtual void visit(const common::StopRequestedMessage& message);
+    virtual void visit(const common::RestartRequestedMessage& message);
+    virtual void visit(const common::ExitRequestedMessage& message);
 	virtual void visit(const common::FitnessFunctionChangeRequestedMessage& message);
     virtual void visit(const common::PerformSingleStepMessage& message);
     virtual void visit(const common::EvaluateGenerationMessage& message);

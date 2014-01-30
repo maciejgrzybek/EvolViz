@@ -19,6 +19,8 @@ public:
     explicit MainWindow(std::shared_ptr<Controller::BlockingQueue> blockingQueue, QWidget* parent = nullptr);
     virtual ~MainWindow();
 
+    virtual void exit();
+
     virtual void drawGraph(const common::PopulationSnapshot& snapshot);
     virtual void changeFitnessFunction(const std::string& formula, double width, double height);
 
@@ -31,6 +33,7 @@ public:
 signals:
     void drawSnapshotSig(const common::PopulationSnapshot& snapshot);
     void drawFitnessFunctionSig(const QString& formula, double width, double height);
+    void performExit();
 
 protected:
     virtual void resizeEvent(QResizeEvent* event);
@@ -44,7 +47,7 @@ protected slots:
     void performSingleStep();
     void evaluateGeneration();
     void restart();
-    void exit();
+    void exitRequest();
 
     void windowResized();
 

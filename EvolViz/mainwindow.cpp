@@ -128,7 +128,7 @@ MainWindow::MainWindow(std::shared_ptr<Controller::BlockingQueue> blockingQueue,
     connect(ui->actionPerform_single_step, SIGNAL(triggered(bool)), SLOT(performSingleStep()));
     connect(ui->actionEvaluate_generation, SIGNAL(triggered(bool)), SLOT(evaluateGeneration()));
     connect(ui->action_Restart, SIGNAL(triggered(bool)), SLOT(restart()));
-    connect(ui->action_Exit, SIGNAL(triggered(bool)), SLOT(exit()));
+    connect(ui->action_Exit, SIGNAL(triggered(bool)), SLOT(exitRequest()));
 
     connect(ui->fitnessFunctionCommit, SIGNAL(clicked()), SLOT(fitnessFunctionChangeRequested()));
     connect(ui->initializationType, SIGNAL(currentIndexChanged(int)), SLOT(commitInitializationProperties(int)));
@@ -145,6 +145,7 @@ MainWindow::MainWindow(std::shared_ptr<Controller::BlockingQueue> blockingQueue,
 
     connect(this, SIGNAL(drawSnapshotSig(common::PopulationSnapshot)), SLOT(drawSnapshot(common::PopulationSnapshot)));
     connect(this, SIGNAL(drawFitnessFunctionSig(QString, double, double)), SLOT(drawFitnessFunction(QString, double, double)));
+    connect(this, SIGNAL(performExit()), SLOT(close()));
 
     initializationOptions.push_back(new PointInitializationDialog(this));
     initializationOptions.push_back(new RandomInitializationDialog(this));
@@ -212,13 +213,12 @@ void MainWindow::evaluateGeneration()
 
 void MainWindow::restart()
 {
-    blockingQueue->push(common::MessagePtr(new common::StopRequestedMessage));
-    blockingQueue->push(common::MessagePtr(new common::StartRequestedMessage));
+    blockingQueue->push(common::MessagePtr(new common::RestartRequestedMessage));
 }
 
-void MainWindow::exit()
+void MainWindow::exitRequest()
 {
-    blockingQueue->push(common::MessagePtr(new common::StopRequestedMessage));
+    blockingQueue->push(common::MessagePtr(new common::ExitRequestedMessage));
 }
 
 void MainWindow::windowResized()
@@ -558,6 +558,11 @@ MainWindow::~MainWindow()
 {
     delete image;
     delete ui;
+}
+
+void MainWindow::exit()
+{
+    emit performExit();
 }
 
 void MainWindow::drawGraph(const common::PopulationSnapshot& snapshot)
