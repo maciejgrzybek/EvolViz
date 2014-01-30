@@ -49,7 +49,7 @@ protected slots:
     void windowResized();
 
     void showInitializationPropertiesWindow();
-    void showInitializationPropertiesWindow(int chosenInitializationType);
+    void commitInitializationProperties(int chosenInitializationType);
     void reproductionFactorChangeRequested();
     void rangeOptionsChangeRequest();
     void selectionTypeChangeRequest(int chosenSelectionType);

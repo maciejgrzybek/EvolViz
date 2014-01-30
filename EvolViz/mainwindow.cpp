@@ -130,7 +130,7 @@ MainWindow::MainWindow(std::shared_ptr<Controller::BlockingQueue> blockingQueue,
     connect(ui->action_Exit, SIGNAL(triggered(bool)), SLOT(exit()));
 
     connect(ui->fitnessFunctionCommit, SIGNAL(clicked()), SLOT(fitnessFunctionChangeRequested()));
-    connect(ui->initializationType, SIGNAL(activated(int)), SLOT(showInitializationPropertiesWindow(int)));
+    connect(ui->initializationType, SIGNAL(currentIndexChanged(int)), SLOT(commitInitializationProperties(int)));
     connect(ui->initializationToolButton, SIGNAL(clicked()), SLOT(showInitializationPropertiesWindow()));
     connect(ui->reproductionFactorCommitButton, SIGNAL(clicked()), SLOT(reproductionFactorChangeRequested()));
     connect(ui->rangeCommitButton, SIGNAL(clicked()), SLOT(rangeOptionsChangeRequest()));
@@ -222,12 +222,7 @@ void MainWindow::windowResized()
 
 void MainWindow::showInitializationPropertiesWindow()
 {
-    showInitializationPropertiesWindow(ui->initializationType->currentIndex());
-}
-
-void MainWindow::showInitializationPropertiesWindow(int chosenInitializationType)
-{
-    switch (chosenInitializationType)
+    switch (ui->initializationType->currentIndex())
     {
         case 0: // point
         {
@@ -236,6 +231,32 @@ void MainWindow::showInitializationPropertiesWindow(int chosenInitializationType
             const int result = d->exec();
             if (result != QDialog::Accepted)
                 break;
+
+            commitInitializationProperties(0);
+            break;
+        }
+        case 1: // random
+        {
+            RandomInitializationDialog* d = dynamic_cast<RandomInitializationDialog*>(initializationOptions[1]);
+            assert(d != nullptr);
+            const int result = d->exec();
+            if (result != QDialog::Accepted)
+                break;
+
+            commitInitializationProperties(1);
+            break;
+        }
+    }
+}
+
+void MainWindow::commitInitializationProperties(int chosenInitializationType)
+{
+    switch (chosenInitializationType)
+    {
+        case 0: // point
+        {
+            PointInitializationDialog* d = dynamic_cast<PointInitializationDialog*>(initializationOptions[0]);
+            assert(d != nullptr);
             auto opts = new common::InitializationOptionsChangeRequest(common::InitializationOptionsChangeRequest::Point);
             opts->x1 = d->getX();
             opts->y1 = d->getY();
@@ -246,9 +267,6 @@ void MainWindow::showInitializationPropertiesWindow(int chosenInitializationType
         {
             RandomInitializationDialog* d = dynamic_cast<RandomInitializationDialog*>(initializationOptions[1]);
             assert(d != nullptr);
-            const int result = d->exec();
-            if (result != QDialog::Accepted)
-                break;
             auto opts = new common::InitializationOptionsChangeRequest(common::InitializationOptionsChangeRequest::Random);
             opts->x1 = d->getXmin();
             opts->y1 = d->getYmin();
