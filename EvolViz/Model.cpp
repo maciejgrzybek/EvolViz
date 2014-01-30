@@ -26,7 +26,7 @@ void Model::doImmidiateExit() {
 void Model::setFitnessFunction(const std::string& formula) {
 	FitnessFunctionerPtr ff = FitnessFunctioner::produce(formula);
 	ObservedCommand cmd(std::bind(&Evolution::set_fitness_functioner, &evol_, ff),
-						std::bind(&common::ModelObserver::onFitnessFunctionApplied, std::placeholders::_1));
+                        std::bind(&common::ModelObserver::onFitnessFunctionApplied, std::placeholders::_1, formula));
 	evol_commands_[ApplyPolicy::GENERATION].push(cmd);
 }
 

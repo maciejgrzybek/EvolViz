@@ -61,7 +61,7 @@ public:
 	virtual void onProcessingStarted();
 	virtual void onProcessingStoped();
 
-	virtual void onFitnessFunctionApplied();
+    virtual void onFitnessFunctionApplied(const std::string& fitnessFunction);
 	virtual void onInitializationOptionsApplied();
 	virtual void onReproductionOptionsApplied();
 	virtual void onMutationOptionsApplied();
@@ -105,6 +105,8 @@ private:
     View& view;
 	std::atomic<bool> working;
     int state;
+
+    std::string fitnessFunctionLastApplied;
 
     std::shared_ptr<common::RangeAlignmentOptions> rangeOptionsSet;
 };

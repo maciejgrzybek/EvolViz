@@ -1,4 +1,7 @@
 #pragma once
+
+#include <string>
+
 namespace common {
 
 class ModelObserver
@@ -11,7 +14,7 @@ public:
 	virtual void onProcessingStarted() = 0;
 	virtual void onProcessingStoped() = 0;
 
-	virtual void onFitnessFunctionApplied() = 0;
+    virtual void onFitnessFunctionApplied(const std::string& fitnessFunction) = 0;
 	virtual void onInitializationOptionsApplied() = 0;
 	virtual void onReproductionOptionsApplied() = 0;
 	virtual void onMutationOptionsApplied() = 0;
@@ -22,5 +25,5 @@ public:
 	virtual void onGoalValueApplied() = 0;
 };
 
-}
+} // namespace common
 

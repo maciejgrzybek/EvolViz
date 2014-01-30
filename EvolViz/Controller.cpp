@@ -47,15 +47,11 @@ void Controller::visit(const common::StopRequestedMessage& message)
 void Controller::visit(const common::FitnessFunctionChangeRequestedMessage& message)
 {
     // TODO check whether in proper state (whether CAN change fitness function)!
+    if (message.formula == fitnessFunctionLastApplied)
+        return; // if not changed, do not update
+
     model->setFitnessFunction(message.formula);
-    double width = 0;
-    double height = 0;
-    if (rangeOptionsSet)
-    {
-        width = rangeOptionsSet->x_max - rangeOptionsSet->x_min;
-        height = rangeOptionsSet->y_max - rangeOptionsSet->y_min;
-    }
-    view.changeFitnessFunction(message.formula, width, height);
+    model->doCommit(); // to ensure drawing function
 }
 
 void Controller::visit(const common::PerformSingleStepMessage& message)
@@ -176,8 +172,19 @@ void Controller::visit(const common::ProcessingStoppedMessage& message)
     // FIXME implement this
 }
 
-void Controller::visit(const common::FitnessFunctionAppliedMessage&)
+void Controller::visit(const common::FitnessFunctionAppliedMessage& message)
 {
+    double width = 0;
+    double height = 0;
+    if (rangeOptionsSet)
+    {
+        width = rangeOptionsSet->x_max - rangeOptionsSet->x_min;
+        height = rangeOptionsSet->y_max - rangeOptionsSet->y_min;
+    }
+    view.changeFitnessFunction(message.fitnessFunction, width, height);
+
+    fitnessFunctionLastApplied = message.fitnessFunction;
+
     state ^= FitnessFunctionChangeRequested;
     state |= FitnessFunctionChangeApplied;
 }
@@ -253,9 +260,9 @@ void Controller::onProcessingStoped()
 	// FIXME implement this
 }
 
-void Controller::onFitnessFunctionApplied()
+void Controller::onFitnessFunctionApplied(const std::string& fitnessFunction)
 {
-    common::MessagePtr msg(new common::FitnessFunctionAppliedMessage);
+    common::MessagePtr msg(new common::FitnessFunctionAppliedMessage(fitnessFunction));
     blockingQueue->push(std::move(msg));
 }
 

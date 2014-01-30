@@ -12,7 +12,7 @@ class PointInitializationDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit PointInitializationDialog(QWidget *parent = 0);
+    explicit PointInitializationDialog(QWidget* parent = 0);
     ~PointInitializationDialog();
 
     double getX() const;
@@ -23,10 +23,10 @@ public slots:
     virtual void reject();
 
 private:
-    double x;
-    double y;
+    Ui::PointInitializationDialog* ui;
 
-    Ui::PointInitializationDialog *ui;
+    double x;
+    double y;    
 };
 
 #endif // POINTINITIALIZATIONDIALOG_H

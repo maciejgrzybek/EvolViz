@@ -147,6 +147,10 @@ void ProcessingStoppedMessage::accept(MessageVisitor& visitor) const
 	visitor.visit(*this);
 }
 
+FitnessFunctionAppliedMessage::FitnessFunctionAppliedMessage(const std::string& fitnessFunction)
+    : fitnessFunction(fitnessFunction)
+{}
+
 void FitnessFunctionAppliedMessage::accept(MessageVisitor& visitor) const
 {
 	visitor.visit(*this);

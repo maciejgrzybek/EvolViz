@@ -196,7 +196,8 @@ void MainWindow::drawFitnessFunction(const QString& formula, double width, doubl
 
 void MainWindow::fitnessFunctionChangeRequested()
 {
-    blockingQueue->push(common::MessagePtr(new common::FitnessFunctionChangeRequestedMessage(ui->fitnessFunctionLineEdit->text().toStdString())));
+    const std::string formula = ui->fitnessFunctionLineEdit->text().toStdString();
+    blockingQueue->push(common::MessagePtr(new common::FitnessFunctionChangeRequestedMessage(formula)));
 }
 
 void MainWindow::performSingleStep()

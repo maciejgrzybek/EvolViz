@@ -209,6 +209,9 @@ struct ProcessingStoppedMessage : ModelMessage
 
 struct FitnessFunctionAppliedMessage : ModelMessage
 {
+    FitnessFunctionAppliedMessage(const std::string& fitnessFunction);
+    const std::string fitnessFunction;
+
 	virtual void accept(MessageVisitor& visitor) const;
 };
 
