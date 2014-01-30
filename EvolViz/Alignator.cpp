@@ -1,5 +1,6 @@
 #include "Alignator.h"
 #include "EvolFunctions.hpp"
+#include <cassert>
 
 namespace model {
 
@@ -74,6 +75,12 @@ double Alignator::overflow_y(const Population::Subject& subject) const {
 	return kNoOverflow;
 }
 
+void Alignator::assert_check(const Population& pop) const {
+    for (const Population::Subject& subject : pop.subjects) {
+        assert(isInRangeX(subject) && isInRangeY(subject));
+    }
+}
+
 RollingAlignator::RollingAlignator(double x_min, double x_max, double y_min, double y_max)
 	: Alignator(x_min, x_max, y_min, y_max) {
 }
@@ -89,6 +96,7 @@ ReinitializationAlignator::ReinitializationAlignator(double x_min, double x_max,
 void RollingAlignator::operator()(Population& population) const {
 	for (Population::Subject& subject : population.subjects)
 		alignSubject(subject);
+    assert_check(population);
 }
 
 void RollingAlignator::alignSubject(Population::Subject& subject) const {
@@ -109,6 +117,7 @@ void RollingAlignator::alignSubject(Population::Subject& subject) const {
 void MirroringAlignator::operator()(Population& population) const {
 	for (Population::Subject& subject : population.subjects)
 		alignSubject(subject);
+    assert_check(population);
 }
 
 void MirroringAlignator::alignSubject(Population::Subject& subject) const {
@@ -129,6 +138,7 @@ void MirroringAlignator::alignSubject(Population::Subject& subject) const {
 void ReinitializationAlignator::operator()(Population& population) const {
 	for (Population::Subject& subject : population.subjects)
 		alignSubject(subject);
+    assert_check(population);
 }
 
 void ReinitializationAlignator::alignSubject(Population::Subject& subject) const {

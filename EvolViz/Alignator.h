@@ -35,6 +35,7 @@ protected:
 	double range_width_y() const;
 	double overflow_x(const Population::Subject& subject) const;
 	double overflow_y(const Population::Subject& subject) const;
+    void assert_check(const Population& pop) const;
 
 	const double x_min_;
 	const double x_max_;
