@@ -12,6 +12,8 @@
 #include "ConstMutationDialog.h"
 #include "GaussMutationDialog.h"
 
+#include "QualityAvgCrossOverDialog.h"
+
 #include "ModelOptions.h"
 
 #include "FitnessFunctionCalculator.h"
@@ -220,6 +222,8 @@ MainWindow::MainWindow(std::shared_ptr<Controller::BlockingQueue> blockingQueue,
     connect(ui->goalCommitButton, SIGNAL(clicked()), SLOT(goalChangeRequest()));
     connect(ui->mutationToolButton, SIGNAL(clicked()), SLOT(showMutationPropertiesWindow()));
     connect(ui->populationCommitButton, SIGNAL(clicked()), SLOT(populationSizeChangeRequest()));
+    connect(ui->crossOverCommitButton, SIGNAL(clicked()), SLOT(crossOverChangeRequest()));
+    connect(ui->crossOverToolButton, SIGNAL(clicked()), SLOT(showCrossOverProperties()));
 
     connect(this, SIGNAL(drawSnapshotSig(common::PopulationSnapshot)), SLOT(drawSnapshot(common::PopulationSnapshot)));
     connect(this, SIGNAL(drawFitnessFunctionSig(QString, double, double)), SLOT(drawFitnessFunction(QString, double, double)));
@@ -230,6 +234,8 @@ MainWindow::MainWindow(std::shared_ptr<Controller::BlockingQueue> blockingQueue,
     mutationOptions.push_back(new MutationOptionsDialog("Min", "Max", "Min", "Max", this));
     mutationOptions.push_back(new MutationOptionsDialog("Variation", "Expected", "Variation", "Expected", this));
     mutationOptions.push_back(new ConstMutationDialog(this));
+
+    crossOverOptions.push_back(new QualityAvgCrossOverDialog(this));
 }
 
 void MainWindow::resizeEvent(QResizeEvent* event)
@@ -489,6 +495,70 @@ void MainWindow::populationSizeChangeRequest()
 {
     common::MessagePtr msg(new common::PopulationSizeChangeRequestedMessage(ui->populationSize->value()));
     blockingQueue->push(std::move(msg));
+}
+
+
+void MainWindow::crossOverChangeRequest()
+{
+    const double factor = ui->crossOverFactor->value();
+
+    switch (ui->crossOverType->currentIndex())
+    {
+        case 0: // quality avg
+        {
+            QualityAvgCrossOverDialog* dialog = dynamic_cast<QualityAvgCrossOverDialog*>(crossOverOptions[0]);
+            assert(dialog != nullptr);
+            const std::shared_ptr<common::CrossOverOptions> options(
+                        new common::QualityAvgCrossOver(factor, dialog->getNormalizator()));
+
+            common::MessagePtr message(new common::CrossOverChangeRequestedMessage(options));
+            blockingQueue->push(std::move(message));
+            break;
+        }
+    }
+}
+
+void MainWindow::showCrossOverProperties()
+{
+    const double factor = ui->crossOverFactor->value();
+
+    switch (ui->crossOverType->currentIndex())
+    {
+        case 0: // quality avg
+        {
+            QualityAvgCrossOverDialog* dialog = dynamic_cast<QualityAvgCrossOverDialog*>(crossOverOptions[0]);
+            assert(dialog != nullptr);
+            const int result = dialog->exec();
+            if (result != QDialog::Accepted)
+                break;
+
+            const std::shared_ptr<common::CrossOverOptions> options(
+                        new common::QualityAvgCrossOver(factor, dialog->getNormalizator()));
+            common::MessagePtr message(new common::CrossOverChangeRequestedMessage(options));
+            blockingQueue->push(std::move(message));
+            break;
+        }
+        case 1: // const avg
+        {
+            assert(false && "NYI");
+        }
+        case 2: // universal random
+        {
+            assert(false && "NYI");
+        }
+        case 3: // gauss random
+        {
+            assert(false && "NYI");
+        }
+        case 4: // quality random fixed
+        {
+            assert(false && "NYI");
+        }
+        case 5: // universal random fixed
+        {
+            assert(false && "NYI");
+        }
+    }
 }
 
 MainWindow::~MainWindow()

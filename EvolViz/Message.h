@@ -21,6 +21,7 @@ struct SelectionOptionsChangeRequestedMessage;
 struct GoalChangeRequestedMessage;
 struct MutationChangeRequestedMessage;
 struct PopulationSizeChangeRequestedMessage;
+struct CrossOverChangeRequestedMessage;
 
 struct StateChangedMessage;
 struct GoalReachedMessage;
@@ -48,6 +49,7 @@ typedef Visitor<StartRequestedMessage, // view messages
                 GoalChangeRequestedMessage,
                 MutationChangeRequestedMessage,
                 PopulationSizeChangeRequestedMessage,
+                CrossOverChangeRequestedMessage,
 				StateChangedMessage, // model messages below
 				GoalReachedMessage,
 				ProcessingStartedMessage,
@@ -145,6 +147,14 @@ struct PopulationSizeChangeRequestedMessage : ViewMessage
 {
     PopulationSizeChangeRequestedMessage(int size);
     const int size;
+
+    virtual void accept(MessageVisitor& visitor) const;
+};
+
+struct CrossOverChangeRequestedMessage : ViewMessage
+{
+    CrossOverChangeRequestedMessage(std::shared_ptr<common::CrossOverOptions> options);
+    const std::shared_ptr<common::CrossOverOptions> options;
 
     virtual void accept(MessageVisitor& visitor) const;
 };

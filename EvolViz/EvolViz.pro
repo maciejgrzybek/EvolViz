@@ -40,7 +40,8 @@ SOURCES += main.cpp\
     PointInitializationDialog.cpp \
     RandomInitializationDialog.cpp \
     GaussMutationDialog.cpp \
-    ConstMutationDialog.cpp
+    ConstMutationDialog.cpp \
+    QualityAvgCrossOverDialog.cpp
 
 HEADERS  += MainWindow.h \
     Alignator.h \
@@ -70,10 +71,12 @@ HEADERS  += MainWindow.h \
     PointInitializationDialog.h \
     RandomInitializationDialog.h \
     GaussMutationDialog.h \
-    ConstMutationDialog.h
+    ConstMutationDialog.h \
+    QualityAvgCrossOverDialog.h
 
 FORMS    += MainWindow.ui \
     PointInitializationDialog.ui \
     RandomInitializationDialog.ui \
     GaussMutationDialog.ui \
-    ConstMutationDialog.ui
+    ConstMutationDialog.ui \
+    QualityAvgCrossOverDialog.ui

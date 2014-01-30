@@ -97,6 +97,15 @@ void PopulationSizeChangeRequestedMessage::accept(MessageVisitor& visitor) const
     visitor.visit(*this);
 }
 
+CrossOverChangeRequestedMessage::CrossOverChangeRequestedMessage(std::shared_ptr<CrossOverOptions> options)
+    : options(options)
+{}
+
+void CrossOverChangeRequestedMessage::accept(MessageVisitor& visitor) const
+{
+    visitor.visit(*this);
+}
+
 void PerformSingleStepMessage::accept(MessageVisitor& visitor) const
 {
     visitor.visit(*this);

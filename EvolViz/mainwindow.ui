@@ -393,7 +393,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QDoubleSpinBox" name="doubleSpinBox_3">
+                <widget class="QDoubleSpinBox" name="crossOverFactor">
                  <property name="decimals">
                   <number>4</number>
                  </property>
@@ -410,7 +410,7 @@
              <item>
               <layout class="QHBoxLayout" name="horizontalLayout_10">
                <item>
-                <widget class="QComboBox" name="comboBox_2">
+                <widget class="QComboBox" name="crossOverType">
                  <item>
                   <property name="text">
                    <string>QualityAvg</string>

@@ -38,6 +38,7 @@ public:
     virtual void visit(const common::GoalChangeRequestedMessage& message);
     virtual void visit(const common::MutationChangeRequestedMessage& message);
     virtual void visit(const common::PopulationSizeChangeRequestedMessage& message);
+    virtual void visit(const common::CrossOverChangeRequestedMessage& message);
 
 	// model events
 	virtual void visit(const common::StateChangedMessage& message);

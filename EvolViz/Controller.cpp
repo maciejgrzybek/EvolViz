@@ -147,6 +147,14 @@ void Controller::visit(const common::PopulationSizeChangeRequestedMessage& messa
     state |= PopulationSizeChangeRequested;
 }
 
+void Controller::visit(const common::CrossOverChangeRequestedMessage& message)
+{
+    model->setCrossOverOptions(*message.options);
+
+    state ^= CrossOverOptionsChangeApplied;
+    state |= CrossOverOptionsChangeRequested;
+}
+
 void Controller::visit(const common::StateChangedMessage& message)
 {
     common::PopulationSnapshot snapshot = model->getPopulationSnapshot();
