@@ -42,7 +42,9 @@ SOURCES += main.cpp\
     GaussMutationDialog.cpp \
     ConstMutationDialog.cpp \
     QualityAvgCrossOverDialog.cpp \
-    CrossOverOptionsDialog.cpp
+    CrossOverOptionsDialog.cpp \
+    BackgroundDrawingThread.cpp \
+    Image.cpp
 
 HEADERS  += MainWindow.h \
     Alignator.h \
@@ -75,7 +77,9 @@ HEADERS  += MainWindow.h \
     ConstMutationDialog.h \
     QualityAvgCrossOverDialog.h \
     CrossOverOptionsDialog.h \
-    ControllsState.h
+    ControllsState.h \
+    BackgroundDrawingThread.h \
+    Image.h
 
 FORMS    += MainWindow.ui \
     PointInitializationDialog.ui \
