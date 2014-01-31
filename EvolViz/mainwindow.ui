@@ -589,6 +589,9 @@
     <property name="title">
      <string>O&amp;perating</string>
     </property>
+    <addaction name="actionStart_continouse_execution"/>
+    <addaction name="actionStop_continous_execution"/>
+    <addaction name="separator"/>
     <addaction name="actionPerform_single_step"/>
     <addaction name="actionEvaluate_generation"/>
     <addaction name="separator"/>
@@ -629,12 +632,14 @@
     <string>Ctrl+E</string>
    </property>
   </action>
-  <action name="actionChange_options">
+  <action name="actionStart_continouse_execution">
    <property name="text">
-    <string>Change &amp;options</string>
+    <string>Start continous execution</string>
    </property>
-   <property name="shortcut">
-    <string>Ctrl+O</string>
+  </action>
+  <action name="actionStop_continous_execution">
+   <property name="text">
+    <string>Stop continous execution</string>
    </property>
   </action>
  </widget>

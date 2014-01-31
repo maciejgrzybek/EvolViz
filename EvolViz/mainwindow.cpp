@@ -1,8 +1,10 @@
 #include <cassert>
 #include <memory>
 
+#include <QInputDialog>
 #include <QMessageBox>
 #include <QPainter>
+#include <QTimer>
 
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
@@ -122,10 +124,13 @@ MainWindow::MainWindow(std::shared_ptr<Controller::BlockingQueue> blockingQueue,
       ui(new Ui::MainWindow),
       blockingQueue(blockingQueue),
       image(nullptr),
+      continousExecutionTimer(nullptr),
       resizeNotifications(false)
 {
     ui->setupUi(this);
 
+    connect(ui->actionStart_continouse_execution, SIGNAL(triggered(bool)), SLOT(showPromptForContinousExecution()));
+    connect(ui->actionStop_continous_execution, SIGNAL(triggered(bool)), SLOT(stopContinouseExecution()));
     connect(ui->actionPerform_single_step, SIGNAL(triggered(bool)), SLOT(performSingleStep()));
     connect(ui->actionEvaluate_generation, SIGNAL(triggered(bool)), SLOT(evaluateGeneration()));
     connect(ui->action_Restart, SIGNAL(triggered(bool)), SLOT(restart()));
@@ -214,6 +219,36 @@ void MainWindow::fitnessFunctionChangeRequested()
 {
     const std::string formula = ui->fitnessFunctionLineEdit->text().toStdString();
     blockingQueue->push(common::MessagePtr(new common::FitnessFunctionChangeRequestedMessage(formula)));
+}
+
+void MainWindow::showPromptForContinousExecution()
+{
+    bool inputAccepted = false;
+    const int refreshTime = QInputDialog::getInt(this, tr("Enter refresh time"), tr("Refresh time (in ms)"),
+                                                 1000, 100, 60*60*1000, 100, &inputAccepted);
+    if (!inputAccepted)
+        return;
+
+    ui->actionStart_continouse_execution->setEnabled(false);
+    delete continousExecutionTimer;
+    continousExecutionTimer = nullptr;
+    continousExecutionTimer = new QTimer(this);
+    connect(continousExecutionTimer, SIGNAL(timeout()), SLOT(evaluateGeneration()));
+    continousExecutionTimer->start(refreshTime);
+    ui->actionStop_continous_execution->setEnabled(true);
+}
+
+void MainWindow::stopContinouseExecution()
+{
+    ui->actionStop_continous_execution->setEnabled(false);
+    ui->actionStart_continouse_execution->setEnabled(true);
+
+    if (!continousExecutionTimer)
+        return;
+
+    continousExecutionTimer->stop();
+    delete continousExecutionTimer;
+    continousExecutionTimer = nullptr;
 }
 
 void MainWindow::performSingleStep()
@@ -673,6 +708,7 @@ void MainWindow::setControllsAvailabilityExecutor(common::ControllsState s)
 
 void MainWindow::goalReachedHandler(int iterationsCount, const common::PopulationSnapshot::Subject& bestSubject)
 {
+    stopContinouseExecution();
     //information ( QWidget * parent, const QString & title, const QString & text, StandardButtons buttons = Ok, StandardButton defaultButton = NoButton )
     const QString message = tr("The goal has been reached in %n iterations. ", "evolutionary goal", iterationsCount)
                           + tr("The best subject has value ", "value of subject from population") + QString::number(bestSubject.value)

@@ -7,6 +7,8 @@
 #include "ControllsState.h"
 #include "View.h"
 
+class QTimer;
+
 namespace Ui {
 class MainWindow;
 }
@@ -52,6 +54,8 @@ protected slots:
 
     void fitnessFunctionChangeRequested();
 
+    void showPromptForContinousExecution();
+    void stopContinouseExecution();
     void performSingleStep();
     void evaluateGeneration();
     void restart();
@@ -77,6 +81,7 @@ protected slots:
 
     void goalReachedHandler(int iterationsCount, const common::PopulationSnapshot::Subject& bestSubject);
     void restartCompleteHandler();
+
 private:
     void sendDefaultsToController();
 
@@ -86,6 +91,7 @@ private:
     std::vector<QDialog*> crossOverOptions;
     std::shared_ptr<Controller::BlockingQueue> blockingQueue;
     class Image* image;
+    QTimer* continousExecutionTimer;
     common::PopulationSnapshot lastSnapshot;
     QPixmap background;
     double width;
