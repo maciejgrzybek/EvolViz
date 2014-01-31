@@ -3,6 +3,7 @@
 #################
 DeploySetDebug
 
+build-*
 *.pydevproject
 .project
 .metadata
