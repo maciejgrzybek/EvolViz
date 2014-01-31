@@ -31,6 +31,7 @@ public:
 
 	IOSTREAM_OBSERVER(onProcessingStarted);
 	IOSTREAM_OBSERVER(onProcessingStoped);
+    IOSTREAM_OBSERVER(onRestarted);
 	
     virtual void onFitnessFunctionApplied(const std::string& formula) override { std::cout << "MyObserver::onFitnessFunctionApplied(" << formula << ")" << std::endl; }
 	IOSTREAM_OBSERVER(onInitializationOptionsApplied);

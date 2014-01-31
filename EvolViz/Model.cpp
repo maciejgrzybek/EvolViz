@@ -146,9 +146,10 @@ void Model::invokeCommand(Command::cmd command) {
             if (evol_.isGoalReached())
                 NotifyAll(std::bind(&common::ModelObserver::onGoalReached, std::placeholders::_1));
 		break;
-		case Command::RESTART:        
+        case Command::RESTART:
 			evol_.doRestart();
             NotifyAll(std::bind(&common::ModelObserver::onStateChanged, std::placeholders::_1));
+            NotifyAll(std::bind(&common::ModelObserver::onRestarted, std::placeholders::_1));
         break;
         case Command::COMMIT:
             // NoOperation, it's just about invoking setters.

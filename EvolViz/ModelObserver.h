@@ -13,6 +13,7 @@ public:
 	
 	virtual void onProcessingStarted() = 0;
 	virtual void onProcessingStoped() = 0;
+    virtual void onRestarted() = 0;
 
     virtual void onFitnessFunctionApplied(const std::string& fitnessFunction) = 0;
 	virtual void onInitializationOptionsApplied() = 0;

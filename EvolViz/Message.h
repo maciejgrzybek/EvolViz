@@ -38,6 +38,7 @@ struct RangeOptionsAppliedMessage;
 struct SelectionTypeChangeAppliedMessage;
 struct PopulationSizeChangeAppliedMessage;
 struct GoalValueChangeAppliedMessage;
+struct RestartPerformedMessage;
 
 typedef Visitor<StartRequestedMessage, // view messages
                 StopRequestedMessage,
@@ -66,7 +67,8 @@ typedef Visitor<StartRequestedMessage, // view messages
 				RangeOptionsAppliedMessage,
 				SelectionTypeChangeAppliedMessage,
 				PopulationSizeChangeAppliedMessage,
-                GoalValueChangeAppliedMessage> MessageVisitor;
+                GoalValueChangeAppliedMessage,
+                RestartPerformedMessage> MessageVisitor;
 
 struct Message;
 
@@ -270,6 +272,11 @@ struct PopulationSizeChangeAppliedMessage : ModelMessage
 struct GoalValueChangeAppliedMessage : ModelMessage
 {
 	virtual void accept(MessageVisitor& visitor) const;
+};
+
+struct RestartPerformedMessage : ModelMessage
+{
+    virtual void accept(MessageVisitor& visitor) const;
 };
 
 } // namespace common

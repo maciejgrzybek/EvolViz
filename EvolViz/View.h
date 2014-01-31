@@ -19,7 +19,7 @@ public:
     virtual void onRestartComplete() = 0;
 
     virtual void onExecutionAvailable() = 0;
-    virtual void onExecutionNoMoreAvailable() = 0;    
+    virtual void onExecutionNoMoreAvailable() = 0;
 
     virtual void setControllsAvailability(common::ControllsState controllsState) = 0;
 };

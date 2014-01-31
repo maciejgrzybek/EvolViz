@@ -210,4 +210,9 @@ void GoalValueChangeAppliedMessage::accept(MessageVisitor& visitor) const
 	visitor.visit(*this);
 }
 
+void RestartPerformedMessage::accept(MessageVisitor& visitor) const
+{
+    visitor.visit(*this);
+}
+
 } // namespace common
