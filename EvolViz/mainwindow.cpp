@@ -651,6 +651,24 @@ void MainWindow::setControllsAvailabilityExecutor(common::ControllsState s)
     ui->mutationCommitButton->setEnabled(!((s & ControllsState::GoalReached)
                                            && !(s & Controller::State::MutationOptionsChangeRequested
                                                 && !(s & Controller::State::MutationOptionsChangeApplied))));
+    ui->populationCommitButton->setEnabled(!((s & ControllsState::GoalReached)
+                                             && !(s & Controller::State::PopulationSizeChangeRequested
+                                                  && !(s & Controller::State::PopulationSizeChangeApplied))));
+    ui->selectionType->setEnabled(!((s & ControllsState::GoalReached)
+                                    && !(s & Controller::State::SelectionTypeChangeRequested
+                                         && !(s & Controller::State::SelectionTypeChangeApplied))));
+    ui->goalCommitButton->setEnabled(!((s & ControllsState::GoalReached)
+                                       && !(s & Controller::State::GoalValueChangeRequested
+                                            && !(s & Controller::State::GoalValueChangeApplied))));
+    ui->initializationToolButton->setEnabled(!((s & ControllsState::GoalReached)
+                                               && !(s & Controller::State::InitializationOptionsChangeRequested
+                                                    && !(s & Controller::State::InitializationOptionsChangeApplied))));
+    ui->initializationType->setEnabled(!((s & ControllsState::GoalReached)
+                                         && !(s & Controller::State::InitializationOptionsChangeRequested
+                                              && !(s & Controller::State::InitializationOptionsChangeApplied))));
+    ui->reproductionFactorCommitButton->setEnabled(!((s & ControllsState::GoalReached)
+                                                     && !(s & Controller::State::ReproductionOptionsChangeRequested
+                                                          && !(s & Controller::State::ReproductionOptionsChangeApplied))));
 }
 
 void MainWindow::goalReachedHandler(int iterationsCount, const common::PopulationSnapshot::Subject& bestSubject)
