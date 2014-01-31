@@ -32,7 +32,11 @@
     </widget>
    </item>
    <item row="1" column="1">
-    <widget class="QSpinBox" name="xmax"/>
+    <widget class="QSpinBox" name="xmax">
+     <property name="value">
+      <number>5</number>
+     </property>
+    </widget>
    </item>
    <item row="2" column="0">
     <widget class="QLabel" name="label_3">
@@ -52,7 +56,11 @@
     </widget>
    </item>
    <item row="3" column="1">
-    <widget class="QSpinBox" name="ymax"/>
+    <widget class="QSpinBox" name="ymax">
+     <property name="value">
+      <number>5</number>
+     </property>
+    </widget>
    </item>
    <item row="4" column="0" colspan="2">
     <widget class="QDialogButtonBox" name="buttonBox">

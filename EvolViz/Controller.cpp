@@ -360,7 +360,7 @@ void Controller::setupModel()
                                                                                                   common::GaussRandomOptions(0.0, 0.3),
                                                                                                   common::GaussRandomOptions(0.0, 0.3)))));
     visit(CrossOverChangeRequestedMessage(std::shared_ptr<CrossOverOptions>(new QualityAvgCrossOver(1.0, -2.0))));
-    visit(SelectionOptionsChangeRequestedMessage(std::shared_ptr<SelectionOptions>(new EliteSelection)));
+    visit(SelectionOptionsChangeRequestedMessage(std::shared_ptr<SelectionOptions>(new LoterySelection)));
     visit(PopulationSizeChangeRequestedMessage(1000));
     visit(GoalChangeRequestedMessage(2.0));
 }
