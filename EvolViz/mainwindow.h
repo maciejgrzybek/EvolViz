@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 #include "Controller.h"
+#include "ControllsState.h"
 #include "View.h"
 
 namespace Ui {
@@ -29,6 +30,8 @@ public:
 
     virtual void onExecutionAvailable();
     virtual void onExecutionNoMoreAvailable();
+
+    virtual void setControllsAvailability(common::ControllsState controllsState);
 
 signals:
     void drawSnapshotSig(const common::PopulationSnapshot& snapshot);
@@ -66,6 +69,8 @@ protected slots:
     void crossOverTypeChange(int chosenType);
 
 private:
+    void sendDefaultsToController();
+
     Ui::MainWindow* ui;
     std::vector<QDialog*> initializationOptions;
     std::vector<QDialog*> mutationOptions;

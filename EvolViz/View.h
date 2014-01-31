@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ControllsState.h"
 #include "Model.h"
 
 class View
@@ -17,5 +18,7 @@ public:
 
     virtual void onExecutionAvailable() = 0;
     virtual void onExecutionNoMoreAvailable() = 0;
+
+    virtual void setControllsAvailability(common::ControllsState controllsState) = 0;
 };
 

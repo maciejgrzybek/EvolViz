@@ -74,7 +74,8 @@ HEADERS  += MainWindow.h \
     GaussMutationDialog.h \
     ConstMutationDialog.h \
     QualityAvgCrossOverDialog.h \
-    CrossOverOptionsDialog.h
+    CrossOverOptionsDialog.h \
+    ControllsState.h
 
 FORMS    += MainWindow.ui \
     PointInitializationDialog.ui \

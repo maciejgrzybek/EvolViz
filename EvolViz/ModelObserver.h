@@ -19,7 +19,7 @@ public:
 	virtual void onReproductionOptionsApplied() = 0;
 	virtual void onMutationOptionsApplied() = 0;
 	virtual void onCrossOverOptionsApplied() = 0;
-	virtual void onRangeOptionsApplied() = 0;
+    virtual void onRangeOptionsApplied() = 0;
 	virtual void onSelectionTypeApplied() = 0;
 	virtual void onPopulationSizeApplied() = 0;
 	virtual void onGoalValueApplied() = 0;

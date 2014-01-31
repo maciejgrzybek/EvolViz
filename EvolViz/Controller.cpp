@@ -1,7 +1,6 @@
 #include "Controller.h"
 #include "View.h"
 
-
 Controller::Controller(std::shared_ptr<BlockingQueue> blockingQueue,
                        std::shared_ptr<model::Model> model,
                        View& view)
@@ -11,6 +10,7 @@ Controller::Controller(std::shared_ptr<BlockingQueue> blockingQueue,
       working(false),
       state(0)
 {
+    setupModel();
     updateControlls();
 }
 
@@ -59,7 +59,7 @@ void Controller::visit(const common::ExitRequestedMessage& /*message*/)
 void Controller::visit(const common::FitnessFunctionChangeRequestedMessage& message)
 {
     // TODO check whether in proper state (whether CAN change fitness function)!
-    if (message.formula == fitnessFunctionLastApplied)
+    if (message.formula == fitnessFunctionLastApplied && !fitnessFunctionLastApplied.empty())
         return; // if not changed, do not update
 
     model->setFitnessFunction(message.formula);
@@ -115,9 +115,9 @@ void Controller::visit(const common::ReproductionOptionsChangeRequestedMessage& 
 
 void Controller::visit(const common::RangeOptionsChangeRequestedMessage& message)
 {
+    requestedRangeOptions = message.options;
     model->setRangeOptions(*message.options);
-
-    rangeOptionsSet = message.options;
+    model->doCommit();
 
     state ^= RangeOptionsChangeApplied;
     state |= RangeOptionsChangeRequested;
@@ -126,6 +126,7 @@ void Controller::visit(const common::RangeOptionsChangeRequestedMessage& message
 void Controller::visit(const common::SelectionOptionsChangeRequestedMessage& message)
 {
     model->setSelectionType(*message.options);
+    model->doCommit();
 
     state ^= SelectionTypeChangeApplied;
     state |= SelectionTypeChangeRequested;
@@ -134,6 +135,7 @@ void Controller::visit(const common::SelectionOptionsChangeRequestedMessage& mes
 void Controller::visit(const common::GoalChangeRequestedMessage& message)
 {
     model->setGoalValue(message.goal);
+    model->doCommit();
 
     state ^= GoalValueChangeApplied;
     state |= GoalValueChangeRequested;
@@ -142,6 +144,7 @@ void Controller::visit(const common::GoalChangeRequestedMessage& message)
 void Controller::visit(const common::MutationChangeRequestedMessage& message)
 {
     model->setMutationOptions(*message.options);
+    model->doCommit();
 
     state ^= MutationOptionsChangeApplied;
     state |= MutationOptionsChangeRequested;
@@ -150,6 +153,7 @@ void Controller::visit(const common::MutationChangeRequestedMessage& message)
 void Controller::visit(const common::PopulationSizeChangeRequestedMessage& message)
 {
     model->setPopulationSize(message.size);
+    model->doCommit();
 
     state ^= PopulationSizeChangeApplied;
     state |= PopulationSizeChangeRequested;
@@ -223,8 +227,16 @@ void Controller::visit(const common::CrossOverOptionsAppliedMessage&)
     state |= CrossOverOptionsChangeApplied;
 }
 
-void Controller::visit(const common::RangeOptionsAppliedMessage&)
+void Controller::visit(const common::RangeOptionsAppliedMessage& /*message*/)
 {
+    rangeOptionsSet = requestedRangeOptions;
+
+    {
+        const double width = rangeOptionsSet->x_max - rangeOptionsSet->x_min;
+        const double height = rangeOptionsSet->y_max - rangeOptionsSet->y_min;
+        view.changeFitnessFunction(fitnessFunctionLastApplied, width, height);
+    }
+
     state ^= RangeOptionsChangeRequested;
     state |= RangeOptionsChangeApplied;
 }
@@ -327,10 +339,35 @@ void Controller::onGoalValueApplied()
 void Controller::dispatchMessage(std::unique_ptr<common::Message> message)
 {
 	message->accept(*this);
+    updateControlls();
+}
+
+void Controller::setupModel()
+{
+    using namespace common;
+    visit(RangeOptionsChangeRequestedMessage(std::make_shared<MirroringRangeAlignment>(0, 5, 0, 5)));
+    visit(FitnessFunctionChangeRequestedMessage("sin(x) + sin(y)"));
+    {
+        auto v = InitializationOptionsChangeRequest(InitializationOptionsChangeRequest::Random);
+        v.x1 = 0;
+        v.x2 = 5;
+        v.y1 = 0;
+        v.y2 = 5;
+        visit(v);
+    }
+    visit(ReproductionOptionsChangeRequestedMessage(2.0));
+    visit(MutationChangeRequestedMessage(std::shared_ptr<MutationOptions>(new GaussRandomMutation(0.25,
+                                                                                                  common::GaussRandomOptions(0.0, 0.3),
+                                                                                                  common::GaussRandomOptions(0.0, 0.3)))));
+    visit(CrossOverChangeRequestedMessage(std::shared_ptr<CrossOverOptions>(new QualityAvgCrossOver(1.0, -2.0))));
+    visit(SelectionOptionsChangeRequestedMessage(std::shared_ptr<SelectionOptions>(new EliteSelection)));
+    visit(PopulationSizeChangeRequestedMessage(1000));
+    visit(GoalChangeRequestedMessage(2.0));
 }
 
 void Controller::updateControlls()
 {
+    view.setControllsAvailability(static_cast<common::ControllsState>(state));
     view.onExecutionAvailable();/*
     if (state & State::FitnessFunctionChangeApplied
         && state & State::CrossOverOptionsChangeApplied

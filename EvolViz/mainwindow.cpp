@@ -159,6 +159,8 @@ MainWindow::MainWindow(std::shared_ptr<Controller::BlockingQueue> blockingQueue,
     crossOverOptions.push_back(new CrossOverOptionsDialog(this, "X min", "X max", "Y min", "Y max", "min", "max"));
     crossOverOptions.push_back(new CrossOverOptionsDialog(this, "X min", "X max", "Y min", "Y max", "expected", "variation"));
     crossOverOptions.push_back(new QualityAvgCrossOverDialog(this));
+
+    sendDefaultsToController();
 }
 
 void MainWindow::resizeEvent(QResizeEvent* event)
@@ -564,6 +566,11 @@ void MainWindow::crossOverTypeChange(int chosenType)
         ui->crossOverToolButton->setEnabled(true);
 }
 
+void MainWindow::sendDefaultsToController()
+{
+    //ui->ran
+}
+
 MainWindow::~MainWindow()
 {
     delete image;
@@ -605,4 +612,11 @@ void MainWindow::onExecutionNoMoreAvailable()
 {
     ui->actionChange_options->setEnabled(false);
     ui->actionEvaluate_generation->setEnabled(false);
+}
+
+void MainWindow::setControllsAvailability(common::ControllsState s)
+{
+    ui->fitnessFunctionCommit->setEnabled(!(s & Controller::State::FitnessFunctionChangeRequested
+                                          && !(s & Controller::State::FitnessFunctionChangeApplied)));
+
 }

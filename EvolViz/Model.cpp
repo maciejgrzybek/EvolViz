@@ -61,7 +61,7 @@ void Model::setCrossOverOptions(const common::CrossOverOptions& options) {
 void Model::setRangeOptions(const common::RangeAlignmentOptions& options) {
 	AlignatorPtr alignator = Alignator::Factory().produce(options);
 	ObservedCommand cmd(std::bind(&Evolution::set_alignator, &evol_, alignator),
-						std::bind(&common::ModelObserver::onRangeOptionsApplied, std::placeholders::_1));
+                        std::bind(&common::ModelObserver::onRangeOptionsApplied, std::placeholders::_1));
 	evol_commands_[ApplyPolicy::STEP].push(cmd);
 }
 

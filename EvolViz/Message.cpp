@@ -186,6 +186,10 @@ void CrossOverOptionsAppliedMessage::accept(MessageVisitor& visitor) const
 	visitor.visit(*this);
 }
 
+//RangeOptionsAppliedMessage::RangeOptionsAppliedMessage(std::shared_ptr<RangeAlignmentOptions> options)
+//    : options(options)
+//{}
+
 void RangeOptionsAppliedMessage::accept(MessageVisitor& visitor) const
 {
 	visitor.visit(*this);

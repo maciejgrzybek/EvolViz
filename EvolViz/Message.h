@@ -251,6 +251,9 @@ struct CrossOverOptionsAppliedMessage : ModelMessage
 
 struct RangeOptionsAppliedMessage : ModelMessage
 {
+    //RangeOptionsAppliedMessage(std::shared_ptr<common::RangeAlignmentOptions> options);
+    //const std::shared_ptr<common::RangeAlignmentOptions> options;
+
 	virtual void accept(MessageVisitor& visitor) const;
 };
 
