@@ -13,20 +13,26 @@ const std::string& FitnessFunctionCalculator::InvalidFormulaException::formula()
 	return formula_;
 }
 
-FitnessFunctionCalculator::FitnessFunctionCalculator(const std::string& formula) {
+FitnessFunctionCalculator::FitnessFunctionCalculator(const std::string& formula)
+    : formula_(formula) {
+
     try {
       calculator_.DefineVar("x", &x_);
       calculator_.DefineVar("y", &y_);
       calculator_.SetExpr(formula);
-    } catch (mu::Parser::exception_type&) {
+    } catch (const mu::Parser::exception_type&) {
       throw InvalidFormulaException(formula);
     }
 }
 
 double FitnessFunctionCalculator::operator()(double x, double y) {
-	x_ = x;
-	y_ = y;
-    return calculator_.Eval();
+    try {
+      x_ = x;
+      y_ = y;
+      return calculator_.Eval();
+    } catch (const mu::Parser::exception_type&) {
+      throw InvalidFormulaException(formula_);
+    }
 }
 
 } // namespace common

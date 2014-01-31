@@ -24,6 +24,7 @@ public:
 private:
 	double x_;
 	double y_;
+    std::string formula_;
     mu::Parser calculator_;
 };
 
