@@ -9,12 +9,14 @@
 
 Q_DECLARE_METATYPE(common::PopulationSnapshot)
 Q_DECLARE_METATYPE(common::ControllsState)
+Q_DECLARE_METATYPE(common::PopulationSnapshot::Subject)
 
 int main(int argc, char* argv[])
 {
     QApplication a(argc, argv);
     qRegisterMetaType<common::PopulationSnapshot>("PopulationSnapshot");
     qRegisterMetaType<common::ControllsState>("ControllsState");
+    qRegisterMetaType<common::PopulationSnapshot::Subject>("Subject");
     const std::shared_ptr<Controller::BlockingQueue> bq = std::make_shared<Controller::BlockingQueue>();
     MainWindow w(bq);
 

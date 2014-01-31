@@ -1,6 +1,7 @@
 #include <cassert>
 #include <memory>
 
+#include <QMessageBox>
 #include <QPainter>
 
 #include "MainWindow.h"
@@ -148,6 +149,8 @@ MainWindow::MainWindow(std::shared_ptr<Controller::BlockingQueue> blockingQueue,
     connect(this, SIGNAL(drawFitnessFunctionSig(QString, double, double)), SLOT(drawFitnessFunction(QString, double, double)));
     connect(this, SIGNAL(performExit()), SLOT(close()));
     connect(this, SIGNAL(setControllsAvailabilitySig(common::ControllsState)), SLOT(setControllsAvailabilityExecutor(common::ControllsState)));
+    connect(this, SIGNAL(goalReached(int,common::PopulationSnapshot::Subject)), SLOT(goalReachedHandler(int,common::PopulationSnapshot::Subject)));
+    connect(this, SIGNAL(restartComplete()), SLOT(restartCompleteHandler()));
 
     initializationOptions.push_back(new PointInitializationDialog(this));
     initializationOptions.push_back(new RandomInitializationDialog(this));
@@ -161,8 +164,6 @@ MainWindow::MainWindow(std::shared_ptr<Controller::BlockingQueue> blockingQueue,
     crossOverOptions.push_back(new CrossOverOptionsDialog(this, "X min", "X max", "Y min", "Y max", "min", "max"));
     crossOverOptions.push_back(new CrossOverOptionsDialog(this, "X min", "X max", "Y min", "Y max", "expected", "variation"));
     crossOverOptions.push_back(new QualityAvgCrossOverDialog(this));
-
-    sendDefaultsToController();
 }
 
 void MainWindow::resizeEvent(QResizeEvent* event)
@@ -576,11 +577,6 @@ void MainWindow::crossOverTypeChange(int chosenType)
         ui->crossOverToolButton->setEnabled(true);
 }
 
-void MainWindow::sendDefaultsToController()
-{
-    //ui->ran
-}
-
 MainWindow::~MainWindow()
 {
     delete image;
@@ -604,12 +600,17 @@ void MainWindow::changeFitnessFunction(const std::string& formula, double width,
 
 void MainWindow::onFunctionParsingCompleted()
 {
-
+    // FIXME implement this
 }
 
 void MainWindow::onFunctionParsingFailed()
 {
+    // FIXME implement this
+}
 
+void MainWindow::onRestartComplete()
+{
+    emit restartComplete();
 }
 
 void MainWindow::onExecutionAvailable()
@@ -620,8 +621,13 @@ void MainWindow::onExecutionAvailable()
 
 void MainWindow::onExecutionNoMoreAvailable()
 {
-    ui->actionChange_options->setEnabled(false);
+    ui->actionPerform_single_step->setEnabled(false);
     ui->actionEvaluate_generation->setEnabled(false);
+}
+
+void MainWindow::onGoalReached(int iterationsCount, const common::PopulationSnapshot::Subject& bestSubject)
+{
+    emit goalReached(iterationsCount, bestSubject);
 }
 
 void MainWindow::setControllsAvailability(common::ControllsState s)
@@ -632,12 +638,32 @@ void MainWindow::setControllsAvailability(common::ControllsState s)
 void MainWindow::setControllsAvailabilityExecutor(common::ControllsState s)
 {
     using namespace common;
-    ui->fitnessFunctionCommit->setEnabled(!(s & ControllsState::FitnessFunctionChangeRequested
-                                          && !(s & ControllsState::FitnessFunctionChangeApplied)));
-    ui->rangeCommitButton->setEnabled(!(s & ControllsState::RangeOptionsChangeRequested
-                                        && !(s & ControllsState::RangeOptionsChangeApplied)));
-    ui->crossOverCommitButton->setEnabled(!(s & ControllsState::CrossOverOptionsChangeRequested
-                                            && !(s & ControllsState::CrossOverOptionsChangeApplied)));
-    ui->mutationCommitButton->setEnabled(!(s & Controller::State::MutationOptionsChangeRequested
-                                           && !(s & Controller::State::MutationOptionsChangeApplied)));
+
+    ui->fitnessFunctionCommit->setEnabled(!((s & ControllsState::GoalReached)
+                                            && !(s & ControllsState::FitnessFunctionChangeRequested
+                                                 && !(s & ControllsState::FitnessFunctionChangeApplied))));
+    ui->rangeCommitButton->setEnabled(!((s & ControllsState::GoalReached)
+                                        && !(s & ControllsState::RangeOptionsChangeRequested
+                                             && !(s & ControllsState::RangeOptionsChangeApplied))));
+    ui->crossOverCommitButton->setEnabled(!((s & ControllsState::GoalReached)
+                                            && !(s & ControllsState::CrossOverOptionsChangeRequested
+                                                && !(s & ControllsState::CrossOverOptionsChangeApplied))));
+    ui->mutationCommitButton->setEnabled(!((s & ControllsState::GoalReached)
+                                           && !(s & Controller::State::MutationOptionsChangeRequested
+                                                && !(s & Controller::State::MutationOptionsChangeApplied))));
+}
+
+void MainWindow::goalReachedHandler(int iterationsCount, const common::PopulationSnapshot::Subject& bestSubject)
+{
+    //information ( QWidget * parent, const QString & title, const QString & text, StandardButtons buttons = Ok, StandardButton defaultButton = NoButton )
+    const QString message = tr("The goal has been reached in %n iterations. ", "evolutionary goal", iterationsCount)
+                          + tr("The best subject has value ", "value of subject from population") + QString::number(bestSubject.value)
+                          + tr(" and is located in: ", "Subject from population position") + "(" + QString::number(bestSubject.x) + "," + QString::number(bestSubject.y) + ")";
+    QMessageBox::information(this, tr("Congratulations! The goal has been reached!"), message);
+    onExecutionNoMoreAvailable();
+}
+
+void MainWindow::restartCompleteHandler()
+{
+    onExecutionAvailable();
 }

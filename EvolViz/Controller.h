@@ -83,12 +83,14 @@ public:
     virtual void visit(const common::SelectionTypeChangeAppliedMessage& message);
     virtual void visit(const common::PopulationSizeChangeAppliedMessage& message);
     virtual void visit(const common::GoalValueChangeAppliedMessage& message);
+    virtual void visit(const common::RestartPerformedMessage& message);
 
 	virtual void onStateChanged();
 	virtual void onGoalReached();
 
 	virtual void onProcessingStarted();
 	virtual void onProcessingStoped();
+    virtual void onRestarted();
 
     virtual void onFitnessFunctionApplied(const std::string& fitnessFunction);
 	virtual void onInitializationOptionsApplied();
@@ -110,6 +112,9 @@ private:
     View& view;
 	std::atomic<bool> working;
     int state;
+    int iterationsCount;
+
+    common::PopulationSnapshot lastSnapshot;
 
     std::string fitnessFunctionLastApplied;
 

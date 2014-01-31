@@ -8,7 +8,8 @@ Controller::Controller(std::shared_ptr<BlockingQueue> blockingQueue,
       model(model),
       view(view),
       working(false),
-      state(0)
+      state(0),
+      iterationsCount(0)
 {
     setupModel();
     updateControlls();
@@ -20,6 +21,7 @@ Controller::~Controller()
 void Controller::operator()()
 {
 	working = true;
+    iterationsCount = 0;
 	while (working)
 	{
 		common::MessagePtr msg;
@@ -167,14 +169,18 @@ void Controller::visit(const common::CrossOverChangeRequestedMessage& message)
     state |= CrossOverOptionsChangeRequested;
 }
 
-void Controller::visit(const common::StateChangedMessage& message)
+void Controller::visit(const common::StateChangedMessage& /*message*/)
 {
-    common::PopulationSnapshot snapshot = model->getPopulationSnapshot();
-    view.drawGraph(snapshot);
+    ++iterationsCount; // TODO model should provide such an information!
+    lastSnapshot = model->getPopulationSnapshot();
+    view.drawGraph(lastSnapshot);
 }
 
 void Controller::visit(const common::GoalReachedMessage&)
 {
+    // assuming snapshot is sorted!
+    view.onGoalReached(iterationsCount, lastSnapshot.subjects[0]);
+
     state |= GoalReached;
 }
 
@@ -259,8 +265,16 @@ void Controller::visit(const common::GoalValueChangeAppliedMessage&)
     state |= GoalValueChangeApplied;
 }
 
+void Controller::visit(const common::RestartPerformedMessage&)
+{
+    state ^= GoalReached;
+    iterationsCount = 0;
+    view.onRestartComplete();
+}
+
 void Controller::onStateChanged()
 {
+
 	// enqueue Message for further evaluation in proper (Controller's) thread.
 	common::MessagePtr msg(new common::StateChangedMessage);
 	blockingQueue->push(std::move(msg));
@@ -280,6 +294,12 @@ void Controller::onProcessingStarted()
 void Controller::onProcessingStoped()
 {
 	// FIXME implement this
+}
+
+void Controller::onRestarted()
+{
+    common::MessagePtr msg(new common::RestartPerformedMessage);
+    blockingQueue->push(std::move(msg));
 }
 
 void Controller::onFitnessFunctionApplied(const std::string& fitnessFunction)
@@ -368,7 +388,7 @@ void Controller::setupModel()
 void Controller::updateControlls()
 {
     view.setControllsAvailability(static_cast<common::ControllsState>(state));
-    view.onExecutionAvailable();/*
+    /*
     if (state & State::FitnessFunctionChangeApplied
         && state & State::CrossOverOptionsChangeApplied
         && state & State::MutationOptionsChangeApplied

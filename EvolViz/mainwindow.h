@@ -24,9 +24,11 @@ public:
 
     virtual void drawGraph(const common::PopulationSnapshot& snapshot);
     virtual void changeFitnessFunction(const std::string& formula, double width, double height);
+    virtual void onGoalReached(int iterationsCount, const common::PopulationSnapshot::Subject& bestSubject);
 
     virtual void onFunctionParsingCompleted();
     virtual void onFunctionParsingFailed();
+    virtual void onRestartComplete();
 
     virtual void onExecutionAvailable();
     virtual void onExecutionNoMoreAvailable();
@@ -36,8 +38,10 @@ public:
 signals:
     void drawSnapshotSig(const common::PopulationSnapshot& snapshot);
     void drawFitnessFunctionSig(const QString& formula, double width, double height);
+    void goalReached(int iterationsCount, const common::PopulationSnapshot::Subject& bestSubject);
     void performExit();
     void setControllsAvailabilitySig(common::ControllsState controllsState);
+    void restartComplete();
 
 protected:
     virtual void resizeEvent(QResizeEvent* event);
@@ -71,6 +75,8 @@ protected slots:
 
     void setControllsAvailabilityExecutor(common::ControllsState controllsState);
 
+    void goalReachedHandler(int iterationsCount, const common::PopulationSnapshot::Subject& bestSubject);
+    void restartCompleteHandler();
 private:
     void sendDefaultsToController();
 
