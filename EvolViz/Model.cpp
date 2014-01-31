@@ -148,6 +148,7 @@ void Model::invokeCommand(Command::cmd command) {
 		break;
 		case Command::RESTART:        
 			evol_.doRestart();
+            NotifyAll(std::bind(&common::ModelObserver::onStateChanged, std::placeholders::_1));
         break;
         case Command::COMMIT:
             // NoOperation, it's just about invoking setters.
