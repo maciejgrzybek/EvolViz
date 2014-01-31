@@ -8,8 +8,7 @@ Controller::Controller(std::shared_ptr<BlockingQueue> blockingQueue,
       model(model),
       view(view),
       working(false),
-      state(0),
-      iterationsCount(0)
+      state(0)
 {
     setupModel();
     updateControlls();
@@ -21,7 +20,6 @@ Controller::~Controller()
 void Controller::operator()()
 {
 	working = true;
-    iterationsCount = 0;
 	while (working)
 	{
 		common::MessagePtr msg;
@@ -66,6 +64,9 @@ void Controller::visit(const common::FitnessFunctionChangeRequestedMessage& mess
 
     model->setFitnessFunction(message.formula);
     model->doCommit(); // to ensure drawing function
+
+    state = getBitmaskWithoutBitOn(state, State::FitnessFunctionChangeApplied);
+    state |= State::FitnessFunctionChangeRequested;
 }
 
 void Controller::visit(const common::PerformSingleStepMessage& message)
@@ -102,7 +103,7 @@ void Controller::visit(const common::InitializationOptionsChangeRequest& message
     else
         model->setInitializationOptions(common::RandomInitialization(message.x1, message.x2, message.y1, message.y2));
 
-    state ^= InitializationOptionsChangeApplied;
+    state = getBitmaskWithoutBitOn(state, InitializationOptionsChangeApplied);
     state |= InitializationOptionsChangeRequested;
 }
 
@@ -111,7 +112,7 @@ void Controller::visit(const common::ReproductionOptionsChangeRequestedMessage& 
     // TODO check state
     model->setReproductionOptions(common::ReproductionOptions(message.value));
 
-    state ^= ReproductionOptionsChangeApplied;
+    state = getBitmaskWithoutBitOn(state, ReproductionOptionsChangeApplied);
     state |= ReproductionOptionsChangeRequested;
 }
 
@@ -121,7 +122,7 @@ void Controller::visit(const common::RangeOptionsChangeRequestedMessage& message
     model->setRangeOptions(*message.options);
     model->doCommit();
 
-    state ^= RangeOptionsChangeApplied;
+    state = getBitmaskWithoutBitOn(state, RangeOptionsChangeApplied);
     state |= RangeOptionsChangeRequested;
 }
 
@@ -130,7 +131,7 @@ void Controller::visit(const common::SelectionOptionsChangeRequestedMessage& mes
     model->setSelectionType(*message.options);
     model->doCommit();
 
-    state ^= SelectionTypeChangeApplied;
+    state = getBitmaskWithoutBitOn(state, SelectionTypeChangeApplied);
     state |= SelectionTypeChangeRequested;
 }
 
@@ -139,7 +140,7 @@ void Controller::visit(const common::GoalChangeRequestedMessage& message)
     model->setGoalValue(message.goal);
     model->doCommit();
 
-    state ^= GoalValueChangeApplied;
+    state = getBitmaskWithoutBitOn(state, GoalValueChangeApplied);
     state |= GoalValueChangeRequested;
 }
 
@@ -148,7 +149,7 @@ void Controller::visit(const common::MutationChangeRequestedMessage& message)
     model->setMutationOptions(*message.options);
     model->doCommit();
 
-    state ^= MutationOptionsChangeApplied;
+    state = getBitmaskWithoutBitOn(state, MutationOptionsChangeApplied);
     state |= MutationOptionsChangeRequested;
 }
 
@@ -157,7 +158,7 @@ void Controller::visit(const common::PopulationSizeChangeRequestedMessage& messa
     model->setPopulationSize(message.size);
     model->doCommit();
 
-    state ^= PopulationSizeChangeApplied;
+    state = getBitmaskWithoutBitOn(state, PopulationSizeChangeApplied);
     state |= PopulationSizeChangeRequested;
 }
 
@@ -165,13 +166,12 @@ void Controller::visit(const common::CrossOverChangeRequestedMessage& message)
 {
     model->setCrossOverOptions(*message.options);
 
-    state ^= CrossOverOptionsChangeApplied;
+    state = getBitmaskWithoutBitOn(state, CrossOverOptionsChangeApplied);
     state |= CrossOverOptionsChangeRequested;
 }
 
 void Controller::visit(const common::StateChangedMessage& /*message*/)
 {
-    ++iterationsCount; // TODO model should provide such an information!
     lastSnapshot = model->getPopulationSnapshot();
     view.drawGraph(lastSnapshot);
 }
@@ -179,17 +179,17 @@ void Controller::visit(const common::StateChangedMessage& /*message*/)
 void Controller::visit(const common::GoalReachedMessage&)
 {
     // assuming snapshot is sorted!
-    view.onGoalReached(iterationsCount, lastSnapshot.subjects[0]);
+    view.onGoalReached(model->getGenerationId(), lastSnapshot.subjects[0]);
 
     state |= GoalReached;
 }
 
-void Controller::visit(const common::ProcessingStartedMessage& message)
+void Controller::visit(const common::ProcessingStartedMessage& /*message*/)
 {
     // FIXME implement this
 }
 
-void Controller::visit(const common::ProcessingStoppedMessage& message)
+void Controller::visit(const common::ProcessingStoppedMessage& /*message*/)
 {
     // FIXME implement this
 }
@@ -205,31 +205,31 @@ void Controller::visit(const common::FitnessFunctionAppliedMessage& message)
 
     fitnessFunctionLastApplied = message.fitnessFunction;
 
-    state ^= FitnessFunctionChangeRequested;
+    state = getBitmaskWithoutBitOn(state, FitnessFunctionChangeRequested);
     state |= FitnessFunctionChangeApplied;
 }
 
 void Controller::visit(const common::InitializationOptionsAppliedMessage&)
 {
-    state ^= InitializationOptionsChangeRequested;
+    state = getBitmaskWithoutBitOn(state, InitializationOptionsChangeRequested);
     state |= InitializationOptionsChangeApplied;
 }
 
 void Controller::visit(const common::ReproductionOptionsAppliedMessage&)
 {
-    state ^= ReproductionOptionsChangeRequested;
+    state = getBitmaskWithoutBitOn(state, ReproductionOptionsChangeRequested);
     state |= ReproductionOptionsChangeApplied;
 }
 
 void Controller::visit(const common::MutationOptionsAppliedMessage&)
 {
-    state ^= MutationOptionsChangeRequested;
+    state = getBitmaskWithoutBitOn(state, MutationOptionsChangeRequested);
     state |= MutationOptionsChangeApplied;
 }
 
 void Controller::visit(const common::CrossOverOptionsAppliedMessage&)
 {
-    state ^= CrossOverOptionsChangeRequested;
+    state = getBitmaskWithoutBitOn(state, CrossOverOptionsChangeRequested);
     state |= CrossOverOptionsChangeApplied;
 }
 
@@ -243,32 +243,31 @@ void Controller::visit(const common::RangeOptionsAppliedMessage& /*message*/)
         view.changeFitnessFunction(fitnessFunctionLastApplied, width, height);
     }
 
-    state ^= RangeOptionsChangeRequested;
+    state = getBitmaskWithoutBitOn(state, RangeOptionsChangeRequested);
     state |= RangeOptionsChangeApplied;
 }
 
 void Controller::visit(const common::SelectionTypeChangeAppliedMessage&)
 {
-    state ^= SelectionTypeChangeRequested;
+    state = getBitmaskWithoutBitOn(state, SelectionTypeChangeRequested);
     state |= SelectionTypeChangeApplied;
 }
 
 void Controller::visit(const common::PopulationSizeChangeAppliedMessage&)
 {
-    state ^= PopulationSizeChangeRequested;
+    state = getBitmaskWithoutBitOn(state, PopulationSizeChangeRequested);
     state |= PopulationSizeChangeApplied;
 }
 
 void Controller::visit(const common::GoalValueChangeAppliedMessage&)
 {
-    state ^= GoalValueChangeRequested;
+    state = getBitmaskWithoutBitOn(state, GoalValueChangeRequested);
     state |= GoalValueChangeApplied;
 }
 
 void Controller::visit(const common::RestartPerformedMessage&)
 {
-    state ^= GoalReached;
-    iterationsCount = 0;
+    state = getBitmaskWithoutBitOn(state, GoalReached);
     view.onRestartComplete();
 }
 
@@ -354,6 +353,15 @@ void Controller::onGoalValueApplied()
 {
     common::MessagePtr msg(new common::GoalValueChangeAppliedMessage);
     blockingQueue->push(std::move(msg));
+}
+
+int Controller::getBitmaskWithoutBitOn(int bitmask, int bitToTurnOff)
+{
+    int result = bitmask;
+    if (bitmask & bitToTurnOff)
+        result ^= bitToTurnOff;
+
+    return result;
 }
 
 void Controller::dispatchMessage(std::unique_ptr<common::Message> message)

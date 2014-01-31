@@ -103,6 +103,7 @@ public:
 	virtual void onGoalValueApplied();
 
 private:
+    static int getBitmaskWithoutBitOn(int bitmask, int bitToTurnOff);
 	void dispatchMessage(std::unique_ptr<common::Message> message);
     void setupModel();
     void updateControlls();
@@ -112,7 +113,6 @@ private:
     View& view;
 	std::atomic<bool> working;
     int state;
-    int iterationsCount;
 
     common::PopulationSnapshot lastSnapshot;
 
