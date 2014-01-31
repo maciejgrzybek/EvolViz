@@ -147,6 +147,7 @@ MainWindow::MainWindow(std::shared_ptr<Controller::BlockingQueue> blockingQueue,
     connect(this, SIGNAL(drawSnapshotSig(common::PopulationSnapshot)), SLOT(drawSnapshot(common::PopulationSnapshot)));
     connect(this, SIGNAL(drawFitnessFunctionSig(QString, double, double)), SLOT(drawFitnessFunction(QString, double, double)));
     connect(this, SIGNAL(performExit()), SLOT(close()));
+    connect(this, SIGNAL(setControllsAvailabilitySig(common::ControllsState)), SLOT(setControllsAvailabilityExecutor(common::ControllsState)));
 
     initializationOptions.push_back(new PointInitializationDialog(this));
     initializationOptions.push_back(new RandomInitializationDialog(this));
@@ -624,6 +625,11 @@ void MainWindow::onExecutionNoMoreAvailable()
 }
 
 void MainWindow::setControllsAvailability(common::ControllsState s)
+{
+   emit setControllsAvailabilitySig(s);
+}
+
+void MainWindow::setControllsAvailabilityExecutor(common::ControllsState s)
 {
     using namespace common;
     ui->fitnessFunctionCommit->setEnabled(!(s & ControllsState::FitnessFunctionChangeRequested

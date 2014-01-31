@@ -37,6 +37,7 @@ signals:
     void drawSnapshotSig(const common::PopulationSnapshot& snapshot);
     void drawFitnessFunctionSig(const QString& formula, double width, double height);
     void performExit();
+    void setControllsAvailabilitySig(common::ControllsState controllsState);
 
 protected:
     virtual void resizeEvent(QResizeEvent* event);
@@ -67,6 +68,8 @@ protected slots:
     void crossOverChangeRequest();
     void showCrossOverProperties();
     void crossOverTypeChange(int chosenType);
+
+    void setControllsAvailabilityExecutor(common::ControllsState controllsState);
 
 private:
     void sendDefaultsToController();
