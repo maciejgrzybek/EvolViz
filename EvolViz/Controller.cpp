@@ -56,17 +56,36 @@ void Controller::visit(const common::ExitRequestedMessage& /*message*/)
     working = false;
 }
 
+bool Controller::isFormulaCorrect(const std::string& formula) const
+{
+    try
+    {
+        common::FitnessFunctionCalculator calculator(formula);
+        calculator(0, 0); // trivial check, exemplary (x,y)
+    }
+    catch (const common::FitnessFunctionCalculator::InvalidFormulaException&)
+    {
+        return false;
+    }
+    return true;
+}
+
 void Controller::visit(const common::FitnessFunctionChangeRequestedMessage& message)
 {
     // TODO check whether in proper state (whether CAN change fitness function)!
     if (message.formula == fitnessFunctionLastApplied && !fitnessFunctionLastApplied.empty())
         return; // if not changed, do not update
 
+    if (!isFormulaCorrect(message.formula))
+        return view.onFunctionParsingFailed();
+
     model->setFitnessFunction(message.formula);
     model->doCommit(); // to ensure drawing function
 
     state = getBitmaskWithoutBitOn(state, State::FitnessFunctionChangeApplied);
     state |= State::FitnessFunctionChangeRequested;
+
+    view.onFunctionParsingCompleted();
 }
 
 void Controller::visit(const common::PerformSingleStepMessage& message)

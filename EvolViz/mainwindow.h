@@ -40,6 +40,7 @@ public:
 signals:
     void drawSnapshotSig(const common::PopulationSnapshot& snapshot);
     void drawFitnessFunctionSig(const QString& formula, double width, double height);
+    void functionParsingFailed();
     void goalReached(int iterationsCount, const common::PopulationSnapshot::Subject& bestSubject);
     void performExit();
     void setControllsAvailabilitySig(common::ControllsState controllsState);
@@ -79,6 +80,7 @@ protected slots:
 
     void setControllsAvailabilityExecutor(common::ControllsState controllsState);
 
+    void functionParsingFailedHandler();
     void goalReachedHandler(int iterationsCount, const common::PopulationSnapshot::Subject& bestSubject);
     void restartCompleteHandler();
 

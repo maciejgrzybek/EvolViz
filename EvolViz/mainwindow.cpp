@@ -152,6 +152,7 @@ MainWindow::MainWindow(std::shared_ptr<Controller::BlockingQueue> blockingQueue,
 
     connect(this, SIGNAL(drawSnapshotSig(common::PopulationSnapshot)), SLOT(drawSnapshot(common::PopulationSnapshot)));
     connect(this, SIGNAL(drawFitnessFunctionSig(QString, double, double)), SLOT(drawFitnessFunction(QString, double, double)));
+    connect(this, SIGNAL(functionParsingFailed()), SLOT(functionParsingFailedHandler()));
     connect(this, SIGNAL(performExit()), SLOT(close()));
     connect(this, SIGNAL(setControllsAvailabilitySig(common::ControllsState)), SLOT(setControllsAvailabilityExecutor(common::ControllsState)));
     connect(this, SIGNAL(goalReached(int,common::PopulationSnapshot::Subject)), SLOT(goalReachedHandler(int,common::PopulationSnapshot::Subject)));
@@ -640,7 +641,7 @@ void MainWindow::onFunctionParsingCompleted()
 
 void MainWindow::onFunctionParsingFailed()
 {
-    // FIXME implement this
+    emit functionParsingFailed();
 }
 
 void MainWindow::onRestartComplete()
@@ -704,6 +705,11 @@ void MainWindow::setControllsAvailabilityExecutor(common::ControllsState s)
     ui->reproductionFactorCommitButton->setEnabled(!((s & ControllsState::GoalReached)
                                                      && !(s & Controller::State::ReproductionOptionsChangeRequested
                                                           && !(s & Controller::State::ReproductionOptionsChangeApplied))));
+}
+
+void MainWindow::functionParsingFailedHandler()
+{
+    QMessageBox::warning(this, tr("Incorrect function given"), tr("Given fitness function cannot be parsed. Please check whether syntax is correct and try again."));
 }
 
 void MainWindow::goalReachedHandler(int iterationsCount, const common::PopulationSnapshot::Subject& bestSubject)

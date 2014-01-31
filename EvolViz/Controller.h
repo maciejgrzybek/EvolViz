@@ -107,6 +107,7 @@ private:
 	void dispatchMessage(std::unique_ptr<common::Message> message);
     void setupModel();
     void updateControlls();
+    bool isFormulaCorrect(const std::string& formula) const;
 
     std::shared_ptr<BlockingQueue> blockingQueue;
 	std::shared_ptr<model::Model> model;
