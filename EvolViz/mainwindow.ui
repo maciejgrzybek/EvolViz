@@ -634,12 +634,18 @@
   </action>
   <action name="actionStart_continouse_execution">
    <property name="text">
-    <string>Start continous execution</string>
+    <string>S&amp;tart continous execution</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+T</string>
    </property>
   </action>
   <action name="actionStop_continous_execution">
    <property name="text">
-    <string>Stop continous execution</string>
+    <string>St&amp;op continous execution</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
    </property>
   </action>
  </widget>
