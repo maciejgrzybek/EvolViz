@@ -25,6 +25,25 @@
 class Image
 {
 public:
+    class MultiplePointsDrawer
+    {
+    public:
+        void publish(QPixmap& pixmap, const QColor& color)
+        {
+            QPainter painter(&pixmap);
+            painter.setPen(QPen(color, 2));
+            painter.drawPoints(&points[0], points.size());
+        }
+
+        void drawPoint(double x, double y)
+        {
+            points.push_back(QPointF(x, y));
+        }
+
+    private:
+        std::vector<QPointF> points;
+    };
+
     Image(const QPixmap& pixmap, double width, double height)
         : image(pixmap),
           width(width),
@@ -39,23 +58,28 @@ public:
 
     void prepare(const QRectF& crect)
     {
-        assert(calculator); // FIXME not valid when default constructor used!
+        prepareWithScale(crect, 1, &image);
+    }
+
+    void prepareWithScale(const QRectF& crect, double dividor, QPixmap* output)
+    {
+        assert(dividor > 0);
+        assert(calculator); // FIXME not valid when constructor without formula used!
 
         const QRectF rect = crect.normalized();
-        image = QPixmap(rect.width(), rect.height());
-        QPainter painter;
-        painter.begin(&image);
+        QPixmap img(rect.width()/dividor, rect.height()/dividor);
+        QPainter painter(&img);
 
         const std::pair<double, double> minMax = getMinMaxOfFunction(width, height);
 
         const double widthFactor = width/rect.width();
         const double heightFactor = height/rect.height();
 
-        for (int i = 0; i < rect.width(); ++i)
+        for (int i = 0; i < rect.width()/dividor; ++i)
         {
-            for (int j = 0; j < rect.height(); ++j)
+            for (int j = 0; j < rect.height()/dividor; ++j)
             {
-                const double value = (*calculator)(i * widthFactor, j * heightFactor);
+                const double value = (*calculator)(dividor*i * widthFactor, dividor*j * heightFactor);
                 const double normalization = std::min(getNormalization(value, minMax), 1.0);
                 assert(normalization >= 0.0 && normalization <= 1.0);
 
@@ -64,7 +88,7 @@ public:
             }
         }
 
-        painter.end();
+        *output = img.scaled(QSize(rect.width(), rect.height()));
     }
 
     void drawPoint(double x, double y, const QColor& color = QColor(Qt::yellow))
