@@ -14,6 +14,7 @@ void Evolution::doStep() {
 			generation_id_ = 0;
 			population_.subjects.clear();
 			(*initializer_)(population_, population_size_);
+            updateGoalReached();
 			state_ = BEFORE_REPRODUCTION;
 		break;
 		case BEFORE_REPRODUCTION:
