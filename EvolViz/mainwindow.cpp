@@ -138,6 +138,7 @@ MainWindow::MainWindow(std::shared_ptr<Controller::BlockingQueue> blockingQueue,
     connect(ui->selectionType, SIGNAL(currentIndexChanged(int)), SLOT(selectionTypeChangeRequest(int)));
     connect(ui->goalCommitButton, SIGNAL(clicked()), SLOT(goalChangeRequest()));
     connect(ui->mutationToolButton, SIGNAL(clicked()), SLOT(showMutationPropertiesWindow()));
+    connect(ui->mutationCommitButton, SIGNAL(clicked()), SLOT(mutationChangeRequest()));
     connect(ui->populationCommitButton, SIGNAL(clicked()), SLOT(populationSizeChangeRequest()));
     connect(ui->crossOverCommitButton, SIGNAL(clicked()), SLOT(crossOverChangeRequest()));
     connect(ui->crossOverToolButton, SIGNAL(clicked()), SLOT(showCrossOverProperties()));
@@ -370,6 +371,7 @@ void MainWindow::mutationChangeRequest()
         case 0: // universal
         {
             MutationOptionsDialog* dialog = dynamic_cast<MutationOptionsDialog*>(mutationOptions[1]);
+            assert(dialog != nullptr);
             common::UniversalRandomOptions x(dialog->getX1(), dialog->getX2());
             common::UniversalRandomOptions y(dialog->getY1(), dialog->getY2());
             options.reset(new common::UniversalRandomMutation(factor, x, y));
@@ -378,16 +380,23 @@ void MainWindow::mutationChangeRequest()
         case 1: // gauss
         {
             MutationOptionsDialog* dialog = dynamic_cast<MutationOptionsDialog*>(mutationOptions[1]);
+            assert(dialog != nullptr);
             common::GaussRandomOptions x(dialog->getX1(), dialog->getX2());
             common::GaussRandomOptions y(dialog->getY1(), dialog->getY2());
             options.reset(new common::GaussRandomMutation(factor, x, y));
             break;
         }
         case 2: // const
+        {
+            ConstMutationDialog* dialog = dynamic_cast<ConstMutationDialog*>(mutationOptions[2]);
+            assert(dialog != nullptr);
+            options.reset(new common::ConstMutation(factor, dialog->getX(), dialog->getY()));
             break;
+        }
     }
 
     common::MessagePtr msg(new common::MutationChangeRequestedMessage(options));
+    blockingQueue->push(std::move(msg));
 }
 
 void MainWindow::showMutationPropertiesWindow()
@@ -616,7 +625,13 @@ void MainWindow::onExecutionNoMoreAvailable()
 
 void MainWindow::setControllsAvailability(common::ControllsState s)
 {
-    ui->fitnessFunctionCommit->setEnabled(!(s & Controller::State::FitnessFunctionChangeRequested
-                                          && !(s & Controller::State::FitnessFunctionChangeApplied)));
-
+    using namespace common;
+    ui->fitnessFunctionCommit->setEnabled(!(s & ControllsState::FitnessFunctionChangeRequested
+                                          && !(s & ControllsState::FitnessFunctionChangeApplied)));
+    ui->rangeCommitButton->setEnabled(!(s & ControllsState::RangeOptionsChangeRequested
+                                        && !(s & ControllsState::RangeOptionsChangeApplied)));
+    ui->crossOverCommitButton->setEnabled(!(s & ControllsState::CrossOverOptionsChangeRequested
+                                            && !(s & ControllsState::CrossOverOptionsChangeApplied)));
+    ui->mutationCommitButton->setEnabled(!(s & Controller::State::MutationOptionsChangeRequested
+                                           && !(s & Controller::State::MutationOptionsChangeApplied)));
 }
