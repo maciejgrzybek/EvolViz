@@ -3,15 +3,18 @@
 
 #include <QApplication>
 
+#include "ControllsState.h"
 #include "Controller.h"
 #include "MainWindow.h"
 
 Q_DECLARE_METATYPE(common::PopulationSnapshot)
+Q_DECLARE_METATYPE(common::ControllsState)
 
 int main(int argc, char* argv[])
 {
     QApplication a(argc, argv);
     qRegisterMetaType<common::PopulationSnapshot>("PopulationSnapshot");
+    qRegisterMetaType<common::ControllsState>("ControllsState");
     const std::shared_ptr<Controller::BlockingQueue> bq = std::make_shared<Controller::BlockingQueue>();
     MainWindow w(bq);
 
